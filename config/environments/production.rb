@@ -68,6 +68,11 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
+  # set host for action mailer emails- links in the email need to know the full path to the server.
+  config.action_mailer.default_url_options = {:host => "http://workout-tracker.herokuapp.com"}
+
+  Rails.application.routes.default_url_options[:host]= 'https://comment-processor.herokuapp.com'
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true

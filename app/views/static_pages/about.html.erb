@@ -1,0 +1,14 @@
+<br>
+<div class="about center hero-unit">
+  <p>
+    A tool to help athletes track their workouts over time.
+  </p>
+  <p>
+    Please <%= mail_to APPLICATION_HOST_EMAIL_ADDRESS, 'contact me' %> if you have questions, suggestions, or have trouble logging in.
+  </p>
+
+  <% unless signed_in? %>
+    <%= link_to "Sign in", signin_path, class: "btn btn-large btn-primary" %>
+  <% end %>
+
+</div>
