@@ -7,5 +7,6 @@ class CreateWorkoutTypes < ActiveRecord::Migration[6.1]
 
       t.timestamps
     end
+    add_index :workout_types, [:user_id, :order_in_list]
   end
 end

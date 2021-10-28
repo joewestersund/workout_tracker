@@ -13,5 +13,6 @@ class CreateWorkoutRoutes < ActiveRecord::Migration[6.1]
 
       t.timestamps
     end
+    add_index :workout_routes, :workout_id
   end
 end

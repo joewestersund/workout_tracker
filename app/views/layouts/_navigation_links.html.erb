@@ -1,0 +1,38 @@
+
+<%# add navigation links to this file %>
+<% if signed_in? %>
+  <li class="nav-item"><%= link_to font_awesome_icon("workouts","Workouts").html_safe, workouts_path, class: "nav-link" %></li>
+
+  <li id="fat-menu" class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="navbarDropdownSetup">
+      <%= font_awesome_icon("cog","Setup").html_safe%> <b class="caret"></b>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownSetup">
+      <%= link_to "Workout Types", workout_types_path, class: "dropdown-item" %>
+      <%= link_to "Routes", routes_path, class: "dropdown-item" %>
+    </div>
+  </li>
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="navbarDropdownStats">
+      <%= font_awesome_icon("signal","Stats").html_safe%> <b class="caret"></b>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownStats">
+
+      <%# add links here %>
+
+    </div>
+  </li>
+
+  <li id="fat-menu" class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="navbarDropdownAccount">
+      <%= font_awesome_icon("user-circle","Account").html_safe%> <b class="caret"></b>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownAccount">
+      <%= link_to "Edit Profile", profile_edit_path, class: "dropdown-item" %>
+      <%= link_to "Change Password", profile_edit_password_path, class: "dropdown-item" %>
+      <%= link_to font_awesome_icon("sign-out","Log Out", {never_hide: true}).html_safe, signout_path, method: :delete, class: "dropdown-item" %>
+    </div>
+  </li>
+
+<% end %>
