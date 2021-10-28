@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Routes</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Belongs to</th>
+      <th>Belongs to</th>
+      <th>Name</th>
+      <th>Distance</th>
+      <th>Order in list</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @routes.each do |route| %>
+      <tr>
+        <td><%= route.belongs_to %></td>
+        <td><%= route.belongs_to %></td>
+        <td><%= route.name %></td>
+        <td><%= route.distance %></td>
+        <td><%= route.order_in_list %></td>
+        <td><%= link_to 'Show', route %></td>
+        <td><%= link_to 'Edit', edit_route_path(route) %></td>
+        <td><%= link_to 'Destroy', route, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Route', new_route_path %>

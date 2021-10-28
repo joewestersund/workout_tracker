@@ -1,0 +1,12 @@
+Dear <%= @new_user.name %>,
+
+A login to the <%= APPLICATION_NAME %> website has been set up for you by <%= "#{@added_by.name} <#{@added_by.email}>" %>.
+Here is your new login information:
+
+Web address: <%= @main_app_url %>
+Username: <%= @new_user.email %>
+
+You can log in and set up your password by going to <%= @password_reset_url %> in the next <%= pluralize(@hours_to_log_in,"hour") %>.
+
+If you don't log in and set up your password in the next <%= @hours_to_log_in %> hours, no worries. You can reset your password anytime by going to 'Account | Reset Password' at <%= password_forgot_url %>
+

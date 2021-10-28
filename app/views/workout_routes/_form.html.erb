@@ -1,0 +1,62 @@
+<%= form_with(model: workout_route) do |form| %>
+  <% if workout_route.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(workout_route.errors.count, "error") %> prohibited this workout_route from being saved:</h2>
+
+      <ul>
+        <% workout_route.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :belongs_to %>
+    <%= form.text_field :belongs_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :belongs_to %>
+    <%= form.text_field :belongs_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :belongs_to %>
+    <%= form.text_field :belongs_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :repetitions %>
+    <%= form.text_field :repetitions %>
+  </div>
+
+  <div class="field">
+    <%= form.label :distance %>
+    <%= form.text_field :distance %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pace %>
+    <%= form.text_field :pace %>
+  </div>
+
+  <div class="field">
+    <%= form.label :duration %>
+    <%= form.text_field :duration %>
+  </div>
+
+  <div class="field">
+    <%= form.label :heart_rate %>
+    <%= form.text_field :heart_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

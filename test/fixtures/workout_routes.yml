@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  belongs_to: 
+  belongs_to: 
+  belongs_to: 
+  repetitions: 
+  distance: 1.5
+  pace: 1.5
+  duration: 1.5
+  heart_rate: 
+  description: MyText
+
+two:
+  belongs_to: 
+  belongs_to: 
+  belongs_to: 
+  repetitions: 
+  distance: 1.5
+  pace: 1.5
+  duration: 1.5
+  heart_rate: 
+  description: MyText

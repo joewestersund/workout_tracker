@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  belongs_to: 
+  belongs_to: 
+  name: MyString
+  distance: 1.5
+  order_in_list: 
+
+two:
+  belongs_to: 
+  belongs_to: 
+  name: MyString
+  distance: 1.5
+  order_in_list: 

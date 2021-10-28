@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Belongs to:</strong>
+  <%= @workout_route.belongs_to %>
+</p>
+
+<p>
+  <strong>Belongs to:</strong>
+  <%= @workout_route.belongs_to %>
+</p>
+
+<p>
+  <strong>Belongs to:</strong>
+  <%= @workout_route.belongs_to %>
+</p>
+
+<p>
+  <strong>Repetitions:</strong>
+  <%= @workout_route.repetitions %>
+</p>
+
+<p>
+  <strong>Distance:</strong>
+  <%= @workout_route.distance %>
+</p>
+
+<p>
+  <strong>Pace:</strong>
+  <%= @workout_route.pace %>
+</p>
+
+<p>
+  <strong>Duration:</strong>
+  <%= @workout_route.duration %>
+</p>
+
+<p>
+  <strong>Heart rate:</strong>
+  <%= @workout_route.heart_rate %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @workout_route.description %>
+</p>
+
+<%= link_to 'Edit', edit_workout_route_path(@workout_route) %> |
+<%= link_to 'Back', workout_routes_path %>
