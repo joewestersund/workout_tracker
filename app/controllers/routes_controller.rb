@@ -1,4 +1,5 @@
 class RoutesController < ApplicationController
+  before_action :signed_in_user
   before_action :set_route, only: %i[ show edit update destroy ]
 
   # GET /routes or /routes.json

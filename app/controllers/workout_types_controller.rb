@@ -1,4 +1,5 @@
 class WorkoutTypesController < ApplicationController
+  before_action :signed_in_user
   before_action :set_workout_type, only: %i[ show edit update destroy ]
 
   # GET /workout_types or /workout_types.json

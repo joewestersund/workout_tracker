@@ -1,4 +1,5 @@
 class WorkoutRoutesController < ApplicationController
+  before_action :signed_in_user
   before_action :set_workout_route, only: %i[ show edit update destroy ]
 
   # GET /workout_routes or /workout_routes.json

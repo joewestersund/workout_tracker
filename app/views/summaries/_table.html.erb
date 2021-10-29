@@ -1,0 +1,36 @@
+<% if @table.num_rows == 0 %>
+  <div class="no_data">You haven't entered any transaction data, or no data matches the filter above.</div>
+<% else
+  if @table.some_columns_have_no_data %>
+    <%= check_box_tag :show_all_columns %>
+    <%= label_tag :show_all_columns, "Show All Columns" %>
+  <% end %>
+  <table class="summary">
+    <thead>
+    <tr>
+      <th></th>
+        <% for column_index in 0..(@table.num_columns-1)
+          ch_text = @table.header_text(:column,column_index)
+          ch_href = @table.header_href(:column,column_index)%>
+          <th class="<%= "no_data hide" if @table.column_has_no_data(column_index) %>"><%= link_to ch_text, ch_href if ch_text.present?%></th>
+        <% end %>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% for row_index in 0..(@table.num_rows-1) %>
+      <tr>
+        <% rh_text = @table.header_text(:row,row_index)
+          rh_href = @table.header_href(:row,row_index)%>
+        <td class="row_header"><%= link_to rh_text, rh_href if rh_text.present?%></td>
+        <% for column_index in 0..(@table.num_columns-1)
+          c_text = @table.text(row_index,column_index)
+          c_href = @table.href(row_index,column_index)
+          c_numeric_value = @table.numeric_value(row_index,column_index)%>
+          <td class="<%= "no_data hide" if @table.column_has_no_data(column_index) %>"><%= link_to set_currency_styling(c_numeric_value), c_href if c_text.present?%></td>
+        <% end %>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>

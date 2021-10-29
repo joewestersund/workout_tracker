@@ -1,0 +1,34 @@
+<h1>Spending Summary</h1>
+
+<%= render 'navbar' %>
+
+<div class="filter-box">
+  <button id="show_filter" class="filter-button">Show/Hide Filter</button>
+  <div class="filter <%="hidden" unless @filtered %>">
+  <%= form_tag request.path, method: 'get' do %>
+      <div class="field number">
+        <%= label_tag :year %>
+        <%= number_field_tag :year, params[:year] %>
+      </div>
+      <div class="field number">
+        <%= label_tag :month %>
+        <%= number_field_tag :month, params[:month] %>
+      </div>
+      <div class="field number">
+        <%= label_tag :day %>
+        <%= number_field_tag :day, params[:day] %>
+      </div>
+      <div class="actions">
+        <%= submit_tag "Search" %>
+        <%= button_tag 'Clear Form', {:type => 'reset', id: "clear_filter"} %>
+        <%= hidden_field_tag :averaging_time, params[:averaging_time] %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if @show_table %>
+  <%= render 'table' %>
+<% else %>
+  <%= render 'chart' %>
+<% end %>

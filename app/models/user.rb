@@ -1,10 +1,10 @@
 class User < ApplicationRecord
   has_secure_password #adds authenticate method, etc.
 
-  has_many :workouts
-  has_many :routes
-  has_many :workout_types
-  has_many :workout_routes
+  has_many :workouts, dependent: :destroy
+  has_many :routes, dependent: :destroy
+  has_many :workout_types, dependent: :destroy
+  has_many :workout_routes, dependent: :destroy
 
   before_save { |user| user.email.downcase! }
   before_create :create_remember_token

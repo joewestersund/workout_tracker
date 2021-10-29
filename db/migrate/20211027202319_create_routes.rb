@@ -4,7 +4,7 @@ class CreateRoutes < ActiveRecord::Migration[6.1]
       t.belongs_to :user
       t.belongs_to :workout_type
       t.string :name
-      t.float :distance
+      t.decimal :distance
       t.int :order_in_list
 
       t.timestamps
