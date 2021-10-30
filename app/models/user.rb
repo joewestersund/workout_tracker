@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                     :bigint           not null, primary key
+#  email                  :string
+#  name                   :string
+#  password_digest        :string
+#  password_reset_sent_at :datetime
+#  remember_token         :string
+#  reset_password_token   :string
+#  time_zone              :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#
 class User < ApplicationRecord
   has_secure_password #adds authenticate method, etc.
 
@@ -5,6 +20,9 @@ class User < ApplicationRecord
   has_many :routes, dependent: :destroy
   has_many :workout_types, dependent: :destroy
   has_many :workout_routes, dependent: :destroy
+  has_many :additional_data_types, dependent: :destroy
+  has_many :additional_data_type_options, dependent: :destroy
+  has_many :additional_data_type_values, dependent: :destroy
 
   before_save { |user| user.email.downcase! }
   before_create :create_remember_token

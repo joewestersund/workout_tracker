@@ -4,9 +4,9 @@ class CreateWorkouts < ActiveRecord::Migration[6.1]
       t.belongs_to :user
       t.belongs_to :workout_type
       t.datetime :workout_date
-      t.int :year
-      t.int :month
-      t.int :week
+      t.integer :year
+      t.integer :month
+      t.integer :week
 
       t.timestamps
     end

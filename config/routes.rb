@@ -1,4 +1,10 @@
+# == Route Map
+#
+
 Rails.application.routes.draw do
+  resources :workout_type_additional_data_type_values
+  resources :workout_type_additional_data_type_options
+  resources :workout_type_additional_data_types
   resources :workouts
   resources :workout_routes
   resources :routes
