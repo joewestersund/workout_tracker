@@ -33,4 +33,6 @@ Rails.application.routes.draw do
   get '/welcome', to: 'static_pages#welcome' # creates named path 'welcome'
   get '/signup', to: 'users#new' # creates named path 'signup'
 
+  root 'static_pages#about'
+
 end

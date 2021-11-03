@@ -26,7 +26,7 @@ module SessionsHelper
   def current_user
     remember_token = User.encrypt(cookies[:remember_token])
     #don't let inactive users log in.
-    @current_user ||= User.find_by(active: true, remember_token: remember_token)
+    @current_user ||= User.find_by(remember_token: remember_token)
 
   end
 end
