@@ -1,15 +1,7 @@
 class UsersController < ApplicationController
-  before_action :signed_in_user, only: [:edit, :edit_password, :update, :update_password, :show, :destroy, :index]
-  before_action :set_user, only: %i[ show edit update destroy ]
+  before_action :signed_in_user, only: [:edit, :edit_password, :update, :update_password, :destroy ]
+  before_action :set_self_as_user, only: %i[ edit update edit_profile, update_profile, edit_password, update_password destroy ]
 
-  # GET /users or /users.json
-  def index
-    @users = User.all
-  end
-
-  # GET /users/1 or /users/1.json
-  def show
-  end
 
   # GET /users/new
   def new
@@ -18,10 +10,20 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params_new)
+
+    #create a temporary password. We won't tell them what it is, but it will prevent anyone from logging into this account until they create one
+    pw = User.generate_random_password
+    @user.password = pw
+    @user.password_confirmation = pw
+
     if @user.save
+
       sign_in @user
-      create_user_defaults(@user)
-      flash[:notice] = "Welcome to the Spending Tracker! We've set up some default account names and transaction categories for you."
+
+      @user.generate_password_token!
+      NotificationMailer.password_reset_email(@user).deliver
+      format.html { redirect_to signin_path, notice: "We've sent an email to you at #{@user.email}. Please use the link in that email to set your password and activate your account." }
+
       redirect_to welcome_path
     else
       render 'new'
@@ -51,7 +53,18 @@ class UsersController < ApplicationController
   def update_password
     respond_to do |format|
       if params[:user][:password].present? and @user.update(user_params_change_password)
-        format.html { redirect_to comments_path, notice: 'Your password was successfully updated.' }
+        if !@user.activated?
+          # this user just created their password for the first time
+          notice_text = "Welcome to the Workout Tracker!"
+          create_user_defaults(@user)
+          flash[:notice] =
+          @user.activated = true
+          @user.save
+        else
+          notice_text = 'Your password was successfully updated.'
+        end
+
+        format.html { redirect_to workouts_path, notice: notice_text }
         format.json { head :no_content }
       else
         format.html { render action: 'edit_password' }
@@ -79,6 +92,7 @@ class UsersController < ApplicationController
   def reset_password
     respond_to do |format|
       user = User.find_by(reset_password_token: params[:token]) if !params[:token].blank?
+
       if user.present? && user.password_token_valid? then
         sign_in user
 
@@ -86,7 +100,14 @@ class UsersController < ApplicationController
         user.reset_password_token = nil
         user.save
 
-        format.html {redirect_to profile_edit_password_path, notice: "Please enter a new password"}
+        if user.activated?
+          notice_text = "Please enter a new password"
+        else
+          # this user will just be creating their password for the first time
+          notice_text = "Please enter a password"
+        end
+
+        format.html {redirect_to profile_edit_password_path, notice: notice_text}
       else
         format.html {redirect_to password_forgot_path, alert: "That email address was not recognized, or its password reset link has expired."}
       end
@@ -104,8 +125,8 @@ class UsersController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
+    def set_self_as_user
+      @user = self.current_user
     end
 
     # Only allow a list of trusted parameters through.

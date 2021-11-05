@@ -12,9 +12,9 @@
 #
 # Indexes
 #
-#  index_additional_data_type_options_on_additional_data_type_id  (additional_data_type_id)
-#  index_additional_data_type_options_on_user_id                  (user_id)
-#  index_adto_on_user_and_adt_and_order                           (user_id,additional_data_type_id,order_in_list)
+#  index_additional_data_type_options_on_user_id  (user_id)
+#  index_adto_on_adt                              (additional_data_type_id)
+#  index_adto_on_user_and_adt_and_order           (user_id,additional_data_type_id,order_in_list)
 #
 class AdditionalDataTypeOption < ApplicationRecord
   belongs_to :user

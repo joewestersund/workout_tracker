@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
     t.integer "order_in_list"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["additional_data_type_id"], name: "index_additional_data_type_options_on_additional_data_type_id"
+    t.index ["additional_data_type_id"], name: "index_adto_on_adt"
     t.index ["user_id", "additional_data_type_id", "order_in_list"], name: "index_adto_on_user_and_adt_and_order"
     t.index ["user_id"], name: "index_additional_data_type_options_on_user_id"
   end
@@ -73,8 +73,10 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
     t.string "reset_password_token"
     t.datetime "password_reset_sent_at"
     t.string "time_zone"
+    t.boolean "activated"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   create_table "workout_routes", force: :cascade do |t|

@@ -8,6 +8,7 @@ class CreateUsers < ActiveRecord::Migration[6.1]
       t.string :reset_password_token
       t.datetime :password_reset_sent_at
       t.string :time_zone
+      t.boolean :activated
 
       t.timestamps
     end

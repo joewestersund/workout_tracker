@@ -3,6 +3,7 @@
 # Table name: users
 #
 #  id                     :bigint           not null, primary key
+#  activated              :boolean
 #  email                  :string
 #  name                   :string
 #  password_digest        :string
@@ -13,6 +14,11 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
+# Indexes
+#
+#  index_users_on_email  (email) UNIQUE
+#
+
 class User < ApplicationRecord
   has_secure_password #adds authenticate method, etc.
 
@@ -56,6 +62,14 @@ class User < ApplicationRecord
     24
   end
 
+  def User.generate_random_password
+    SecureRandom.urlsafe_base64   # by default, a 16 digit string
+  end
+
+  def email_address_with_name
+    "#{self.name} <#{self.email}>"
+  end
+
   def generate_password_token!
     self.reset_password_token = generate_pw_token
     self.password_reset_sent_at = Time.now.utc
@@ -80,6 +94,5 @@ class User < ApplicationRecord
   def generate_pw_token
     SecureRandom.hex(10)
   end
-
 
 end

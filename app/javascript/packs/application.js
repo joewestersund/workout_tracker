@@ -10,8 +10,11 @@ import "channels"
 
 import "../src/style.scss";
 
-require("jquery");
-require("bootstrap");
+//= require("jquery");
+//= require("jquery_ujs");
+//= require("bootstrap");
+
+//= require("@fortawesome/fontawesome-free")
 
 Rails.start()
 Turbolinks.start()

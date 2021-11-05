@@ -8,7 +8,6 @@ Rails.application.routes.draw do
   resources :workouts
   resources :workout_routes
   resources :routes
-  resources :users
   resources :workout_types
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
@@ -16,6 +15,8 @@ Rails.application.routes.draw do
   get '/signin', to: "sessions#new"
   delete '/signout', to: "sessions#destroy"
 
+  resources :users, except: [:show, :destroy]
+  get '/signup', to: 'users#new' # creates named path 'signup'
   get 'password/forgot', to: 'users#forgot_password'
   post 'password/send_reset_email', to: 'users#send_password_reset_email'
   get 'password/reset/:token', to: 'users#reset_password'
@@ -31,7 +32,6 @@ Rails.application.routes.draw do
 
   get '/about', to: 'static_pages#about' # creates named path 'about'
   get '/welcome', to: 'static_pages#welcome' # creates named path 'welcome'
-  get '/signup', to: 'users#new' # creates named path 'signup'
 
   root 'static_pages#about'
 
