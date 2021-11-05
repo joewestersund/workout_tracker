@@ -1,0 +1,79 @@
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+form {
+  div.field > label {
+    max-width: 300px; //limit width of labels, but only ones directly under the filter div. The Bootstrap dropdowns use labels
+  }
+
+  div.field {
+    label {
+      display: block;
+      margin-bottom: 1px;
+    }
+
+    label.inline {
+      display: inline;
+    }
+
+    textarea {
+      width: 300px;
+      &.bigtextarea {
+        width: 90%;
+      }
+    }
+
+    input[type="number"] {
+      width: 80px;
+    }
+
+    input[type="text"] {
+      width: 300px;
+      &.short {
+        width: 100px;
+      }
+
+      &.long {
+        width: 90%;
+      }
+    }
+
+    input.email {
+      width: 300px;
+    }
+
+    input.datepicker {
+      width: 120px;
+    }
+
+    button.multiselect {
+      text-align: left;
+    }
+
+  }
+
+  div.actions {
+    margin-top: 15px;
+  }
+
+  p {
+    margin: 5px auto;
+  }
+}
+
+.back-button {
+  display: block;
+}
+
+.text-from-comments-box {
+
+  border: 1px solid black;
+  padding: 10px;
+  margin: 10px;
+  width: 85%;
+
+  .text-from-comments-button {
+    background-color: lightblue;
+  }
+
+}

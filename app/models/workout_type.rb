@@ -21,4 +21,8 @@ class WorkoutType < ApplicationRecord
 
   validates :user_id, presence: true
   validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: :user_id }
+
+  def WorkoutType.default_types
+    ["run" "bouldering" "lead climb" "toprope"]
+  end
 end

@@ -1,0 +1,46 @@
+@import "bootstrap";
+
+// override for the 'Home' navigation link
+
+// THESE ARE EXAMPLES YOU CAN MODIFY
+// create your own classes
+// to make views framework-neutral
+.column {
+  @extend .col-md-6;
+  @extend .text-center;
+  }
+.form {
+  @extend .col-md-6;
+  }
+.form-centered {
+  @extend .col-md-6;
+  @extend .text-center;
+  }
+.submit {
+  @extend .btn;
+  @extend .btn-primary;
+  @extend .btn-lg;
+  }
+// apply styles to HTML elements
+// to make views framework-neutral
+
+main {
+  @extend .container;
+  //background-color: #eee;
+  padding-bottom: 80px;
+  width: 100%;  //960px;
+  margin-top: 10px;
+  //border: 1px black solid
+}
+
+.container {
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 90%;
+  max-width: 1600px;
+}
+
+section {
+  @extend .row;
+  margin-top: 20px;
+  }

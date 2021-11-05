@@ -1,0 +1,158 @@
+
+table.read_only_parameters, table.show {
+  margin-bottom: 10px;
+
+  td {
+    text-align: left;
+    border: 1px black solid;
+  }
+}
+
+th, td {
+  border-left: 1px black solid;
+  border-bottom: 1px black solid;
+  padding: 2px 5px;
+  text-align: center;
+}
+
+th {
+  border-bottom: 1px black solid;
+}
+
+th:first-of-type, td:first-of-type {
+  border-left: none;
+}
+
+td, th {
+  &.not-assigned {
+    background: darkgray;
+  }
+  &.assigned-to-me {
+    background: yellowgreen;
+  }
+  &.assigned-to-others {
+    //background: cornflowerblue;
+  }
+
+  &.status-1 {
+    background: indianred;
+  }
+  &.status-2 {
+    background: yellow;
+  }
+  &.status-3 {
+    background: forestgreen;
+  }
+  &.status-4 {
+    background: dodgerblue;
+  }
+  &.status-5 {
+    background: yellowgreen;
+  }
+  &.status-6 {
+    background: darkorange;
+  }
+
+  &.response-1 {
+    background: yellowgreen;
+  }
+  &.response-2 {
+    background: yellowgreen;
+  }
+  &.response-3 {
+    background: dodgerblue;
+  }
+  &.response-4 {
+    background: dodgerblue;
+  }
+  &.response-5 {
+    background: yellowgreen;
+  }
+
+  &.highlight-true {
+    font-weight: bold;
+    color: blue;
+  }
+
+  &.empty {
+    background: darkgray;
+  }
+  &.has-content {
+    background: yellow;
+  }
+
+  div.separate {
+    border-top: 1px solid black;
+  }
+
+  span.rounded-span {
+    margin: 1px;
+    padding: 1px;
+    //background-color: orange;
+    border: 1px solid black;
+    align: left;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+  }
+}
+
+.link-block {
+  margin-bottom: 20px;
+  .link {
+    display: inline-block;
+    padding-right: 20px;
+  }
+
+}
+
+.filter-box {
+
+  border-bottom: 1px solid black;
+  margin-bottom: 10px;
+
+  .filter, .filter-button {
+    margin-bottom: 10px;
+  }
+
+  div.field, div.actions {
+    display: inline-block;
+  }
+
+  div.field.number input{
+    width: 70px;
+  }
+
+}
+
+.change-log-entries-box {
+
+  padding-top: 10px;
+
+  th, td {
+    font-size: 0.9em;
+  }
+
+  .change-log-entries-button {
+    background-color: lightblue;
+  }
+}
+
+.next-previous {
+  border-bottom: 1px solid black;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+div.links {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.welcome p a, .about p a {
+  color: blue;
+
+  &:hover {
+    text-decoration: underline;
+    background-color: inherit;
+  }
+}

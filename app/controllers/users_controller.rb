@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :signed_in_user, only: [:edit, :edit_password, :update, :update_password, :destroy ]
-  before_action :set_self_as_user, only: %i[ edit update edit_profile, update_profile, edit_password, update_password destroy ]
+  before_action :signed_in_user, only: [:edit_profile, :edit_password, :update, :update_password, :destroy ]
+  before_action :set_self_as_user, only: %i[ edit_profile update update_profile edit_password update_password destroy ]
 
 
   # GET /users/new
@@ -21,17 +21,19 @@ class UsersController < ApplicationController
       sign_in @user
 
       @user.generate_password_token!
-      NotificationMailer.password_reset_email(@user).deliver
-      format.html { redirect_to signin_path, notice: "We've sent an email to you at #{@user.email}. Please use the link in that email to set your password and activate your account." }
 
-      redirect_to welcome_path
+      NotificationMailer.new_user_email(@user).deliver
+
+      notice_text = "We've sent an email to you at #{@user.email}. Please use the link in that email to set your password and activate your account."
+      respond_to do |format|
+        format.html { redirect_to welcome_path, notice: notice_text }
+      end
     else
       render 'new'
     end
   end
 
-  # GET /users/1/edit
-  def edit
+  def edit_profile
   end
 
   def edit_password
@@ -90,27 +92,26 @@ class UsersController < ApplicationController
   end
 
   def reset_password
-    respond_to do |format|
-      user = User.find_by(reset_password_token: params[:token]) if !params[:token].blank?
+    @user = User.find_by(reset_password_token: params[:token]) if !params[:token].blank?
+    if @user.present? && @user.password_token_valid? then
+      sign_in @user
 
-      if user.present? && user.password_token_valid? then
-        sign_in user
+      #erase the password reset token, so they can't reset it again with that same link
+      @user.reset_password_token = nil
+      @user.save
 
-        #erase the password reset token, so they can't reset it again with that same link
-        user.reset_password_token = nil
-        user.save
-
-        if user.activated?
-          notice_text = "Please enter a new password"
-        else
-          # this user will just be creating their password for the first time
-          notice_text = "Please enter a password"
-        end
-
-        format.html {redirect_to profile_edit_password_path, notice: notice_text}
+      if @user.activated?
+        notice_text = "Please enter a new password"
       else
-        format.html {redirect_to password_forgot_path, alert: "That email address was not recognized, or its password reset link has expired."}
+        # this user will just be creating their password for the first time
+        notice_text = "Please enter a password"
       end
+
+      flash[:notice] = notice_text
+      render :edit_password
+    else
+      flash[:alert] = "That email address was not recognized, or its password reset link has expired."
+      redirect_to password_forgot_path
     end
   end
 
@@ -143,7 +144,9 @@ class UsersController < ApplicationController
     end
 
     def create_user_defaults(user)
-      # what needs to be inserted?
+      WorkoutType.default_types.each do |wt_name|
+        user.workout_types.create(name: wt_name)
+      end
     end
 
 end

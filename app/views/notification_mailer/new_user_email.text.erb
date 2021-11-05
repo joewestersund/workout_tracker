@@ -1,12 +1,7 @@
-Dear <%= @new_user.name %>,
+Dear <%= @user.name %>,
 
-A login to the <%= APPLICATION_NAME %> website has been set up for you by <%= "#{@added_by.name} <#{@added_by.email}>" %>.
-Here is your new login information:
+Thank you for creating a login for <%= APPLICATION_NAME %>. In order to activate your account, please confirm your email by going to <%= @password_reset_url %> in the next <%= pluralize(@hours_to_log_in,"hour") %>.
 
-Web address: <%= @main_app_url %>
-Username: <%= @new_user.email %>
+If you don't click on the link before it expires, you can always request a new link by clicking on "Forgot Password" on the login page at <%= @login_url %>.
 
-You can log in and set up your password by going to <%= @password_reset_url %> in the next <%= pluralize(@hours_to_log_in,"hour") %>.
-
-If you don't log in and set up your password in the next <%= @hours_to_log_in %> hours, no worries. You can reset your password anytime by going to 'Account | Reset Password' at <%= password_forgot_url %>
 

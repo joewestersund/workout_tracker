@@ -4,21 +4,13 @@
   <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
 </head>
 <body>
-Dear <%= @new_user.name %>,
+Dear <%= @user.name %>,
 <p>
-  A login to the <%= APPLICATION_NAME %> website has been set up for you by <%= mail_to @added_by.email, @added_by.name %>.
-  Here is your new login information:
-</p>
-
-<div><strong>Web address:</strong> <%= @main_app_url %></div>
-<div><strong>Username:</strong> <%= @new_user.email %></div>
-
-<p>
-  You can log in and set up your password by going to <%= link_to @password_reset_url, @password_reset_url %> in the next <%= pluralize(@hours_to_log_in,"hour") %>.
+  Thank you for creating a login for <%= link_to APPLICATION_NAME, @main_app_url %>. In order to activate your account, please confirm your email by going to <%= link_to @account_activation_url, @account_activation_url %> in the next <%= pluralize(@hours_to_log_in,"hour") %>.
 </p>
 
 <p>
-  If you don't log in and set up your password in the next <%= @hours_to_log_in %> hours, no worries. You can reset your password anytime by going to <%= link_to 'Account | Reset Password', password_forgot_url %> </p>
+  If you don't click on the link before it expires, you can always request a new link by going to "Forgot Password" on the <%= link_to 'Login', @login_url %> page.
 </p>
 
 </body>
