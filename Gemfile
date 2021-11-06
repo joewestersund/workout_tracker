@@ -31,7 +31,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'pg', '~> 1.1'
 
 gem 'font_awesome5_rails'
-gem "recaptcha"
+gem 'recaptcha'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

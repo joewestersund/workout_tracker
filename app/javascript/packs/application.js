@@ -11,11 +11,9 @@ import "channels"
 import "../src/style.scss";
 
 import "@fortawesome/fontawesome-free/css/all"
-import "@fortawesome/fontawesome-free/js/all"
 
-//= require("jquery");
-//= require("jquery_ujs");
-//= require("bootstrap");
+require("jquery");
+require("bootstrap");
 
 Rails.start()
 Turbolinks.start()

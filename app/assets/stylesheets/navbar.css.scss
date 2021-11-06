@@ -42,26 +42,17 @@
   margin-left: 5px;
 }
 
-.navbar-text.rulemaking-name {
-  color: rgba(255, 255, 255, 0.5);
-  margin-top: 12px; //it's navbar-text if there is only 1 rulemaking for this user. In this case it's text, not a link
+// alternate text for a font-awesome icon
+.fa5-text {
+  padding-left: 10px;
+  color: red;
 }
-.rulemaking-name {
-  font-weight: bold;
-  a {
-    margin-top: 10px; //to center vertically with other navbar links
-  }
-}
-
 //font-awesome icons
-i.fa {
-  font-size: 30px;
+.svg-inline--fa {
+  font-size: 400px;
 }
-
-//font-awesome icons in a dropdown list
-.dropdown-item i.fa {
-  font-size: 15px;
-  margin-right: 5px;
+.svg-inline--fa {
+  margin-right: 15px;
 }
 
 .dropdown-menu li {
