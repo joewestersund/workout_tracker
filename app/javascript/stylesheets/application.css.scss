@@ -10,17 +10,13 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require navbar
- *= require framework_and_overrides
- *= require forms
- *= require scaffolds
- *
  *= require_tree .
  *= require_self
  */
 
 @import 'font_awesome5_webfont';
-@import "bootstrap/scss/bootstrap.scss";
+//@import "bootstrap/scss/bootstrap.scss";
+@import "~bootstrap/scss/bootstrap"; // if you plan on using bootstrap.
 
 // stuff below appears not to be needed
 //$fa-font-path: '@fortawesome/fontawesome-free/webfonts';

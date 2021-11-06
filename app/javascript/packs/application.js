@@ -8,9 +8,20 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
-import "../src/style.scss";
+import "../stylesheets/colors.css.scss"
+import "../stylesheets/forms.css.scss"
+import "../stylesheets/framework_and_overrides.css.scss"
+import "../stylesheets/navbar.css.scss"
+import "../stylesheets/scaffolds.css.scss"
+import "../stylesheets/select.css.scss"
+import "../stylesheets/style.css.scss"
+import "../stylesheets/tables.css.scss"
+import "../stylesheets/will_paginate.css.scss"
 
-import "@fortawesome/fontawesome-free/css/all"
+//import "../stylesheets/application.css.scss"
+
+import "@fortawesome/fontawesome-free/js/all"
+
 
 require("jquery");
 require("bootstrap");
