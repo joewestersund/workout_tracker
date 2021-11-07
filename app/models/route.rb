@@ -13,9 +13,9 @@
 #
 # Indexes
 #
-#  index_routes_on_user_id                    (user_id)
-#  index_routes_on_user_id_and_order_in_list  (user_id,order_in_list)
-#  index_routes_on_workout_type_id            (workout_type_id)
+#  index_routes_on_user_id                                        (user_id)
+#  index_routes_on_user_id_and_workout_type_id_and_order_in_list  (user_id,workout_type_id,order_in_list)
+#  index_routes_on_workout_type_id                                (workout_type_id)
 #
 class Route < ApplicationRecord
 
@@ -25,5 +25,6 @@ class Route < ApplicationRecord
   belongs_to :workout_type
 
   validates :user_id, presence: true
-  validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: :user_id }
+  validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: [:user_id, :workout_type_id] }
+  validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: [:user_id, :workout_type_id] }
 end

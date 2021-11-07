@@ -4,7 +4,7 @@ class AdditionalDataTypeOptionsController < ApplicationController
 
   # GET /additional_data_type_options or /additional_data_type_options.json
   def index
-    @additional_data_type_options = AdditionalDataTypeOption.all
+    @additional_data_type_options = current_user.additional_data_type_options.order(:order_in_list)
   end
 
   # GET /additional_data_type_options/1 or /additional_data_type_options/1.json
@@ -23,6 +23,7 @@ class AdditionalDataTypeOptionsController < ApplicationController
   # POST /additional_data_type_options or /additional_data_type_options.json
   def create
     @additional_data_type_option = AdditionalDataTypeOption.new(additional_data_type_option_params)
+    @additional_data_type_option.user = current_user
 
     respond_to do |format|
       if @additional_data_type_option.save
@@ -48,9 +49,18 @@ class AdditionalDataTypeOptionsController < ApplicationController
     end
   end
 
+  def move_up
+    move(true)
+  end
+
+  def move_down
+    move(false)
+  end
+
   # DELETE /additional_data_type_options/1 or /additional_data_type_options/1.json
   def destroy
     @additional_data_type_option.destroy
+    handle_delete_of_order_in_list(current_user.workout_types,current_workout_type_id)
     respond_to do |format|
       format.html { redirect_to additional_data_type_options_url, notice: "Workout type additional data type option was successfully destroyed." }
       format.json { head :no_content }
@@ -60,7 +70,7 @@ class AdditionalDataTypeOptionsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_additional_data_type_option
-      @additional_data_type_option = AdditionalDataTypeOption.find(params[:id])
+      @additional_data_type_option = current_user.additional_data_type_options.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

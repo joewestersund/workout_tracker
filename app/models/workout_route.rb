@@ -27,5 +27,6 @@ class WorkoutRoute < ApplicationRecord
   belongs_to :route
 
   validates :user_id, presence: true
+  validates :workout_id, presence: true
 
 end

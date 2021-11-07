@@ -12,13 +12,14 @@
   </thead>
 
   <tbody>
-    <% @workout_types.each do |workout_type| %>
+    <% @workout_types.each_with_index do |workout_type, index| %>
       <tr>
         <td><%= workout_type.name %></td>
         <td><%= workout_type.order_in_list %></td>
-        <td><%= link_to 'Show', workout_type %></td>
         <td><%= link_to 'Edit', edit_workout_type_path(workout_type) %></td>
-        <td><%= link_to 'Destroy', workout_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Delete', workout_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= (link_to 'Move Up', "/workout_types/#{workout_type.id}/move_up", method: :post) unless index == 0 %></td>
+        <td><%= (link_to 'Move Down', "/workout_types/#{workout_type.id}/move_down", method: :post) unless index == @workout_types.count-1 %></td>
       </tr>
     <% end %>
   </tbody>

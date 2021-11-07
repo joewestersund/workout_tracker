@@ -3,7 +3,8 @@
 # Table name: additional_data_types
 #
 #  id              :bigint           not null, primary key
-#  data_type_name  :string
+#  field_type      :string
+#  name            :string
 #  order_in_list   :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -22,5 +23,9 @@ class AdditionalDataType < ApplicationRecord
 
   has_many :additional_data_type_options, dependent: :destroy
   has_many :additional_data_type_values, dependent: :destroy
+
+  validates :user_id, presence: true
+  validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: [:user_id, :workout_type_id] }
+  validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: [:user_id, :workout_type_id] }
 
 end

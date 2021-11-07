@@ -5,6 +5,8 @@ class CreateAdditionalDataTypeValues < ActiveRecord::Migration[6.1]
       t.belongs_to :workout
       t.belongs_to :additional_data_type, index: { name: 'index_adtv_on_adt' }
       t.belongs_to :additional_data_type_option, index: { name: 'index_adtv_on_adto' }
+      t.string :string_value
+      t.decimal :decimal_value
 
       t.timestamps
     end

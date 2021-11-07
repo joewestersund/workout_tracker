@@ -3,7 +3,8 @@ class CreateAdditionalDataTypes < ActiveRecord::Migration[6.1]
     create_table :additional_data_types do |t|
       t.belongs_to :user
       t.belongs_to :workout_type
-      t.string :data_type_name
+      t.string :name
+      t.string :field_type
       t.integer :order_in_list
 
       t.timestamps

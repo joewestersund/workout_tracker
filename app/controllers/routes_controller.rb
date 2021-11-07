@@ -4,7 +4,7 @@ class RoutesController < ApplicationController
 
   # GET /routes or /routes.json
   def index
-    @routes = Route.all
+    @routes = current_user.routes.order(:order_in_list)
   end
 
   # GET /routes/1 or /routes/1.json
@@ -23,11 +23,13 @@ class RoutesController < ApplicationController
   # POST /routes or /routes.json
   def create
     @route = Route.new(route_params)
+    @route.user = current_user
+    @route.type.order_in_list = next_order_in_list(current_user.routes)
 
     respond_to do |format|
       if @route.save
-        format.html { redirect_to @route, notice: "Route was successfully created." }
-        format.json { render :show, status: :created, location: @route }
+        format.html { redirect_to routes_path, notice: "Route was successfully created." }
+        format.json { render :index, status: :created, location: @route }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @route.errors, status: :unprocessable_entity }
@@ -39,13 +41,21 @@ class RoutesController < ApplicationController
   def update
     respond_to do |format|
       if @route.update(route_params)
-        format.html { redirect_to @route, notice: "Route was successfully updated." }
-        format.json { render :show, status: :ok, location: @route }
+        format.html { redirect_to routes_path, notice: "Route was successfully updated." }
+        format.json { render :index, status: :ok, location: @route }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @route.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def move_up
+    move(true)
+  end
+
+  def move_down
+    move(false)
   end
 
   # DELETE /routes/1 or /routes/1.json
@@ -60,11 +70,15 @@ class RoutesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_route
-      @route = Route.find(params[:id])
+      @route = current_user.routes.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def route_params
       params.require(:route).permit(:belongs_to, :belongs_to, :name, :distance, :order_in_list)
+    end
+
+    def move(up)
+      move_in_list(current_user.routes, routes_path, params[:id], up)
     end
 end

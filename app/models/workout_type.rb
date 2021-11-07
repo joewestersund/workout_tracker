@@ -20,6 +20,7 @@ class WorkoutType < ApplicationRecord
   has_many :routes
 
   validates :user_id, presence: true
+  validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: :user_id }
   validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: :user_id }
 
   def WorkoutType.default_types

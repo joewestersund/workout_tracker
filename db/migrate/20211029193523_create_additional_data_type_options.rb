@@ -2,7 +2,7 @@ class CreateAdditionalDataTypeOptions < ActiveRecord::Migration[6.1]
   def change
     create_table :additional_data_type_options do |t|
       t.belongs_to :user
-      t.belongs_to :additional_data_type, index: { name: 'index_adto_on_adt' }
+      t.belongs_to :additional_data_type
       t.string :name
       t.integer :order_in_list
 

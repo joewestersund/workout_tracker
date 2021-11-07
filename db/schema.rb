@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
     t.integer "order_in_list"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["additional_data_type_id"], name: "index_adto_on_adt"
+    t.index ["additional_data_type_id"], name: "index_additional_data_type_options_on_additional_data_type_id"
     t.index ["user_id", "additional_data_type_id", "order_in_list"], name: "index_adto_on_user_and_adt_and_order"
     t.index ["user_id"], name: "index_additional_data_type_options_on_user_id"
   end
@@ -32,6 +32,8 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
     t.bigint "workout_id"
     t.bigint "additional_data_type_id"
     t.bigint "additional_data_type_option_id"
+    t.string "string_value"
+    t.decimal "decimal_value"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["additional_data_type_id"], name: "index_adtv_on_adt"
@@ -43,7 +45,8 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
   create_table "additional_data_types", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "workout_type_id"
-    t.string "data_type_name"
+    t.string "name"
+    t.string "field_type"
     t.integer "order_in_list"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -60,7 +63,7 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
     t.integer "order_in_list"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id", "order_in_list"], name: "index_routes_on_user_id_and_order_in_list"
+    t.index ["user_id", "workout_type_id", "order_in_list"], name: "index_routes_on_user_id_and_workout_type_id_and_order_in_list"
     t.index ["user_id"], name: "index_routes_on_user_id"
     t.index ["workout_type_id"], name: "index_routes_on_workout_type_id"
   end

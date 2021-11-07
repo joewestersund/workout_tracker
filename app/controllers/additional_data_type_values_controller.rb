@@ -4,7 +4,7 @@ class AdditionalDataTypeValuesController < ApplicationController
 
   # GET /additional_data_type_values or /additional_data_type_values.json
   def index
-    @additional_data_type_values = AdditionalDataTypeValue.all
+    @additional_data_type_values = current_user.additional_data_type_values.all
   end
 
   # GET /additional_data_type_values/1 or /additional_data_type_values/1.json
@@ -23,6 +23,7 @@ class AdditionalDataTypeValuesController < ApplicationController
   # POST /additional_data_type_values or /additional_data_type_values.json
   def create
     @additional_data_type_value = AdditionalDataTypeValue.new(additional_data_type_value_params)
+    @additional_data_type_value.user = current_user
 
     respond_to do |format|
       if @additional_data_type_value.save
@@ -60,7 +61,7 @@ class AdditionalDataTypeValuesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_additional_data_type_value
-      @additional_data_type_value = AdditionalDataTypeValue.find(params[:id])
+      @additional_data_type_value = current_user.additional_data_type_values.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

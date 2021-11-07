@@ -15,7 +15,7 @@
   </thead>
 
   <tbody>
-    <% @routes.each do |route| %>
+    <% @routes.each_with_index do |route, index| %>
       <tr>
         <td><%= route.belongs_to %></td>
         <td><%= route.belongs_to %></td>
@@ -24,7 +24,9 @@
         <td><%= route.order_in_list %></td>
         <td><%= link_to 'Show', route %></td>
         <td><%= link_to 'Edit', edit_route_path(route) %></td>
-        <td><%= link_to 'Destroy', route, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Delete', route, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= (link_to 'Move Up', "/routes/#{route.id}/move_up", method: :post) unless index == 0 %></td>
+        <td><%= (link_to 'Move Down', "/routes/#{route.id}/move_down", method: :post) unless index == @routes.count-1 %></td>
       </tr>
     <% end %>
   </tbody>

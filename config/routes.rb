@@ -2,14 +2,24 @@
 #
 
 Rails.application.routes.draw do
-  resources :workout_type_additional_data_type_values
-  resources :workout_type_additional_data_type_options
-  resources :workout_type_additional_data_types
+  resources :additional_data_type_values
+  resources :additional_data_type_options
+  post '/additional_data_type_options/:id/move_up', to: 'additional_data_type_options#move_up'
+  post '/additional_data_type_options/:id/move_down', to: 'additional_data_type_options#move_down'
+
+  resources :additional_data_types
+  post '/additional_data_types/:id/move_up', to: 'additional_data_types#move_up'
+  post '/additional_data_types/:id/move_down', to: 'additional_data_types#move_down'
+
   resources :workouts
   resources :workout_routes
   resources :routes
+  post '/routes/:id/move_up', to: 'routes#move_up'
+  post '/routes/:id/move_down', to: 'routes#move_down'
+
   resources :workout_types
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  post '/workout_types/:id/move_up', to: 'workout_types#move_up'
+  post '/workout_types/:id/move_down', to: 'workout_types#move_down'
 
   resources :sessions, only: [:new, :create, :destroy]
   get '/signin', to: "sessions#new"

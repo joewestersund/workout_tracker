@@ -9,6 +9,6 @@ class CreateRoutes < ActiveRecord::Migration[6.1]
 
       t.timestamps
     end
-    add_index :routes, [:user_id, :order_in_list]
+    add_index :routes, [:user_id, :workout_type_id, :order_in_list]
   end
 end
