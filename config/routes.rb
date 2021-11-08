@@ -13,9 +13,16 @@ Rails.application.routes.draw do
 
   resources :workouts
   resources :workout_routes
-  resources :routes
-  post '/routes/:id/move_up', to: 'routes#move_up'
-  post '/routes/:id/move_down', to: 'routes#move_down'
+  #resources :routes
+  #get '/routes', to: 'routes#index'
+  get '/routes/:workout_type_id', to: 'routes#index', as: :routes
+  get '/routes/:workout_type_id/new', to: 'routes#new', as: :new_route
+  post '/routes/:workout_type_id/', to: 'routes#create', as: :create_route
+  post '/routes/:workout_type_id/:id/edit', to: 'routes#edit', as: :edit_route
+  post '/routes/:workout_type_id/:id', to: 'routes#update', as: :update_route
+  delete '/routes/:workout_type_id/:id', to: 'routes#destroy', as: :destroy_route
+  post '/routes/:workout_type_id/:id/move_up', to: 'routes#move_up', as: :move_route_up
+  post '/routes/:workout_type_id/:id/move_down', to: 'routes#move_down', as: :move_route_down
 
   resources :workout_types
   post '/workout_types/:id/move_up', to: 'workout_types#move_up'

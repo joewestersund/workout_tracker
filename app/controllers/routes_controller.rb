@@ -1,14 +1,19 @@
 class RoutesController < ApplicationController
   before_action :signed_in_user
-  before_action :set_route, only: %i[ show edit update destroy ]
+  before_action :set_workout_type, except: :index
+  before_action :set_route, only: %i[ show edit update destroy move_up move_down]
 
   # GET /routes or /routes.json
   def index
-    @routes = current_user.routes.order(:order_in_list)
-  end
+    @workout_types = current_user.workout_types.order(:order_in_list)
 
-  # GET /routes/1 or /routes/1.json
-  def show
+    # for index only, get the fist workout type if the user didn't specify one
+    if params[:workout_type_id].present?
+      set_workout_type
+    else
+      @workout_type = @workout_types.first
+    end
+    @routes = @workout_type.routes.order(:order_in_list)
   end
 
   # GET /routes/new
@@ -18,6 +23,7 @@ class RoutesController < ApplicationController
 
   # GET /routes/1/edit
   def edit
+    @route = @workout_type.routes.find(params[:id])
   end
 
   # POST /routes or /routes.json
@@ -68,9 +74,13 @@ class RoutesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+    def set_workout_type
+      @workout_type = current_user.workout_types.find(params[:workout_type_id])
+    end
+
     def set_route
-      @route = current_user.routes.find(params[:id])
+      @route = nil
+      @route = @workout_type.routes.find(params[:id]) if @workout_type.present?
     end
 
     # Only allow a list of trusted parameters through.

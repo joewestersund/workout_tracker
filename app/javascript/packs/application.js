@@ -8,6 +8,9 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
+//import sayHello from "../client_side/hello.js"
+//sayHello();
+
 import "../stylesheets/colors.css.scss"
 import "../stylesheets/forms.css.scss"
 import "../stylesheets/framework_and_overrides.css.scss"
@@ -22,12 +25,11 @@ import "../stylesheets/will_paginate.css.scss"
 
 import "@fortawesome/fontawesome-free/js/all"
 
-
-require("jquery");
-require("bootstrap");
-
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+require("jquery");
+require("bootstrap");
 
 

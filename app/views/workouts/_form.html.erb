@@ -11,22 +11,22 @@
     </div>
   <% end %>
 
+  <% if @workout_types.count > 0 %>
   <div class="field">
     <%= form.label :workout_date %>
     <%= form.date_select :workout_date %>
   </div>
 
   <div class="field">
-    <%= form.label :workout_type_id %>
-    <%= form.text_field :workout_type_id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id %>
+    <%= form.label :workout_type %>
+    <%= form.collection_select :workout_type_id, @workout_types, :id, :name, selected: @workout.workout_type_id, include_blank: false  %>
   </div>
 
   <div class="actions">
     <%= form.submit %>
   </div>
+  <% else %>
+    <p> You need to add one or more workout types before you can add a workout. </p>
+    <p> <%= link_to "Add a Workout Type", new_workout_type_path %></p>
+  <% end %>
 <% end %>

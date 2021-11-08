@@ -1,10 +1,10 @@
 class WorkoutsController < ApplicationController
   before_action :signed_in_user
   before_action :set_workout, only: %i[ show edit update destroy ]
-
+  before_action :get_workout_types, only: [:new, :edit]
   # GET /workouts or /workouts.json
   def index
-    @workouts = current_user.workouts.all
+    @workouts = current_user.workouts.order(workout_date: :desc)
   end
 
   # GET /workouts/1 or /workouts/1.json
@@ -67,5 +67,9 @@ class WorkoutsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def workout_params
       params.require(:workout).permit(:workout_date, :workout_type_id, :user_id)
+    end
+
+    def get_workout_types
+      @workout_types = current_user.workout_types.order(:order_in_list)
     end
 end
