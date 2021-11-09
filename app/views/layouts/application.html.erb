@@ -9,6 +9,11 @@
     <!-- < %= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %> -->
     <%= stylesheet_pack_tag "application", media: "all", "data-turbolinks-track": "reload" %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <%= javascript_pack_tag 'hello_react' %>
+    <% # react_component("hello_react") %>
+    <%= javascript_pack_tag "HelloWorld", { greeting: "react-rails" } %>
+
   </head>
 
   <body>

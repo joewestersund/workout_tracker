@@ -21,8 +21,6 @@ import "../stylesheets/style.css.scss"
 import "../stylesheets/tables.css.scss"
 import "../stylesheets/will_paginate.css.scss"
 
-//import "../stylesheets/application.css.scss"
-
 import "@fortawesome/fontawesome-free/js/all"
 
 Rails.start()
@@ -33,3 +31,7 @@ require("jquery");
 require("bootstrap");
 
 
+// Support component names relative to this directory:
+var componentRequireContext = require.context("components", true);
+var ReactRailsUJS = require("react_ujs");
+ReactRailsUJS.useContext(componentRequireContext);

@@ -1,9 +1,16 @@
 class RoutesController < ApplicationController
   before_action :signed_in_user
-  before_action :set_workout_type, except: :index
+  before_action :set_workout_type, except: [ :index, :index_first]
   before_action :set_route, only: %i[ show edit update destroy move_up move_down]
 
   # GET /routes or /routes.json
+  def index_first
+    @workout_types = current_user.workout_types.order(:order_in_list)
+    @workout_type = @workout_types.first
+    @routes = @workout_type.routes.order(:order_in_list)
+    render :index
+  end
+
   def index
     @workout_types = current_user.workout_types.order(:order_in_list)
 
