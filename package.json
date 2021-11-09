@@ -2,6 +2,7 @@
   "name": "workout-tracker",
   "private": true,
   "dependencies": {
+    "@babel/core": "^7.16.0",
     "@babel/preset-react": "^7.16.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@popperjs/core": "^2.10.2",
