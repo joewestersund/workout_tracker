@@ -12,7 +12,10 @@
   <thead>
     <tr>
       <th>Name</th>
+      <th>Description</th>
       <th>Field Type</th>
+      <th>Dropdown Options</th>
+      <th>Unit</th>
       <th>Order in list</th>
       <th colspan="4"></th>
     </tr>
@@ -22,10 +25,16 @@
     <% @additional_data_types.each_with_index do |adt, index| %>
       <tr>
         <td><%= adt.name %></td>
+        <td><%= adt.description %></td>
         <td><%= adt.field_type %></td>
+        <td>
+          <%= adt.additional_data_type_options.order(:order_in_list).map { |adto| "<div>#{adto.name}</div>"} if adt.additional_data_type_options.present? %>
+          <%= link_to "edit options", additional_data_type_additional_data_type_options_path(adt) if adt.is_dropdown? %>
+        </td>
+        <td><%= adt.unit %></td>
         <td><%= adt.order_in_list %></td>
         <td><%= link_to 'Edit', edit_additional_data_type_path(adt) %></td>
-        <td><%= link_to 'Delete', adt, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Delete', adt, method: :delete, data: { confirm: "Are you sure you want to delete ''#{adt.name}''?" } %></td>
         <td><%= (link_to 'Move Up', "/additional_data_types/#{adt.id}/move_up", method: :post) unless index == 0 %></td>
         <td><%= (link_to 'Move Down', "/additional_data_types/#{adt.id}/move_down", method: :post) unless index == @additional_data_types.count-1 %></td>
       </tr>

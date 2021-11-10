@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
   get '/routes', to: 'routes#default_index', as: :routes_default  # show routes for the first workout type
   get '/additional_data_types', to: 'additional_data_types#default_index', as: :additional_data_types_default  # show adts for the first workout type
-  get '/additional_data_type_options', to: 'additional_data_type_options#default_index', as: :additional_data_type_options_default # show adts options for the first adt for the first workout type
+  #get '/additional_data_type_options', to: 'additional_data_type_options#default_index', as: :additional_data_type_options_default # show adts options for the first adt for the first workout type
 
   #get '/routes/:workout_type_id', to: 'routes#index', as: :routes
   #get '/routes/:workout_type_id/new', to: 'routes#new', as: :new_route

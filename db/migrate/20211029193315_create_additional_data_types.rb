@@ -6,6 +6,7 @@ class CreateAdditionalDataTypes < ActiveRecord::Migration[6.1]
       t.string :name
       t.string :field_type
       t.string :unit
+      t.text :description
       t.integer :order_in_list
 
       t.timestamps

@@ -91,7 +91,7 @@ class RoutesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def route_params
-      params.require(:route).permit(:workout_type_id, :name, :distance, :order_in_list)
+      params.require(:route).permit(:workout_type_id, :name, :distance, :description)
     end
 
     def move(up)

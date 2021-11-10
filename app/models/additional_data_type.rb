@@ -3,6 +3,7 @@
 # Table name: additional_data_types
 #
 #  id              :bigint           not null, primary key
+#  description     :text
 #  field_type      :string
 #  name            :string
 #  order_in_list   :integer
@@ -41,6 +42,10 @@ class AdditionalDataType < ApplicationRecord
 
   def self.field_types_hash
     FIELD_TYPES
+  end
+
+  def is_dropdown?
+    field_type == FIELD_TYPES[:dropdown]
   end
 
 end

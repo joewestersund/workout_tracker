@@ -96,7 +96,7 @@ class AdditionalDataTypesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def additional_data_type_params
-      params.require(:additional_data_type).permit(:workout_type_id, :name, :field_type)
+      params.require(:additional_data_type).permit(:workout_type_id, :name, :field_type, :unit, :description)
     end
 
     def move(up)

@@ -19,8 +19,18 @@
   </div>
 
   <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div class="field">
     <%= form.label :field_type %>
     <%= form.collection_select :field_type, @field_types, :to_s, :to_s, {selected: @additional_data_type.field_type, include_blank: false} %>
+  </div>
+
+  <div class="field">
+    <%= form.label :unit %>
+    <%= form.text_field :unit %>
   </div>
 
   <div class="actions">

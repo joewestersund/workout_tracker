@@ -66,6 +66,6 @@ class AdditionalDataTypeValuesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def additional_data_type_value_params
-      params.require(:additional_data_type_value).permit(:user_id, :workout_id, :additional_data_type_id, :additional_data_type_option_id)
+      params.require(:additional_data_type_value).permit(:workout_route_id, :additional_data_type_id, :additional_data_type_option_id, :text_value, :decimal_value)
     end
 end

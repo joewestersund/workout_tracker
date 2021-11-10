@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
     t.string "name"
     t.string "field_type"
     t.string "unit"
+    t.text "description"
     t.integer "order_in_list"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
