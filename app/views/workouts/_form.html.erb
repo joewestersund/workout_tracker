@@ -22,6 +22,11 @@
     <%= form.collection_select :workout_type_id, @workout_types, :id, :name, selected: @workout.workout_type_id, include_blank: false  %>
   </div>
 
+  <div>
+    Routes
+    <%= react_component("Routes", { routes_json: @routes_json }) %>
+  </div>
+
   <div class="actions">
     <%= form.submit %>
   </div>

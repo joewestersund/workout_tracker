@@ -28,4 +28,14 @@ class AdditionalDataType < ApplicationRecord
   validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: [:user_id, :workout_type_id] }
   validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: [:user_id, :workout_type_id] }
 
+  FIELD_TYPES = {
+      option: "option",
+      string: "string",
+      number: "number"
+  }
+
+  def AdditionalDataType.field_types
+    FIELD_TYPES.map{ |key, str| str }
+  end
+
 end

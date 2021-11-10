@@ -1,6 +1,5 @@
-<h1>Editing Workout Type</h1>
+<h1>Editing Data Type</h1>
 
-<%= render 'form', workout_type: @workout_type %>
+<%= render 'form', additional_data_type: @additional_data_type, model: [@workout_type, @route]  %>
 
-<%= link_to 'Show', @workout_type %> |
-<%= link_to 'Back', workout_types_path %>
+<%= link_to 'Back', workout_type_additional_data_types_path(@workout_type) %>

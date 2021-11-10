@@ -1,6 +1,6 @@
 <h2>For Workout Type '<%= @workout_type.name %>'</h2>
 
-<%= form_with(model: route) do |form| %>
+<%= form_with(model: model) do |form| %>
   <% if route.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(route.errors.count, "error") %> prohibited this route from being saved:</h2>

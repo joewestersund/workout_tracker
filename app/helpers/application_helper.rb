@@ -6,8 +6,8 @@ module ApplicationHelper
     return max.nil? ? 1 : max + 1
   end
 
-  def move_in_list(list_of_objects, redirect_path, current_object_id, up = true)
-    o = list_of_objects.find(current_object_id)
+  def move_in_list(list_of_objects, redirect_path, current_object, up = true)
+    o = current_object
 
     if o.present?
       o2 = get_adjacent(list_of_objects, o, up)
@@ -42,7 +42,7 @@ module ApplicationHelper
     throw "error swapping order_in_list" unless first.save
     throw "error swapping order_in_list" unless second.save
     first.order_in_list = first_new_value
-    throw throw "error swapping order_in_list" unless first.save
+    throw "error swapping order_in_list" unless first.save
   end
 
   def handle_delete_of_order_in_list(list_of_objects,deleted_order_in_list)

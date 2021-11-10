@@ -18,12 +18,13 @@ class WorkoutType < ApplicationRecord
   belongs_to :user
 
   has_many :routes
+  has_many :additional_data_types, dependent: :destroy
 
   validates :user_id, presence: true
   validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: :user_id }
   validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: :user_id }
 
   def WorkoutType.default_types
-    ["run" "bouldering" "lead climb" "toprope"]
+    ["run", "bouldering", "lead climb", "toprope"]
   end
 end

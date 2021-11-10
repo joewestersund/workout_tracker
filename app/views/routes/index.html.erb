@@ -1,10 +1,8 @@
-<p id="notice"><%= notice %></p>
-
 <%= form_with() do |form| %>
   <div class="field">
     <%= form.label :workout_type %>
     <%= form.collection_select :workout_type_id, @workout_types, :id, :name, {selected: @workout_type.id, include_blank: false},
-                               {id: "SelectWorkoutType", onchange: 'var id = $("#SelectWorkoutType option:selected").val(); window.location.href = "/routes/" + id' }  %>
+                               {id: "SelectWorkoutType", onchange: 'var id = $("#SelectWorkoutType option:selected").val(); window.location.href = "/workout_types/" + id + "/routes" ' } %>
   </div>
 <% end %>
 
@@ -37,4 +35,4 @@
 
 <br>
 
-<%= link_to 'New Route', new_route_path(@workout_type) %>
+<%= link_to 'New Route', new_workout_type_route_path(@workout_type) %>
