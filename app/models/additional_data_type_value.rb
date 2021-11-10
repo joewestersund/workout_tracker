@@ -4,24 +4,24 @@
 #
 #  id                             :bigint           not null, primary key
 #  decimal_value                  :decimal(, )
-#  string_value                   :string
+#  text_value                     :text
 #  created_at                     :datetime         not null
 #  updated_at                     :datetime         not null
 #  additional_data_type_id        :bigint
 #  additional_data_type_option_id :bigint
 #  user_id                        :bigint
-#  workout_id                     :bigint
+#  workout_route_id               :bigint
 #
 # Indexes
 #
-#  index_additional_data_type_values_on_user_id     (user_id)
-#  index_additional_data_type_values_on_workout_id  (workout_id)
-#  index_adtv_on_adt                                (additional_data_type_id)
-#  index_adtv_on_adto                               (additional_data_type_option_id)
+#  index_additional_data_type_values_on_user_id           (user_id)
+#  index_additional_data_type_values_on_workout_route_id  (workout_route_id)
+#  index_adtv_on_adt                                      (additional_data_type_id)
+#  index_adtv_on_adto                                     (additional_data_type_option_id)
 #
 class AdditionalDataTypeValue < ApplicationRecord
   belongs_to :user
-  belongs_to :workout
+  belongs_to :workout_route
   belongs_to :additional_data_type
   belongs_to :additional_data_type_option
 
@@ -35,11 +35,11 @@ class AdditionalDataTypeValue < ApplicationRecord
     count = 0
     count += 1 if additional_data_type_option_id.present?
     count += 1 if decimal_value.present?
-    count += 1 if string_value.present?
+    count += 1 if text_value.present?
     if count == 0
-      record.errors.add :base, "No string, decimal or option_id value was supplied."
+      record.errors.add :base, "No text, decimal or option_id value was supplied."
     elsif count > 1
-      record.errors.add :base, "Only one value should be supplied, in either string, decimal or option_id format."
+      record.errors.add :base, "Only one value should be supplied, in either text, decimal or option_id format."
     end
   end
 

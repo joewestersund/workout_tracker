@@ -5,9 +5,6 @@
 #  id          :bigint           not null, primary key
 #  description :text
 #  distance    :decimal(, )
-#  duration    :decimal(, )
-#  heart_rate  :integer
-#  pace        :decimal(, )
 #  repetitions :integer
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null

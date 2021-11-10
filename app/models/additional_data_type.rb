@@ -6,6 +6,7 @@
 #  field_type      :string
 #  name            :string
 #  order_in_list   :integer
+#  unit            :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  user_id         :bigint
@@ -29,13 +30,17 @@ class AdditionalDataType < ApplicationRecord
   validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: [:user_id, :workout_type_id] }
 
   FIELD_TYPES = {
-      option: "option",
-      string: "string",
-      number: "number"
+      dropdown: "dropdown list",
+      text: "text",
+      numeric: "numeric"
   }
 
-  def AdditionalDataType.field_types
+  def self.field_types
     FIELD_TYPES.map{ |key, str| str }
+  end
+
+  def self.field_types_hash
+    FIELD_TYPES
   end
 
 end

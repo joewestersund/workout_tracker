@@ -29,17 +29,17 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
 
   create_table "additional_data_type_values", force: :cascade do |t|
     t.bigint "user_id"
-    t.bigint "workout_id"
+    t.bigint "workout_route_id"
     t.bigint "additional_data_type_id"
     t.bigint "additional_data_type_option_id"
-    t.string "string_value"
+    t.text "text_value"
     t.decimal "decimal_value"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["additional_data_type_id"], name: "index_adtv_on_adt"
     t.index ["additional_data_type_option_id"], name: "index_adtv_on_adto"
     t.index ["user_id"], name: "index_additional_data_type_values_on_user_id"
-    t.index ["workout_id"], name: "index_additional_data_type_values_on_workout_id"
+    t.index ["workout_route_id"], name: "index_additional_data_type_values_on_workout_route_id"
   end
 
   create_table "additional_data_types", force: :cascade do |t|
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
     t.bigint "workout_type_id"
     t.string "name"
     t.string "field_type"
+    t.string "unit"
     t.integer "order_in_list"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -60,6 +61,7 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
     t.bigint "workout_type_id"
     t.string "name"
     t.decimal "distance"
+    t.text "description"
     t.integer "order_in_list"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -88,9 +90,6 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
     t.bigint "route_id"
     t.integer "repetitions"
     t.decimal "distance"
-    t.decimal "pace"
-    t.decimal "duration"
-    t.integer "heart_rate"
     t.text "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

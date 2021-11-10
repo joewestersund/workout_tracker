@@ -3,6 +3,7 @@
 # Table name: routes
 #
 #  id              :bigint           not null, primary key
+#  description     :text
 #  distance        :decimal(, )
 #  name            :string
 #  order_in_list   :integer

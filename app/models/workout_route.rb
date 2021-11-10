@@ -5,9 +5,6 @@
 #  id          :bigint           not null, primary key
 #  description :text
 #  distance    :decimal(, )
-#  duration    :decimal(, )
-#  heart_rate  :integer
-#  pace        :decimal(, )
 #  repetitions :integer
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
@@ -25,8 +22,10 @@ class WorkoutRoute < ApplicationRecord
   belongs_to :user
   belongs_to :workout
   belongs_to :route
+  has_many :additional_data_type_values
 
   validates :user_id, presence: true
   validates :workout_id, presence: true
+  validates :route_id, presence: true
 
 end

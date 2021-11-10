@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  include UsersHelper
+
   before_action :signed_in_user, only: [:edit_profile, :edit_password, :update, :update_password, :destroy ]
   before_action :set_self_as_user, only: %i[ edit_profile update update_profile edit_password update_password destroy ]
 
@@ -19,6 +21,7 @@ class UsersController < ApplicationController
     if @user.save
 
       sign_in @user
+      set_up_user_defaults(@user) # set up default workout types etc
 
       @user.generate_password_token!
 

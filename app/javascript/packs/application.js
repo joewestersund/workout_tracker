@@ -11,7 +11,7 @@ import "channels"
 //import sayHello from "../client_side/hello.js"
 //sayHello();
 
-import selectWorkoutType from "../client_side/SelectWorkoutType.js"
+//import selectWorkoutType from "../client_side/SelectWorkoutType.js"
 
 import "../stylesheets/colors.css.scss"
 import "../stylesheets/forms.css.scss"
