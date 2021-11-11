@@ -28,7 +28,11 @@
         <td><%= adt.description %></td>
         <td><%= adt.field_type %></td>
         <td>
-          <%= adt.additional_data_type_options.order(:order_in_list).map { |adto| "<div>#{adto.name}</div>"} if adt.additional_data_type_options.present? %>
+          <% if adt.additional_data_type_options.present? %>
+            <% adt.additional_data_type_options.order(:order_in_list).each do |adto| %>
+              <div><%= adto.name %></div>
+            <% end %>
+          <% end %>
           <%= link_to "edit options", additional_data_type_additional_data_type_options_path(adt) if adt.is_dropdown? %>
         </td>
         <td><%= adt.unit %></td>
@@ -45,3 +49,4 @@
 <br>
 
 <%= link_to 'New Data Type', new_workout_type_additional_data_type_path(@workout_type) %>
+

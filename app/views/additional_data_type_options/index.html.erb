@@ -1,24 +1,34 @@
-<p id="notice"><%= notice %></p>
 
-<h1>Workout Types</h1>
+<h2>Workout Type: <%= @workout_type.name %> </h2>
+
+<%= form_with() do |form| %>
+  <div class="field">
+    <%= form.label :additional_data_type %>
+    <%= form.collection_select :additional_data_type_id, @additional_data_types, :id, :name, {selected: @additional_data_type.id, include_blank: false},
+                               {id: "SelectAdditionalDataType", onchange: 'var id = $("#SelectAdditionalDataType option:selected").val(); window.location.href = "/additional_data_types/" + id ' } %>
+  </div>
+<% end %>
+
+<h1>Dropdown Options</h1>
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
       <th>Order in list</th>
-      <th colspan="3"></th>
+      <th colspan="4"></th>
     </tr>
   </thead>
 
   <tbody>
-    <% @workout_types.each do |workout_type| %>
+    <% @additional_data_type_options.each_with_index do |adto, index| %>
       <tr>
-        <td><%= workout_type.name %></td>
-        <td><%= workout_type.order_in_list %></td>
-        <td><%= link_to 'Show', workout_type %></td>
-        <td><%= link_to 'Edit', edit_workout_type_path(workout_type) %></td>
-        <td><%= link_to 'Destroy', workout_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= adto.name %></td>
+        <td><%= adto.order_in_list %></td>
+        <td><%= link_to 'Edit', edit_additional_data_type_option_path(adto) %></td>
+        <td><%= link_to 'Delete', adto, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= (link_to 'Move Up', "/additional_data_type_options/#{adto.id}/move_up", method: :post) unless index == 0 %></td>
+        <td><%= (link_to 'Move Down', "/additional_data_type_options/#{adto.id}/move_down", method: :post) unless index == @additional_data_type_options.count-1 %></td>
       </tr>
     <% end %>
   </tbody>
@@ -26,4 +36,8 @@
 
 <br>
 
-<%= link_to 'New Workout Type', new_workout_type_path %>
+<%= link_to 'New Option', new_additional_data_type_additional_data_type_option_path(@additional_data_type) %>
+
+<div>
+  <%= link_to 'Back', workout_type_additional_data_types_path(@workout_type) %>
+</div>

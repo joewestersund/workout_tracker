@@ -34,7 +34,7 @@ class AdditionalDataTypeOptionsController < ApplicationController
 
     respond_to do |format|
       if @additional_data_type_option.save
-        format.html { redirect_to @additional_data_type_option, notice: "Workout type additional data type option was successfully created." }
+        format.html { redirect_to additional_data_type_additional_data_type_options_path(@additional_data_type), notice: "Dropdown option was successfully created." }
         format.json { render :show, status: :created, location: @additional_data_type_option }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -47,7 +47,7 @@ class AdditionalDataTypeOptionsController < ApplicationController
   def update
     respond_to do |format|
       if @additional_data_type_option.update(additional_data_type_option_params)
-        format.html { redirect_to @additional_data_type_option, notice: "Workout type additional data type option was successfully updated." }
+        format.html { redirect_to additional_data_type_additional_data_type_options_path(@additional_data_type), notice: "Dropdown option was successfully updated." }
         format.json { render :show, status: :ok, location: @additional_data_type_option }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -71,7 +71,7 @@ class AdditionalDataTypeOptionsController < ApplicationController
     @additional_data_type_option.destroy
     handle_delete_of_order_in_list(adt.additional_data_type_options,deleted_OIL)
     respond_to do |format|
-      format.html { redirect_to additional_data_type_options_url(adt), notice: "Workout type additional data type option was successfully destroyed." }
+      format.html { redirect_to additional_data_type_additional_data_type_options_path(adt), notice: "Dropdown option was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -86,7 +86,8 @@ class AdditionalDataTypeOptionsController < ApplicationController
     end
 
     def get_additional_data_types
-      @additional_data_types = @workout_type.additional_data_types.order(:order_in_list)
+      ft_dropdown = AdditionalDataType.field_types_hash[:dropdown]
+      @additional_data_types = @workout_type.additional_data_types.where(field_type: ft_dropdown).order(:order_in_list)
     end
 
     def set_adt
@@ -105,7 +106,7 @@ class AdditionalDataTypeOptionsController < ApplicationController
 
     def move(up)
       adto = current_user.additional_data_type_options.find(params[:id])
-      additional_data_type = adto.additional_data_type
-      move_in_list(additional_data_type.additional_data_type_options, additional_data_type_options_path(additional_data_type), adto, up)
+      adt = adto.additional_data_type
+      move_in_list(adt.additional_data_type_options, additional_data_type_additional_data_type_options_path(adt), adto, up)
     end
 end
