@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_29_193956) do
+ActiveRecord::Schema.define(version: 2021_11_11_052330) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,21 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
     t.index ["workout_type_id"], name: "index_data_types_on_workout_type_id"
   end
 
+  create_table "default_data_points", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "route_id"
+    t.bigint "data_type_id"
+    t.bigint "dropdown_option_id"
+    t.text "text_value"
+    t.decimal "decimal_value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["data_type_id"], name: "index_ddp_on_dt"
+    t.index ["dropdown_option_id"], name: "index_ddp_on_do"
+    t.index ["route_id"], name: "index_default_data_points_on_route_id"
+    t.index ["user_id"], name: "index_default_data_points_on_user_id"
+  end
+
   create_table "dropdown_options", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "data_type_id"
@@ -61,7 +76,6 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
     t.bigint "user_id"
     t.bigint "workout_type_id"
     t.string "name"
-    t.decimal "distance"
     t.text "description"
     t.integer "order_in_list"
     t.datetime "created_at", precision: 6, null: false

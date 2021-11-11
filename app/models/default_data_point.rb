@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: data_points
+# Table name: default_data_points
 #
 #  id                 :bigint           not null, primary key
 #  decimal_value      :decimal(, )
@@ -9,24 +9,24 @@
 #  updated_at         :datetime         not null
 #  data_type_id       :bigint
 #  dropdown_option_id :bigint
+#  route_id           :bigint
 #  user_id            :bigint
-#  workout_route_id   :bigint
 #
 # Indexes
 #
-#  index_adtv_on_adt                      (data_type_id)
-#  index_adtv_on_adto                     (dropdown_option_id)
-#  index_data_points_on_user_id           (user_id)
-#  index_data_points_on_workout_route_id  (workout_route_id)
+#  index_ddp_on_do                        (dropdown_option_id)
+#  index_ddp_on_dt                        (data_type_id)
+#  index_default_data_points_on_route_id  (route_id)
+#  index_default_data_points_on_user_id   (user_id)
 #
-class DataPoint < ApplicationRecord
+class DefaultDataPoint < ApplicationRecord
   belongs_to :user
-  belongs_to :workout_route
+  belongs_to :route
   belongs_to :data_type
   belongs_to :dropdown_option, optional: true
 
   validates :user_id, presence: true
-  validates :workout_route_id, presence: true
+  validates :route_id, presence: true
   validates :data_type_id, presence: true
 
   validate :one_of_three_is_present
@@ -53,5 +53,4 @@ class DataPoint < ApplicationRecord
     end
     "#{self.data_type.name}: #{val}"
   end
-
 end

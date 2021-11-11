@@ -12,7 +12,7 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Distance</th>
+      <th>Default Data</th>
       <th>Order in list</th>
       <th colspan="4"></th>
     </tr>
@@ -22,7 +22,12 @@
     <% @routes.each_with_index do |route, index| %>
       <tr>
         <td><%= route.name %></td>
-        <td><%= route.distance %></td>
+        <td>
+          <% route.default_data_points.each do |ddp| %>
+            <div><%= ddp.to_s %></div>
+          <% end %>
+          <%= link_to "edit", route_default_data_points_path(route) %>
+        </td>
         <td><%= route.order_in_list %></td>
         <td><%= link_to 'Edit', edit_route_path(route) %></td>
         <td><%= link_to 'Delete', route, method: :delete, data: { confirm: 'Are you sure?' } %></td>

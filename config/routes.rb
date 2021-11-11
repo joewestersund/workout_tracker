@@ -3,10 +3,13 @@
 
 Rails.application.routes.draw do
 
+  resources :default_data_points
   resources :workouts
 
   resources :workout_types, shallow: true do
-    resources :routes
+    resources :routes, shallow: true do
+      resources :default_data_points
+    end
     resources :data_types, shallow: true do
       resources :dropdown_options
       resources :data_points

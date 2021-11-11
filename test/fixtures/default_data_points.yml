@@ -1,0 +1,31 @@
+# == Schema Information
+#
+# Table name: default_data_points
+#
+#  id                 :bigint           not null, primary key
+#  decimal_value      :decimal(, )
+#  text_value         :text
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  data_type_id       :bigint
+#  dropdown_option_id :bigint
+#  route_id           :bigint
+#  user_id            :bigint
+#
+# Indexes
+#
+#  index_ddp_on_do                        (dropdown_option_id)
+#  index_ddp_on_dt                        (data_type_id)
+#  index_default_data_points_on_route_id  (route_id)
+#  index_default_data_points_on_user_id   (user_id)
+#
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value

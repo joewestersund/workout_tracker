@@ -48,4 +48,12 @@ class DataType < ApplicationRecord
     field_type == FIELD_TYPES[:dropdown]
   end
 
+  def is_text?
+    field_type == FIELD_TYPES[:text]
+  end
+
+  def is_numeric?
+    field_type == FIELD_TYPES[:numeric]
+  end
+
 end

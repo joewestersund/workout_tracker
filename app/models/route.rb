@@ -4,7 +4,6 @@
 #
 #  id              :bigint           not null, primary key
 #  description     :text
-#  distance        :decimal(, )
 #  name            :string
 #  order_in_list   :integer
 #  created_at      :datetime         not null
@@ -21,11 +20,13 @@
 class Route < ApplicationRecord
 
   has_many :workout_routes, dependent: :restrict_with_exception
+  has_many :default_data_points, dependent: :destroy
 
   belongs_to :user
   belongs_to :workout_type
 
   validates :user_id, presence: true
+  validates :workout_type_id, presence: true
   validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: [:user_id, :workout_type_id] }
   validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: [:user_id, :workout_type_id] }
 end
