@@ -1,10 +1,10 @@
 <%= form_with(model: model) do |form| %>
-  <% if additional_data_type_option.errors.any? %>
+  <% if dropdown_option.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(additional_data_type_option.errors.count, "error") %> prohibited this additional_data_type_option from being saved:</h2>
+      <h2><%= pluralize(dropdown_option.errors.count, "error") %> prohibited this dropdown_option from being saved:</h2>
 
       <ul>
-        <% additional_data_type_option.errors.each do |error| %>
+        <% dropdown_option.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
       </ul>

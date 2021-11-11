@@ -14,6 +14,7 @@ class WorkoutsController < ApplicationController
   # GET /workouts/new
   def new
     @workout = Workout.new
+    @workout.workout_date = DateTime.now.in_time_zone(current_user.time_zone)
   end
 
   # GET /workouts/1/edit

@@ -2,12 +2,12 @@
 
 one:
   user: one
-  workout_type_additional_data_type: one
+  workout_type_data_type: one
   name: MyString
   order_in_list: 
 
 two:
   user: two
-  workout_type_additional_data_type: two
+  workout_type_data_type: two
   name: MyString
   order_in_list: 

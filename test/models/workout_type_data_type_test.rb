@@ -1,6 +1,6 @@
 require "test_helper"
 
-class WorkoutTypeAdditionalDataTypeValueTest < ActiveSupport::TestCase
+class WorkoutTypeDataTypeTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

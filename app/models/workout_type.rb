@@ -18,7 +18,7 @@ class WorkoutType < ApplicationRecord
   belongs_to :user
 
   has_many :routes, dependent: :destroy
-  has_many :additional_data_types, dependent: :destroy
+  has_many :data_types, dependent: :destroy
 
   validates :user_id, presence: true
   validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: :user_id }

@@ -1,12 +1,12 @@
 <h2>For Workout Type '<%= @workout_type.name %>'</h2>
 
 <%= form_with(model: model) do |form| %>
-  <% if additional_data_type.errors.any? %>
+  <% if data_type.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(additional_data_type.errors.count, "error") %> prohibited this workout_type from being saved:</h2>
+      <h2><%= pluralize(data_type.errors.count, "error") %> prohibited this workout_type from being saved:</h2>
 
       <ul>
-        <% additional_data_type.errors.each do |error| %>
+        <% data_type.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
       </ul>
@@ -25,7 +25,7 @@
 
   <div class="field">
     <%= form.label :field_type %>
-    <%= form.collection_select :field_type, @field_types, :to_s, :to_s, {selected: @additional_data_type.field_type, include_blank: false} %>
+    <%= form.collection_select :field_type, @field_types, :to_s, :to_s, {selected: @data_type.field_type, include_blank: false} %>
   </div>
 
   <div class="field">

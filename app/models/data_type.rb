@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: additional_data_types
+# Table name: data_types
 #
 #  id              :bigint           not null, primary key
 #  description     :text
@@ -15,16 +15,16 @@
 #
 # Indexes
 #
-#  index_additional_data_types_on_user_id          (user_id)
-#  index_additional_data_types_on_workout_type_id  (workout_type_id)
-#  index_adt_on_user_and_workout_type_and_order    (user_id,workout_type_id,order_in_list)
+#  index_adt_on_user_and_workout_type_and_order  (user_id,workout_type_id,order_in_list)
+#  index_data_types_on_user_id                   (user_id)
+#  index_data_types_on_workout_type_id           (workout_type_id)
 #
-class AdditionalDataType < ApplicationRecord
+class DataType < ApplicationRecord
   belongs_to :user
   belongs_to :workout_type
 
-  has_many :additional_data_type_options, dependent: :destroy
-  has_many :additional_data_type_values, dependent: :destroy
+  has_many :dropdown_options, dependent: :destroy
+  has_many :data_points, dependent: :destroy
 
   validates :user_id, presence: true
   validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: [:user_id, :workout_type_id] }

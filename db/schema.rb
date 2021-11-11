@@ -15,34 +15,22 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "additional_data_type_options", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "additional_data_type_id"
-    t.string "name"
-    t.integer "order_in_list"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["additional_data_type_id"], name: "index_additional_data_type_options_on_additional_data_type_id"
-    t.index ["user_id", "additional_data_type_id", "order_in_list"], name: "index_adto_on_user_and_adt_and_order"
-    t.index ["user_id"], name: "index_additional_data_type_options_on_user_id"
-  end
-
-  create_table "additional_data_type_values", force: :cascade do |t|
+  create_table "data_points", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "workout_route_id"
-    t.bigint "additional_data_type_id"
-    t.bigint "additional_data_type_option_id"
+    t.bigint "data_type_id"
+    t.bigint "dropdown_option_id"
     t.text "text_value"
     t.decimal "decimal_value"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["additional_data_type_id"], name: "index_adtv_on_adt"
-    t.index ["additional_data_type_option_id"], name: "index_adtv_on_adto"
-    t.index ["user_id"], name: "index_additional_data_type_values_on_user_id"
-    t.index ["workout_route_id"], name: "index_additional_data_type_values_on_workout_route_id"
+    t.index ["data_type_id"], name: "index_adtv_on_adt"
+    t.index ["dropdown_option_id"], name: "index_adtv_on_adto"
+    t.index ["user_id"], name: "index_data_points_on_user_id"
+    t.index ["workout_route_id"], name: "index_data_points_on_workout_route_id"
   end
 
-  create_table "additional_data_types", force: :cascade do |t|
+  create_table "data_types", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "workout_type_id"
     t.string "name"
@@ -53,8 +41,20 @@ ActiveRecord::Schema.define(version: 2021_10_29_193956) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id", "workout_type_id", "order_in_list"], name: "index_adt_on_user_and_workout_type_and_order"
-    t.index ["user_id"], name: "index_additional_data_types_on_user_id"
-    t.index ["workout_type_id"], name: "index_additional_data_types_on_workout_type_id"
+    t.index ["user_id"], name: "index_data_types_on_user_id"
+    t.index ["workout_type_id"], name: "index_data_types_on_workout_type_id"
+  end
+
+  create_table "dropdown_options", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "data_type_id"
+    t.string "name"
+    t.integer "order_in_list"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["data_type_id"], name: "index_dropdown_options_on_data_type_id"
+    t.index ["user_id", "data_type_id", "order_in_list"], name: "index_adto_on_user_and_adt_and_order"
+    t.index ["user_id"], name: "index_dropdown_options_on_user_id"
   end
 
   create_table "routes", force: :cascade do |t|

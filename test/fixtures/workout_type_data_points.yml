@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  workout: one
+  workout_type_data_type: one
+  workout_type_dropdown_option: one
+
+two:
+  user: two
+  workout: two
+  workout_type_data_type: two
+  workout_type_dropdown_option: two

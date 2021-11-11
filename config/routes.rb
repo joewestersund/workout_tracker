@@ -7,9 +7,9 @@ Rails.application.routes.draw do
 
   resources :workout_types, shallow: true do
     resources :routes
-    resources :additional_data_types, shallow: true do
-      resources :additional_data_type_options
-      resources :additional_data_type_values
+    resources :data_types, shallow: true do
+      resources :dropdown_options
+      resources :data_points
     end
   end
 
@@ -17,8 +17,8 @@ Rails.application.routes.draw do
   post '/workout_types/:id/move_down', to: 'workout_types#move_down'
 
   get '/routes', to: 'routes#default_index', as: :routes_default  # show routes for the first workout type
-  get '/additional_data_types', to: 'additional_data_types#default_index', as: :additional_data_types_default  # show adts for the first workout type
-  #get '/additional_data_type_options', to: 'additional_data_type_options#default_index', as: :additional_data_type_options_default # show adts options for the first adt for the first workout type
+  get '/data_types', to: 'data_types#default_index', as: :data_types_default  # show adts for the first workout type
+  #get '/dropdown_options', to: 'dropdown_options#default_index', as: :dropdown_options_default # show adts options for the first adt for the first workout type
 
   #get '/routes/:workout_type_id', to: 'routes#index', as: :routes
   #get '/routes/:workout_type_id/new', to: 'routes#new', as: :new_route
@@ -31,13 +31,13 @@ Rails.application.routes.draw do
 
   #resources :workout_routes
 
-  resources :additional_data_type_values
-  resources :additional_data_type_options
-  post '/additional_data_type_options/:id/move_up', to: 'additional_data_type_options#move_up'
-  post '/additional_data_type_options/:id/move_down', to: 'additional_data_type_options#move_down'
+  resources :data_points
+  resources :dropdown_options
+  post '/dropdown_options/:id/move_up', to: 'dropdown_options#move_up'
+  post '/dropdown_options/:id/move_down', to: 'dropdown_options#move_down'
 
-  post '/additional_data_types/:id/move_up', to: 'additional_data_types#move_up'
-  post '/additional_data_types/:id/move_down', to: 'additional_data_types#move_down'
+  post '/data_types/:id/move_up', to: 'data_types#move_up'
+  post '/data_types/:id/move_down', to: 'data_types#move_down'
 
   resources :sessions, only: [:new, :create, :destroy]
   get '/signin', to: "sessions#new"

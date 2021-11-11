@@ -1,0 +1,43 @@
+
+<h2>Workout Type: <%= @workout_type.name %> </h2>
+
+<%= form_with() do |form| %>
+  <div class="field">
+    <%= form.label :data_type %>
+    <%= form.collection_select :data_type_id, @data_types, :id, :name, {selected: @data_type.id, include_blank: false},
+                               {id: "SelectDataType", onchange: 'var id = $("#SelectDataType option:selected").val(); window.location.href = "/data_types/" + id ' } %>
+  </div>
+<% end %>
+
+<h1>Dropdown Options</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Order in list</th>
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @dropdown_options.each_with_index do |adto, index| %>
+      <tr>
+        <td><%= adto.name %></td>
+        <td><%= adto.order_in_list %></td>
+        <td><%= link_to 'Edit', edit_dropdown_option_path(adto) %></td>
+        <td><%= link_to 'Delete', adto, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= (link_to 'Move Up', "/dropdown_options/#{adto.id}/move_up", method: :post) unless index == 0 %></td>
+        <td><%= (link_to 'Move Down', "/dropdown_options/#{adto.id}/move_down", method: :post) unless index == @dropdown_options.count-1 %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Option', new_data_type_dropdown_option_path(@data_type) %>
+
+<div>
+  <%= link_to 'Back', workout_type_data_types_path(@workout_type) %>
+</div>

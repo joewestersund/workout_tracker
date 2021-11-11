@@ -22,7 +22,7 @@ class WorkoutRoute < ApplicationRecord
   belongs_to :user
   belongs_to :workout
   belongs_to :route
-  has_many :additional_data_type_values
+  has_many :data_points
 
   validates :user_id, presence: true
   validates :workout_id, presence: true
