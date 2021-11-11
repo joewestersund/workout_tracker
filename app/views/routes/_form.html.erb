@@ -23,7 +23,6 @@
     <%= form.text_field :description %>
   </div>
 
-  <h1> add default data points here. List all, only save ones that are not blank. </h1>
   <% route.workout_type.data_types.each do |dt| %>
     <% ddp = route.default_data_points.find_by(data_type: dt) %>
     <%= form.label dt.name %>
