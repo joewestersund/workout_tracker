@@ -53,4 +53,31 @@ class DefaultDataPoint < ApplicationRecord
     end
     "#{self.data_type.name}: #{val}"
   end
+
+  def apply_to_existing_data_points(overwrite_non_nil_values = false)
+    current_user.routes.find(self.route_id).workout_routes.each do |wr|
+      dps = current_user.data_points.where(workout_route: wr)
+      if dps.present? and overwrite_non_nil_values
+        dps.each do |dp|
+          # there are some existing data points. Copy values over
+          dp.decimal_value = self.decimal_value
+          dp.text_value = self.text_value
+          dp.dropdown_option = self.dropdown_option
+          dp.save
+        end
+      else
+        # there isn't an existing data point for this workout_route that would correspond to this default data point.
+        # so, create one and copy the important values over.
+        dp = DataPoint.new
+        dp.user = current_user
+        dp.workout_route = wr
+        dp.data_type = self.data_type
+        dp.decimal_value = self.decimal_value
+        dp.text_value = self.text_value
+        dp.dropdown_option = self.dropdown_option
+        dp.save
+      end
+    end
+
+  end
 end
