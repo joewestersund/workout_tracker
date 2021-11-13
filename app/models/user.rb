@@ -29,6 +29,7 @@ class User < ApplicationRecord
   has_many :data_types, dependent: :destroy
   has_many :dropdown_options, dependent: :destroy
   has_many :data_points, dependent: :destroy
+  has_many :default_data_points, dependent: :destroy
 
   before_save { |user| user.email.downcase! }
   before_create :create_remember_token

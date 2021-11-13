@@ -25,6 +25,7 @@ class DataType < ApplicationRecord
 
   has_many :dropdown_options, dependent: :destroy
   has_many :data_points, dependent: :destroy
+  has_many :default_data_points, dependent: :destroy
 
   validates :user_id, presence: true
   validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: [:user_id, :workout_type_id] }

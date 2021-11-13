@@ -22,25 +22,25 @@
   </thead>
 
   <tbody>
-    <% @data_types.each_with_index do |adt, index| %>
+    <% @data_types.each_with_index do |dt, index| %>
       <tr>
-        <td><%= adt.name %></td>
-        <td><%= adt.description %></td>
-        <td><%= adt.field_type %></td>
+        <td><%= dt.name %></td>
+        <td><%= dt.description %></td>
+        <td><%= dt.field_type %></td>
         <td>
-          <% if adt.dropdown_options.present? %>
-            <% adt.dropdown_options.order(:order_in_list).each do |adto| %>
-              <div><%= adto.name %></div>
+          <% if dt.dropdown_options.present? %>
+            <% dt.dropdown_options.order(:order_in_list).each do |dto| %>
+              <div><%= dto.name %></div>
             <% end %>
           <% end %>
-          <%= link_to "edit options", data_type_dropdown_options_path(adt) if adt.is_dropdown? %>
+          <%= link_to "edit options", data_type_dropdown_options_path(dt) if dt.is_dropdown? %>
         </td>
-        <td><%= adt.unit %></td>
-        <td><%= adt.order_in_list %></td>
-        <td><%= link_to 'Edit', edit_data_type_path(adt) %></td>
-        <td><%= link_to 'Delete', adt, method: :delete, data: { confirm: "Are you sure you want to delete ''#{adt.name}''?" } %></td>
-        <td><%= (link_to 'Move Up', "/data_types/#{adt.id}/move_up", method: :post) unless index == 0 %></td>
-        <td><%= (link_to 'Move Down', "/data_types/#{adt.id}/move_down", method: :post) unless index == @data_types.count-1 %></td>
+        <td><%= dt.unit %></td>
+        <td><%= dt.order_in_list %></td>
+        <td><%= link_to 'Edit', edit_data_type_path(dt) %></td>
+        <td><%= link_to 'Delete', dt, method: :delete, data: { confirm: "Are you sure you want to delete '#{dt.name}'?" } %></td>
+        <td><%= (link_to 'Move Up', "/data_types/#{dt.id}/move_up", method: :post) unless index == 0 %></td>
+        <td><%= (link_to 'Move Down', "/data_types/#{dt.id}/move_down", method: :post) unless index == @data_types.count-1 %></td>
       </tr>
     <% end %>
   </tbody>

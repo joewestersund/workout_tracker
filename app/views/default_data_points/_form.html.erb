@@ -1,0 +1,34 @@
+<h2>For Route '<%= @route.name %>'</h2>
+
+<%= form_with(model: model) do |form| %>
+  <% if ddp.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(ddp.errors.count, "error") %> prohibited this default_data_point from being saved:</h2>
+
+      <ul>
+        <% ddp.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.hidden_field "data_type_id", value: ddp.data_type.id %>
+
+  <div class="field">
+    <% if ddp.data_type.is_dropdown? %>
+      <%= form.label :dropdown_option_id, ddp.data_type.name %>
+      <%= form.collection_select :dropdown_option_id, @dropdown_options, :id, :name, {selected: ddp.dropdown_option_id, include_blank: true} %>
+    <% elsif ddp.data_type.is_text? %>
+      <%= form.label :text_value, ddp.data_type.name %>
+      <%= form.text_field :text_value %>
+    <% else %>
+      <%= form.label :decimal_value, ddp.data_type.name %>
+      <%= form.text_field :decimal_value %>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

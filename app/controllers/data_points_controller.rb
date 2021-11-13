@@ -7,10 +7,6 @@ class DataPointsController < ApplicationController
     @data_points = current_user.data_points.all
   end
 
-  # GET /data_points/1 or /data_points/1.json
-  def show
-  end
-
   # GET /data_points/new
   def new
     @data_point = DataPoint.new
@@ -53,7 +49,7 @@ class DataPointsController < ApplicationController
   def destroy
     @data_point.destroy
     respond_to do |format|
-      format.html { redirect_to data_points_url, notice: "Workout type additional data type value was successfully destroyed." }
+      format.html { redirect_to data_points_url, notice: "This data point was successfully destroyed." }
       format.json { head :no_content }
     end
   end

@@ -3,8 +3,7 @@ class DataTypesController < ApplicationController
   before_action :get_workout_types
   before_action :get_field_types
   before_action :set_workout_type, except: %i[ default_index edit update destroy move_up move_down]
-  before_action :set_adt_and_workout_type, only: %i[ edit update destroy move_up move_down]
-
+  before_action :set_dt_and_workout_type, only: %i[ edit update destroy move_up move_down]
 
   def default_index
     @workout_type = @workout_types.first
@@ -89,7 +88,7 @@ class DataTypesController < ApplicationController
       @workout_type = current_user.workout_types.find(params[:workout_type_id])
     end
 
-    def set_adt_and_workout_type
+    def set_dt_and_workout_type
       @data_type = current_user.data_types.find(params[:id])
       @workout_type = @data_type.workout_type
     end
