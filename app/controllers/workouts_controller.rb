@@ -15,6 +15,14 @@ class WorkoutsController < ApplicationController
   def new
     @workout = Workout.new
     @workout.workout_date = DateTime.now.in_time_zone(current_user.time_zone)
+
+    # set defaults
+    @workout.workout_type = current_user.workout_types.order(:order_in_list).first
+    default_route = @workout.workout_type.routes.order(:order_in_list).first
+    wr = @workout.workout_routes.new(user: current_user, workout: @workout, route: default_route)
+    default_route.default_data_points.each do |ddp|
+      @workout.data_points << DataPoint.create_from(ddp)
+    end
   end
 
   # GET /workouts/1/edit

@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <h1>Workouts</h1>
 
 <table>
@@ -7,7 +5,8 @@
     <tr>
       <th>Workout date</th>
       <th>Workout type</th>
-      <th>User</th>
+      <th>Routes</th>
+      <th>Route Details</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -15,12 +14,26 @@
   <tbody>
     <% @workouts.each do |workout| %>
       <tr>
-        <td><%= workout.workout_date %></td>
-        <td><%= workout.workout_type_id %></td>
-        <td><%= workout.user_id %></td>
-        <td><%= link_to 'Show', workout %></td>
-        <td><%= link_to 'Edit', edit_workout_path(workout) %></td>
-        <td><%= link_to 'Destroy', workout, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% wr_rows = workout.workout_routes.empty? ? 1 : workout.workout_routes.count %>
+        <td rowspan="<%= wr_rows %>"><%= workout.workout_date %></td>
+        <td rowspan="<%= wr_rows %>"><%= workout.workout_type.name %></td>
+        <% workout.workout_routes.each do |wr| %>
+          <td>
+            <%= wr.route.name %>
+          </td>
+          <td>
+            <div>
+              <%= wr.route.description %>
+            </div>
+            <% wr.data_points.each do |dp| %>
+              <div>
+                <%= dp.data_type.name%>: <%= dp.to_s %>
+              </div>
+            <% end %>
+          </td>
+        <% end %>
+        <td rowspan="<%= wr_rows %>"><%= link_to 'Edit', edit_workout_path(workout) %></td>
+        <td rowspan="<%= wr_rows %>"><%= link_to 'Delete', workout, method: :delete, data: { confirm: "Are you sure you want to delete '#{workout.to_s}'?" } %></td>
       </tr>
     <% end %>
   </tbody>

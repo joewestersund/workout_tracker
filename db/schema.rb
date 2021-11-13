@@ -104,7 +104,6 @@ ActiveRecord::Schema.define(version: 2021_11_11_052330) do
     t.bigint "workout_id"
     t.bigint "route_id"
     t.integer "repetitions"
-    t.decimal "distance"
     t.text "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

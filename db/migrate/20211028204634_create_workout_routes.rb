@@ -5,7 +5,6 @@ class CreateWorkoutRoutes < ActiveRecord::Migration[6.1]
       t.belongs_to :workout
       t.belongs_to :route
       t.integer :repetitions
-      t.decimal :distance
       t.text :description
 
       t.timestamps
