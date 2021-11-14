@@ -12,22 +12,22 @@
   </thead>
 
   <tbody>
-    <% @data_types.each_with_index do |dt, index| %>
+    <% @data_types.each do |dt| %>
       <tr>
         <td><%= dt.name %></td>
         <td><%= dt.description %></td>
         <td><%= dt.unit %></td>
         <td>
-          <% ddp = dt.default_data_points.first %>
+          <% ddp = dt.default_data_points.where(route: @route).first %>
           <% if ddp.present? %>
-            <%= ddp.to_s %>
+            <%= ddp.value_to_s %>
           <% else %>
             No value set
           <% end %>
         </td>
         <% if ddp.present? %>
           <td><%= link_to 'Edit', edit_default_data_point_path(ddp) %></td>
-          <td><%= link_to 'Delete', ddp, method: :delete, data: { confirm: "Are you sure you want to delete the default data point for '#{dt.name}'?" } %></td>
+          <td><%= link_to 'Delete', ddp, method: :delete, data: { confirm: "Are you sure you want to delete the default data point for '#{dt.name}' for this route?" } %></td>
         <% else %>
           <td><%= link_to 'Add', new_route_default_data_point_path(@route, data_type_id: dt)%></td>
           <td></td>
@@ -36,3 +36,7 @@
     <% end %>
   </tbody>
 </table>
+
+<br>
+
+<%= link_to 'Back', workout_type_routes_path(@route.workout_type) %>

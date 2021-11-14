@@ -43,7 +43,7 @@ class DefaultDataPoint < ApplicationRecord
     end
   end
 
-  def to_s
+  def value_to_s
     if dropdown_option_id.present?
       val = self.dropdown_option.name
     elsif text_value.present?
@@ -51,7 +51,11 @@ class DefaultDataPoint < ApplicationRecord
     else
       val = decimal_value
     end
-    "#{self.data_type.name}: #{val}"
+    val
+  end
+
+  def to_s
+    "#{self.data_type.name}: #{self.value_to_s}"
   end
 
   def apply_to_existing_data_points(overwrite_non_nil_values = false)

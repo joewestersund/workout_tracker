@@ -2,4 +2,4 @@
 
 <%= render 'form', data_type: @data_type, model: [@workout_type, @data_type] %>
 
-<%= link_to 'Back', workout_type_data_types_path(@workout_type) %>
+<%= link_to 'Back', workout_type_data_types_path(@workout_type), class: "back-button" %>

@@ -5,7 +5,7 @@ class DefaultDataPointsController < ApplicationController
 
   # GET /default_data_points or /default_data_points.json
   def index
-    @data_types = @route.workout_type.data_types.includes(:default_data_points).order(:order_in_list)
+    @data_types = @route.workout_type.data_types.order(:order_in_list)
   end
 
   # GET /default_data_points/new
@@ -30,8 +30,7 @@ class DefaultDataPointsController < ApplicationController
   def create
     @default_data_point = DefaultDataPoint.new(default_data_point_params)
     @default_data_point.user = current_user
-    @default_data_point.route_id = params[:route_id]
-    puts @default_data_point.inspect
+    @default_data_point.route = @route
 
     respond_to do |format|
       if @default_data_point.save
@@ -81,7 +80,7 @@ class DefaultDataPointsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def default_data_point_params
-    params.require(:default_data_point).permit(:route_id, :data_type_id, :dropdown_option_id, :text_value, :decimal_value)
+    params.require(:default_data_point).permit(:data_type_id, :dropdown_option_id, :text_value, :decimal_value)
   end
 
 end

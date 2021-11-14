@@ -1,3 +1,9 @@
+<h1>Data Types</h1>
+
+<p>
+  What data would you like to track for this type of workout?
+</p>
+
 <%= form_with() do |form| %>
   <div class="field">
     <%= form.label :workout_type %>
@@ -5,8 +11,6 @@
                                {id: "SelectWorkoutType", onchange: 'var id = $("#SelectWorkoutType option:selected").val(); window.location.href = "/workout_types/" + id + "/data_types" ' } %>
   </div>
 <% end %>
-
-<h1>Data Types</h1>
 
 <table>
   <thead>

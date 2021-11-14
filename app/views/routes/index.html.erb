@@ -1,3 +1,14 @@
+<h1>Routes</h1>
+
+<p>What routes do you follow or exercises do you do, when doing this workout type?</p>
+
+<p>Each route can have default values for the data you track for this workout type.
+  When you enter a workout, you'll see that default, and be able to keep it or enter a different value.
+  Example: You have a workout type 'Running' and track 'distance'. You set up a route 'Around the Park'
+  and give it a default distance of 5 miles. When you enter a workout and choose 'Around the Park',
+  you can use 5 miles or change it to 6 if you went a little farther.
+</p>
+
 <%= form_with() do |form| %>
   <div class="field">
     <%= form.label :workout_type %>
@@ -6,12 +17,11 @@
   </div>
 <% end %>
 
-<h1>Routes for Workout Type '<%= @workout_type.name %>'</h1>
-
 <table>
   <thead>
     <tr>
       <th>Name</th>
+      <th>Description</th>
       <th>Default Data</th>
       <th>Order in list</th>
       <th colspan="4"></th>
@@ -22,11 +32,15 @@
     <% @routes.each_with_index do |route, index| %>
       <tr>
         <td><%= route.name %></td>
+        <td><%= route.description %></td>
         <td>
-          <% route.default_data_points.each do |ddp| %>
-            <div><%= ddp.to_s %></div>
+          <% route.workout_type.data_types.order(:order_in_list).each do |dt| %>
+            <% ddp = dt.default_data_points.where(route: route).first %>
+            <% if ddp.present? %>
+              <div><%= ddp.to_s %></div>
+            <% end %>
           <% end %>
-          <%= link_to "edit", route_default_data_points_path(route) %>
+          <%= link_to "add/edit", route_default_data_points_path(route) if route.workout_type.data_types.count > 0 %>
         </td>
         <td><%= route.order_in_list %></td>
         <td><%= link_to 'Edit', edit_route_path(route) %></td>
@@ -41,3 +55,5 @@
 <br>
 
 <%= link_to 'New Route', new_workout_type_route_path(@workout_type) %>
+|
+<%= link_to 'Edit the data types you can track for this Workout Type', workout_type_data_types_path(@workout_type) %>
