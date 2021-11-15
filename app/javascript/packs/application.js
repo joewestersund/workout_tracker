@@ -8,10 +8,9 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
-//import sayHello from "../client_side/hello.js"
-//sayHello();
 
-//import selectWorkoutType from "../client_side/SelectWorkoutType.js"
+import "../client_side/default_data_explanation"
+import "../client_side/select_workout_type"
 
 import "../stylesheets/colors.css.scss"
 import "../stylesheets/forms.css.scss"

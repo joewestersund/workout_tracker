@@ -18,7 +18,7 @@
         <td><%= dt.description %></td>
         <td><%= dt.unit %></td>
         <td>
-          <% ddp = dt.default_data_points.where(route: @route).first %>
+          <% ddp = @route.default_data_points.find_by(data_type: dt) %>
           <% if ddp.present? %>
             <%= ddp.value_to_s %>
           <% else %>

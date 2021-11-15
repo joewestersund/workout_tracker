@@ -8,7 +8,7 @@
   <div class="field">
     <%= form.label :workout_type %>
     <%= form.collection_select :workout_type_id, @workout_types, :id, :name, {selected: @workout_type.id, include_blank: false},
-                               {id: "SelectWorkoutType", onchange: 'var id = $("#SelectWorkoutType option:selected").val(); window.location.href = "/workout_types/" + id + "/data_types" ' } %>
+                               {id: "select-workout-type" } %>
   </div>
 <% end %>
 

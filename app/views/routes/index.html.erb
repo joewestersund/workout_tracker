@@ -2,12 +2,13 @@
 
 <p>What routes do you follow or exercises do you do, when doing this workout type?</p>
 
-<p>Each route can have default values for the data you track for this workout type.
+<div class="hidden" id="default-data-explanation">
+  Each route can have default values for the data you track for this workout type.
   When you enter a workout, you'll see that default, and be able to keep it or enter a different value.
   Example: You have a workout type 'Running' and track 'distance'. You set up a route 'Around the Park'
   and give it a default distance of 5 miles. When you enter a workout and choose 'Around the Park',
   you can use 5 miles or change it to 6 if you went a little farther.
-</p>
+</div>
 
 <%= form_with() do |form| %>
   <div class="field">
@@ -22,7 +23,7 @@
     <tr>
       <th>Name</th>
       <th>Description</th>
-      <th>Default Data</th>
+      <th><%= link_to "Default Data", '#', {id: "default-data-label"} %></th>
       <th>Order in list</th>
       <th colspan="4"></th>
     </tr>
