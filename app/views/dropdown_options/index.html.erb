@@ -5,7 +5,7 @@
   <div class="field">
     <%= form.label :data_type %>
     <%= form.collection_select :data_type_id, @data_types, :id, :name, {selected: @data_type.id, include_blank: false},
-                               {id: "SelectDataType", onchange: 'var id = $("#SelectDataType option:selected").val(); window.location.href = "/data_types/" + id ' } %>
+                {id: "select-and-redirect", "data-prefix": '/data_types/', "data-suffix": '/dropdown_options'}%>
   </div>
 <% end %>
 

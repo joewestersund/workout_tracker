@@ -1,7 +1,7 @@
 class DropdownOptionsController < ApplicationController
   before_action :signed_in_user
-  before_action :set_adt, except: %i[ edit update destroy move_up move_down]
-  before_action :set_adto_and_adt, only: %i[ edit update destroy move_up move_down ]
+  before_action :set_dt, except: %i[ edit update destroy move_up move_down]
+  before_action :set_dto_and_dt, only: %i[ edit update destroy move_up move_down ]
   before_action :set_workout_type
   before_action :get_workout_types
   before_action :get_data_types
@@ -9,7 +9,7 @@ class DropdownOptionsController < ApplicationController
 
   # GET /dropdown_options or /dropdown_options.json
   def index
-    @dropdown_options = current_user.dropdown_options.order(:order_in_list)
+    @dropdown_options = @data_type.dropdown_options.order(:order_in_list)
   end
 
   # GET /dropdown_options/1 or /dropdown_options/1.json
@@ -67,11 +67,11 @@ class DropdownOptionsController < ApplicationController
   # DELETE /dropdown_options/1 or /dropdown_options/1.json
   def destroy
     deleted_OIL = @dropdown_option.order_in_list
-    adt = @dropdown_option.data_type
+    dt = @dropdown_option.data_type
     @dropdown_option.destroy
-    handle_delete_of_order_in_list(adt.dropdown_options,deleted_OIL)
+    handle_delete_of_order_in_list(dt.dropdown_options,deleted_OIL)
     respond_to do |format|
-      format.html { redirect_to data_type_dropdown_options_path(adt), notice: "Dropdown option was successfully destroyed." }
+      format.html { redirect_to data_type_dropdown_options_path(dt), notice: "Dropdown option was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -90,11 +90,11 @@ class DropdownOptionsController < ApplicationController
       @data_types = @workout_type.data_types.where(field_type: ft_dropdown).order(:order_in_list)
     end
 
-    def set_adt
+    def set_dt
       @data_type = current_user.data_types.find(params[:data_type_id])
     end
 
-    def set_adto_and_adt
+    def set_dto_and_dt
       @dropdown_option = current_user.dropdown_options.find(params[:id])
       @data_type = @dropdown_option.data_type
     end
@@ -105,8 +105,8 @@ class DropdownOptionsController < ApplicationController
     end
 
     def move(up)
-      adto = current_user.dropdown_options.find(params[:id])
-      adt = adto.data_type
-      move_in_list(adt.dropdown_options, data_type_dropdown_options_path(adt), adto, up)
+      dto = current_user.dropdown_options.find(params[:id])
+      dt = dto.data_type
+      move_in_list(dt.dropdown_options, data_type_dropdown_options_path(dt), dto, up)
     end
 end

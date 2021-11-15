@@ -10,7 +10,7 @@ import "channels"
 
 
 import "../client_side/default_data_explanation"
-import "../client_side/select_workout_type"
+import "../client_side/select-and-redirect"
 
 import "../stylesheets/colors.css.scss"
 import "../stylesheets/forms.css.scss"
