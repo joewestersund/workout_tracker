@@ -10,7 +10,7 @@ import "channels"
 
 
 import "../client_side/default_data_explanation"
-import "../client_side/select-and-redirect"
+import "../client_side/select_and_redirect"
 
 import "../stylesheets/colors.css.scss"
 import "../stylesheets/forms.css.scss"

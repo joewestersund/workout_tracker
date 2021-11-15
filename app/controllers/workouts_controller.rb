@@ -16,6 +16,16 @@ class WorkoutsController < ApplicationController
     @workout = Workout.new
     @workout.workout_date = DateTime.now.in_time_zone(current_user.time_zone)
 
+    wt_id = params[:workout_type_id]
+    wt = current_user.workout_types.find(wt_id) if wt_id.present?
+    if wt.present?
+      @workout.workout_type = wt
+    else
+      @workout.workout_type = current_user.workout_types.order(:order_in_list).first
+    end
+
+    @routes = @workout.workout_type.routes.includes(:default_data_points).references(:default_data_points).order(:order_in_list)
+
     # set defaults
     @workout.workout_type = current_user.workout_types.order(:order_in_list).first
     default_route = @workout.workout_type.routes.order(:order_in_list).first

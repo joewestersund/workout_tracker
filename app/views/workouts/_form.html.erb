@@ -12,6 +12,7 @@
   <% end %>
 
   <% if @workout_types.count > 0 %>
+    <div class="hidden" id="route-data"><%= @routes.to_json %></div>
 
     <div class="field">
       <%= form.label :workout_type %>
@@ -23,7 +24,7 @@
 
     <div class="field">
       <%= form.label :route %>
-      <%= form.collection_select :route_id, @workout.workout_type.routes, :id, :name, selected: wr.route_id, include_blank: false  %>
+      <%= form.collection_select :route_id, @workout.workout_type.routes, :id, :name, { selected: wr.route_id, include_blank: false }, { class: "route-dropdown" }  %>
     </div>
 
     <div>
