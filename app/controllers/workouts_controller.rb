@@ -21,7 +21,9 @@ class WorkoutsController < ApplicationController
     default_route = @workout.workout_type.routes.order(:order_in_list).first
     wr = @workout.workout_routes.new(user: current_user, workout: @workout, route: default_route)
     default_route.default_data_points.each do |ddp|
-      @workout.data_points << DataPoint.create_from(ddp)
+      dp = DataPoint.create_from(ddp)
+      dp.workout_route = wr
+      wr.data_points << dp
     end
   end
 

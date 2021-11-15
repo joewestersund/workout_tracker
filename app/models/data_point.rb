@@ -57,16 +57,15 @@ class DataPoint < ApplicationRecord
   def DataPoint.create_from(default_data_point)
     dp = DataPoint.new
     dp.user = default_data_point.user
-    dp.workout_route.new(route: default_data_point.route)
     dp.data_type = default_data_point.data_type
-    copy_values_from(default_data_point)
+    dp.copy_values_from(default_data_point)
     dp   # return the new object
   end
 
   def copy_values_from(default_data_point)
-    decimal_value = default_data_point.decimal_value
-    text_value = default_data_point.text_value
-    dropdown_option = default_data_point.dropdown_option
+    self.decimal_value = default_data_point.decimal_value
+    self.text_value = default_data_point.text_value
+    self.dropdown_option = default_data_point.dropdown_option
   end
 
 end
