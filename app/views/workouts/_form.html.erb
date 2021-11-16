@@ -17,39 +17,24 @@
     <div class="field">
       <%= form.label :workout_type %>
       <%= form.collection_select :workout_type_id, @workout_types, :id, :name, {selected: @workout.workout_type_id, include_blank: false},
-                                 {id: "SelectWorkoutType", onchange: 'var id = $("#SelectWorkoutType option:selected").val(); window.location.href = "/workout_types/" + id + "/routes" ' } %>
+                                 {id: "select-and-redirect", "data-prefix": "/workouts/new?workout_type_id=", "data-suffix": "" } %>
     </div>
 
-    <% wr = @workout.workout_routes.first %>
-
-    <div class="field">
-      <%= form.label :route %>
-      <%= form.collection_select :route_id, @workout.workout_type.routes, :id, :name, { selected: wr.route_id, include_blank: false }, { class: "route-dropdown" }  %>
+    <div id="route-info" data-json-url="/workout_types/<%= @workout.workout_type_id %>/routes.json">
+      <% #note: Javascript will enter info about routes here %>
     </div>
 
-    <div>
-      <%= wr.route.description %>
-    </div>
-
-    <% wr.data_points.each do |dp| %>
-      <div>
-        <%= dp.to_s %>
-      </div>
-    <% end %>
+    <button id="add-route">Add Route</button>
 
     <div class="field">
       <%= form.label :workout_date %>
       <%= form.date_select :workout_date %>
     </div>
 
-    <div>
-      Routes
-      <%= react_component("Routes", { routes_json: @routes_json }) %>
-    </div>
-
     <div class="actions">
       <%= form.submit %>
     </div>
+
   <% else %>
     <p> You need to add one or more workout types before you can add a workout. </p>
     <p> <%= link_to "Add a Workout Type", new_workout_type_path %></p>

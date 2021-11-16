@@ -8,11 +8,13 @@ class RoutesController < ApplicationController
   def default_index
     @workout_type = @workout_types.first
     @routes = @workout_type.routes.order(:order_in_list)
+    @data_types = @workout_type.data_types.order(:order_in_list)
     render :index
   end
 
   def index
     @routes = @workout_type.routes.order(:order_in_list)
+    @data_types = @workout_type.data_types.order(:order_in_list)
   end
 
   # GET /routes/new
