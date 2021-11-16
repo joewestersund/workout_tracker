@@ -12,8 +12,6 @@
   <% end %>
 
   <% if @workout_types.count > 0 %>
-    <div class="hidden" id="route-data"><%= @routes.to_json %></div>
-
     <div class="field">
       <%= form.label :workout_type %>
       <%= form.collection_select :workout_type_id, @workout_types, :id, :name, {selected: @workout.workout_type_id, include_blank: false},
@@ -24,7 +22,7 @@
       <% #note: Javascript will enter info about routes here %>
     </div>
 
-    <button id="add-route">Add Route</button>
+    <a id="add-route" data-turbolinks="false">Add Route</a>
 
     <div class="field">
       <%= form.label :workout_date %>

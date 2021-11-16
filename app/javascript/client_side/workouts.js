@@ -28,15 +28,15 @@ function ready() {
 
     function appendRoute(){
         var items = [];
-        var routeName = "route" + m_routeCount;
         m_routeCount += 1;
+        var routeName = "route" + m_routeCount;
         $("<div/>", {
             "id": routeName,
             class: "field",
         }).appendTo("#route-info");
 
         $.each(m_routes, function(index, route) {
-            items.push( "<option id='" + route.id + "'>" + route.name + "</option>" );
+            items.push( "<option value='" + route.id + "'>" + route.name + "</option>" );
         });
 
         $("<label/>", {
@@ -46,13 +46,15 @@ function ready() {
 
         $("<select/>", {
             "class": "route-dropdown",
-            "id": "route-dropdown" + m_routeCount,
+            "name": "workout[routes" + m_routeCount + "[route_id]]",
             html: items.join( "" )
         }).appendTo( "#" + routeName );
 
-        $("<button/>", {
-            "class": "deleteRoute",
+        $("<a/>", {
+            "class": "delete-route",
             "data-route-number": m_routeCount,
+            "data-turbolinks": false,
+            href: "#",
             html: "Delete"
         }).appendTo( "#" + routeName );
     }

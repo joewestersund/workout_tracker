@@ -32,7 +32,7 @@ class Workout < ApplicationRecord
   def set_year_month_week
     self.year = self.workout_date.year
     self.month = self.workout_date.month
-    self.week = self.workout_date.cweek
+    self.week = self.workout_date.to_date.cweek
   end
 
 end
