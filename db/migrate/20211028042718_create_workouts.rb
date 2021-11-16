@@ -3,7 +3,7 @@ class CreateWorkouts < ActiveRecord::Migration[6.1]
     create_table :workouts do |t|
       t.belongs_to :user
       t.belongs_to :workout_type
-      t.datetime :workout_date
+      t.date :workout_date
       t.integer :year
       t.integer :month
       t.integer :week

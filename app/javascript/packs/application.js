@@ -21,6 +21,7 @@ import "../stylesheets/scaffolds.css.scss"
 import "../stylesheets/select.css.scss"
 import "../stylesheets/style.css.scss"
 import "../stylesheets/tables.css.scss"
+import "../stylesheets/workout.css.scss"
 import "../stylesheets/will_paginate.css.scss"
 
 import "@fortawesome/fontawesome-free/js/all"

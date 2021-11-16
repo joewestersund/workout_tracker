@@ -18,7 +18,7 @@
                                  {id: "select-and-redirect", "data-prefix": "/workouts/new?workout_type_id=", "data-suffix": "" } %>
     </div>
 
-    <div id="route-info" data-json-url="/workout_types/<%= @workout.workout_type_id %>/routes.json">
+    <div id="routes-list" data-json-url="/workout_types/<%= @workout.workout_type_id %>/routes.json">
       <% #note: Javascript will enter info about routes here %>
     </div>
 

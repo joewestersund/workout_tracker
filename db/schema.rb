@@ -125,7 +125,7 @@ ActiveRecord::Schema.define(version: 2021_11_11_052330) do
   create_table "workouts", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "workout_type_id"
-    t.datetime "workout_date"
+    t.date "workout_date"
     t.integer "year"
     t.integer "month"
     t.integer "week"

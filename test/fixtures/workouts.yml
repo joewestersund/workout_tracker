@@ -5,7 +5,7 @@
 #  id              :bigint           not null, primary key
 #  month           :integer
 #  week            :integer
-#  workout_date    :datetime
+#  workout_date    :date
 #  year            :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null

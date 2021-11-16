@@ -5,7 +5,7 @@
 #  id              :bigint           not null, primary key
 #  month           :integer
 #  week            :integer
-#  workout_date    :datetime
+#  workout_date    :date
 #  year            :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -32,7 +32,7 @@ class Workout < ApplicationRecord
   def set_year_month_week
     self.year = self.workout_date.year
     self.month = self.workout_date.month
-    self.week = self.workout_date.to_date.cweek
+    self.week = self.workout_date.cweek
   end
 
 end
