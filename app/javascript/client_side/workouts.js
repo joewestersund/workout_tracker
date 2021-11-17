@@ -41,8 +41,6 @@ function ready() {
             "for": "route-data" + route_number,
             html: "Details for route id " + route_id
         }).appendTo( route_details_element );
-
-
     }
 
     function appendRoute(){
