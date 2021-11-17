@@ -27,4 +27,34 @@ class WorkoutRoute < ApplicationRecord
   validates :workout_id, presence: true
   validates :route_id, presence: true
 
+  def WorkoutRoute.create_from_defaults(route)
+    wr = WorkoutRoute.new
+    wr.user = route.user
+    wr.route = route
+    route.workout_type.data_types.order(:order_in_list).each do |dt|
+      ddp = route.default_data_points.find_by(data_type: dt)
+      if ddp.present?
+        wr.data_points << DataPoint.create_from_default(ddp)
+      else
+        wr.data_points << DataPoint.create_from_data_type(dt)
+      end
+    end
+    wr   # return the new object
+  end
+
+  def apply_defaults
+    # apply the defaults to this route, not overwriting any data point values that exist
+    self.route.workout_type.data_types.order(:order_in_list).each do |dt|
+      if self.data_points.find_by(data_type: dt).nil?
+        # we don't have a current data point for this data type
+        ddp = route.default_data_points.find_by(data_type: dt)
+        if ddp.present?
+          wr.data_points << DataPoint.create_from_default(ddp)
+        else
+          wr.data_points << DataPoint.create_from_data_type(dt)
+        end
+      end
+    end
+  end
+
 end

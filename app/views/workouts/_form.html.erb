@@ -19,6 +19,9 @@
     </div>
 
     <div id="routes-list" data-json-url="/workout_types/<%= @workout.workout_type_id %>/routes.json">
+      <% @workout.workout_routes.each do |wr| %>
+
+      <% end %>
       <% #note: Javascript will enter info about routes here %>
     </div>
 

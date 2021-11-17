@@ -19,8 +19,10 @@ Rails.application.routes.draw do
   post '/workout_types/:id/move_up', to: 'workout_types#move_up'
   post '/workout_types/:id/move_down', to: 'workout_types#move_down'
 
+  get '/workout_types/:id/default_workout_routes', to: 'workout_types#default_workout_routes'
+
   get '/routes', to: 'routes#default_index', as: :routes_default  # show routes for the first workout type
-  get '/data_types', to: 'data_types#default_index', as: :data_types_default  # show adts for the first workout type
+  get '/data_types', to: 'data_types#default_index', as: :data_types_default  # show dts for the first workout type
   #get '/dropdown_options', to: 'dropdown_options#default_index', as: :dropdown_options_default # show adts options for the first adt for the first workout type
 
   #get '/routes/:workout_type_id', to: 'routes#index', as: :routes

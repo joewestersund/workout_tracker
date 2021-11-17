@@ -1,14 +1,18 @@
 class WorkoutTypesController < ApplicationController
   before_action :signed_in_user
-  before_action :set_workout_type, only: %i[ show edit update destroy ]
+  before_action :set_workout_type, only: %i[ edit update destroy default_workout_routes]
 
   # GET /workout_types or /workout_types.json
   def index
     @workout_types = current_user.workout_types.order(:order_in_list)
   end
 
-  # GET /workout_types/1 or /workout_types/1.json
-  def show
+  # GET /workout_types/1/default_workout_routes.json
+  def default_workout_routes
+    @workout_routes = []
+    @workout_type.routes.order(:order_in_list).each do |route|
+      @workout_routes << WorkoutRoute.create_from_defaults(route)
+    end
   end
 
   # GET /workout_types/new

@@ -43,7 +43,7 @@ class DataPoint < ApplicationRecord
     end
   end
 
-  def to_s
+  def value_to_s
     if dropdown_option_id.present?
       val = self.dropdown_option.name
     elsif text_value.present?
@@ -51,10 +51,21 @@ class DataPoint < ApplicationRecord
     else
       val = decimal_value
     end
-    "#{self.data_type.name}: #{val}"
+    val
   end
 
-  def DataPoint.create_from(default_data_point)
+  def to_s
+    "#{self.data_type.name}: #{self.value_to_s}"
+  end
+
+  def DataPoint.create_from_data_type(data_type)
+    dp = DataPoint.new
+    dp.user = data_type.user
+    dp.data_type = data_type
+    dp   # return the new object
+  end
+
+  def DataPoint.create_from_default(default_data_point)
     dp = DataPoint.new
     dp.user = default_data_point.user
     dp.data_type = default_data_point.data_type

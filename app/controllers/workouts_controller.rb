@@ -26,15 +26,9 @@ class WorkoutsController < ApplicationController
 
     @routes = @workout.workout_type.routes.order(:order_in_list)
 
-    # set defaults
-    #@workout.workout_type = current_user.workout_types.order(:order_in_list).first
-    #default_route = @workout.workout_type.routes.order(:order_in_list).first
-    #wr = @workout.workout_routes.new(user: current_user, workout: @workout, route: default_route)
-    #default_route.default_data_points.each do |ddp|
-    #  dp = DataPoint.create_from(ddp)
-    #  dp.workout_route = wr
-    #  wr.data_points << dp
-    #end
+    @workout.workout_routes.each do |wr|
+      wr.apply_defaults
+    end
   end
 
   # GET /workouts/1/edit
