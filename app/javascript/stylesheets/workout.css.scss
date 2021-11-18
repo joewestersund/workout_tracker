@@ -1,11 +1,15 @@
 div.route-info {
-  border-left: 1px red solid;
+  border-left: 1px black solid;
   padding: 5px;
 }
 
 div.route-details {
-  border-left: 1px black solid;
-  padding: 5px;
+  //border-left: 1px black solid;
+  //padding: 5px;
+  & label {
+    padding-left: 10px;
+    padding-right: 5px;
+  }
 }
 
 .delete-route {

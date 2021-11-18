@@ -3,15 +3,17 @@ function ready() {
     var m_routeCount = 0;
     var m_workout_route_templates;
     var m_first_workout_route_template;
-    const ROUTES_LIST_ELEMENT = "#routes-list"
+    const ROUTES_LIST_ELEMENT = "#routes-list";
     const ROUTE_INFO_PREFIX = "route-info";
-    const ROUTE_DETAILS_PREFIX = "route-details"
+    const ROUTE_DETAILS_PREFIX = "route-details";
+    const ROUTE_ID_PREFIX = "r"; //to make sure the keys for m_workout_route_templates don't look like numbers, so order is preserved
 
     function setEvents(){
         $(ROUTES_LIST_ELEMENT).on('change','.route-dropdown',function(event){
             var route_number = $(this).data("route-number");
             var route_id = $(this).val();
-            var wr = m_workout_route_templates[String(route_id)];  //keys are strings
+            var route_id_str = ROUTE_ID_PREFIX + route_id;
+            var wr = m_workout_route_templates[route_id_str];  //keys are strings
             showRouteDetails(route_number, wr)
         });
 
@@ -32,9 +34,6 @@ function ready() {
     }
 
     function showRouteDetails(route_number, workout_route){
-
-        alert("showing route details for " + workout_route.route_name);
-
         var route_number_string = "route" + route_number;
         var route_details_element = "#" + ROUTE_DETAILS_PREFIX + route_number;
 
@@ -48,6 +47,7 @@ function ready() {
 
             if (dp.is_dropdown) {
                 var items = [];
+                items.push( "<option value=''></option>" );  //include blank option in dropdown
                 dp.options.forEach( (opt) => {
                     items.push( "<option value='" + opt.option_id + "'>" + opt.option_name + "</option>" );
                 });
@@ -132,16 +132,12 @@ function ready() {
         const templates = jsonData.workout_route_templates;
         m_first_workout_route_template = templates[0];
 
-        alert("mapping templates");
-
         //convert templates to a hash, with the route ID as the key
         m_workout_route_templates = templates.reduce(function (map, wr) {
-            var route_id_str = String(wr.route_id);
+            var route_id_str = ROUTE_ID_PREFIX + wr.route_id;
             map[route_id_str] = wr; //convert key to string so order of elements is preserved
             return map;
         }, {});
-
-        alert("mapped templates");
 
         const workout_routes = jsonData.workout_routes;
 
