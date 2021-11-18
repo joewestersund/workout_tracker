@@ -38,7 +38,7 @@ class WorkoutsController < ApplicationController
     apply_defaults(@workout)
     workout_route_templates = get_templates(@workout.workout_type)
 
-    @workout_route_json = get_json(@workout.routes, workout_route_templates)
+    @workout_route_json = get_json(@workout.workout_routes, workout_route_templates)
   end
 
   # POST /workouts or /workouts.json

@@ -33,7 +33,7 @@
           </td>
         <% end %>
         <td rowspan="<%= wr_rows %>"><%= link_to 'Edit', edit_workout_path(workout) %></td>
-        <td rowspan="<%= wr_rows %>"><%= link_to 'Delete', workout, method: :delete, data: { confirm: "Are you sure you want to delete '#{workout.to_s}'?" } %></td>
+        <td rowspan="<%= wr_rows %>"><%= link_to 'Delete', workout, method: :delete, data: { confirm: "Are you sure you want to delete the #{workout.workout_type.name} on #{workout.workout_date}?" } %></td>
       </tr>
     <% end %>
   </tbody>
