@@ -1,3 +1,5 @@
+<script type="application/json" id="JSON-data"><%= @workout_route_json %></script>
+
 <%= form_with(model: workout) do |form| %>
   <% if workout.errors.any? %>
     <div id="error_explanation">
@@ -19,32 +21,7 @@
     </div>
 
     <div id="routes-list" data-json-url="/workout_types/<%= @workout.workout_type_id %>/routes.json">
-      <% @workout.workout_routes.each_with_index do |wr, index| %>
-        <div id=<%="route-info#{index}"%> class="route-info">
-          <%= form.label "route-dropdown#{index}", "Route" %>
-          <%= form.collection_select :route_id, @routes, :id, :name, {selected: wr.route_id, include_blank: false},
-                                     {class: "route-dropdown", name: "workout[routes#{index}[route_id]]",
-                                      data: {"route-number": index}, id: "route-dropdown#{index}" } %>
-          <%= link_to "Delete", "#", {class: "delete-route", data: {"route-number": route_number, turbolinks: false}} %>
-          <div id=<%="route-details#{index}"%> class="route-details">
-            <% wr.data_points.each do |dp| %>
-              <div class="field">
-                <% if dp.data_type.is_dropdown? %>
-                  <%= form.label :dropdown_option_id, dp.data_type.name %>
-                  <%= form.collection_select :dropdown_option_id, dp.dropdown_options.order(:order_in_list), :id, :name, {selected: dp.dropdown_option_id, include_blank: true} %>
-                <% elsif ddp.data_type.is_text? %>
-                  <%= form.label :text_value, dp.data_type.name %>
-                  <%= form.text_field dp.text_value %>
-                <% else %>
-                  <%= form.label :decimal_value, dp.data_type.name %>
-                  <%= form.text_field dp.decimal_value %>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-      <% #note: Javascript will enter info about routes here %>
+        <% #note: Javascript will enter info about routes here %>
     </div>
 
     <%= link_to "Add Route", "#", {id: "add-route", data: {turbolinks: false}} %>

@@ -43,6 +43,17 @@ class DataPoint < ApplicationRecord
     end
   end
 
+  def value
+    if dropdown_option_id.present?
+      val = dropdown_option_id
+    elsif text_value.present?
+      val = text_value
+    else
+      val = decimal_value
+    end
+    val
+  end
+
   def value_to_s
     if dropdown_option_id.present?
       val = self.dropdown_option.name

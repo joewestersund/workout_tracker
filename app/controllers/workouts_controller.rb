@@ -26,13 +26,19 @@ class WorkoutsController < ApplicationController
 
     @routes = @workout.workout_type.routes.order(:order_in_list)
 
-    @workout.workout_routes.each do |wr|
-      wr.apply_defaults
-    end
+    apply_defaults(@workout)
+    workout_route_templates = get_templates(@workout.workout_type)
+
+    @workout_route_json = get_json(@workout.workout_routes, workout_route_templates)
+
   end
 
   # GET /workouts/1/edit
   def edit
+    apply_defaults(@workout)
+    workout_route_templates = get_templates(@workout.workout_type)
+
+    @workout_route_json = get_json(@workout.routes, workout_route_templates)
   end
 
   # POST /workouts or /workouts.json
@@ -90,5 +96,26 @@ class WorkoutsController < ApplicationController
 
     def get_workout_types
       @workout_types = current_user.workout_types.order(:order_in_list)
+    end
+
+    def apply_defaults(workout)
+      workout.workout_routes.each do |wr|
+        wr.apply_defaults
+      end
+    end
+
+    def get_templates(workout_type)
+      workout_route_templates = []
+      workout_type.routes.order(:order_in_list).each do |route|
+        workout_route_templates << WorkoutRoute.create_from_defaults(route)
+      end
+      workout_route_templates
+    end
+
+    def get_json(workout_routes, workout_route_templates)
+      Jbuilder.new do |json|
+        json.workout_routes workout_routes.collect { |wr| wr.to_builder.attributes! }
+        json.workout_route_templates workout_route_templates.collect { |wr| wr.to_builder.attributes! }
+      end.target!.html_safe
     end
 end
