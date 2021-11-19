@@ -57,4 +57,18 @@ class DataType < ApplicationRecord
     field_type == FIELD_TYPES[:numeric]
   end
 
+  def to_builder
+    Jbuilder.new do |json|
+      json.id self.id
+      json.name self.name
+      json.description self.description
+      json.field_type self.field_type
+      json.is_dropdown dt.is_dropdown?
+      json.options self.dropdown_options.order(:order_in_list) do |opt|
+        json.option_id opt.id
+        json.option_name opt.name
+      end
+    end
+  end
+
 end

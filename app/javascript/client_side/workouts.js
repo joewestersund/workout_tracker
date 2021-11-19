@@ -68,6 +68,18 @@ function ready() {
                 }).appendTo( route_details_element );
             }
         });
+
+        // show number of repetitions
+        $("<label/>", {
+            "for": route_number_string + "repetitions",
+            html: "Repetitions"
+        }).appendTo( route_details_element );
+
+        $("<input/>", {
+            "name": "workout[routes" + route_number + "[repetitions]]",
+            id: route_number_string + "repetitions",
+            value: workout_route.repetitions
+        }).appendTo( route_details_element );
     }
 
     function appendRoute(wr){

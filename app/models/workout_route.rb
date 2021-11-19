@@ -26,6 +26,14 @@ class WorkoutRoute < ApplicationRecord
   validates :user_id, presence: true
   validates :workout_id, presence: true
   validates :route_id, presence: true
+  validates :repetitions, numericality: { only_integer: true, greater_than: 0 }
+
+  after_initialize :set_defaults, unless: :persisted?
+  # The set_defaults will only work if the object is new
+
+  def set_defaults
+    self.repetitions = 1
+  end
 
   def WorkoutRoute.create_from_defaults(route)
     wr = WorkoutRoute.new
@@ -61,6 +69,7 @@ class WorkoutRoute < ApplicationRecord
     Jbuilder.new do |json|
       json.route_id self.route_id
       json.route_name self.route.name
+      json.repetitions self.repetitions
       json.data_points self.data_points do |dp|
         dt = dp.data_type
         json.data_type_id dt.id
