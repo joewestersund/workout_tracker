@@ -20,6 +20,8 @@
                                  {id: "select-and-redirect", "data-prefix": "/workouts/new?workout_type_id=", "data-suffix": "" } %>
     </div>
 
+    <%= form.hidden_field :route_count %>
+
     <div id="routes-list" data-json-url="/workout_types/<%= @workout.workout_type_id %>/routes.json">
         <% #note: Javascript will enter info about routes here %>
     </div>

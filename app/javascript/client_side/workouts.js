@@ -3,6 +3,7 @@ function ready() {
     var m_routeCount = 0;
     var m_workout_route_templates;
     var m_first_workout_route_template;
+    var m_data_types;
     const ROUTES_LIST_ELEMENT = "#routes-list";
     const ROUTE_INFO_PREFIX = "route-info";
     const ROUTE_DETAILS_PREFIX = "route-details";
@@ -36,23 +37,26 @@ function ready() {
     function showRouteDetails(route_number, workout_route){
         var route_number_string = "route" + route_number;
         var route_details_element = "#" + ROUTE_DETAILS_PREFIX + route_number;
+        var dt;
 
         $(route_details_element).empty();
 
         workout_route.data_points.forEach((dp) => {
+            dt = m_data_types[dp.data_type_id];
+
             $("<label/>", {
                 "for": route_number_string + "data-type-id" + dp.data_type_id,
-                html: dp.data_type_name
+                html: dt.name
             }).appendTo( route_details_element );
 
-            if (dp.is_dropdown) {
+            if (dt.is_dropdown) {
                 var items = [];
                 items.push( "<option value=''></option>" );  //include blank option in dropdown
-                dp.options.forEach( (opt) => {
+                dt.options.forEach( (opt) => {
                     items.push( "<option value='" + opt.option_id + "'>" + opt.option_name + "</option>" );
                 });
                 $("<select/>", {
-                    "name": "workout[routes" + route_number + "[data_type" + dp.data_type_id + "[option_id]]",
+                    "name": "workout[route" + route_number + "[data_type" + dp.data_type_id + "[option_id]]",
                     id: route_number_string + "data-type-id" + dp.data_type_id,
                     html: items.join( "" )
                 }).appendTo( route_details_element );
@@ -62,7 +66,7 @@ function ready() {
 
             } else {
                 $("<input/>", {
-                    "name": "workout[routes" + route_number + "[data_type" + dp.data_type_id + "[option_id]]",
+                    "name": "workout[route" + route_number + "[data_type" + dp.data_type_id + "[value]]",
                     id: route_number_string + "data-type-id" + dp.data_type_id,
                     value: dp.value
                 }).appendTo( route_details_element );
@@ -76,7 +80,7 @@ function ready() {
         }).appendTo( route_details_element );
 
         $("<input/>", {
-            "name": "workout[routes" + route_number + "[repetitions]]",
+            "name": "workout[route" + route_number + "[repetitions]]",
             id: route_number_string + "repetitions",
             value: workout_route.repetitions
         }).appendTo( route_details_element );
@@ -89,6 +93,10 @@ function ready() {
         var route_name = "route" + route_number;
         var route_info_element = ROUTE_INFO_PREFIX + route_number;
         var route_details_element = ROUTE_DETAILS_PREFIX + route_number;
+
+        // tell the server how many routes to look for in the form.
+        // some may have been deleted, but this is the max number to look for.
+        $("#workout_route_count").val(m_routeCount);
 
         $("<div/>", {
             "id": route_info_element,
@@ -107,7 +115,7 @@ function ready() {
 
         $("<select/>", {
             "class": "route-dropdown",
-            "name": "workout[routes" + route_number + "[route_id]]",
+            "name": "workout[route" + route_number + "[route_id]]",
             "data-route-number": route_number,
             id: "route-dropdown" + route_number,
             html: items.join( "" ),
@@ -152,6 +160,12 @@ function ready() {
         }, {});
 
         const workout_routes = jsonData.workout_routes;
+        const data_types = jsonData.data_types;
+
+        m_data_types = data_types.reduce(function (map, dt) {
+            map[dt.id] = dt; //indexed by id, no need to preserve order
+            return map;
+        }, {});
 
         if (workout_routes.length == 0) {
             // this workout has no workout_routes yet. Add one route, the first template
@@ -162,6 +176,7 @@ function ready() {
                 appendRoute(wr);
             });
         }
+
         setEvents();
     }
 }

@@ -71,17 +71,8 @@ class WorkoutRoute < ApplicationRecord
       json.route_name self.route.name
       json.repetitions self.repetitions
       json.data_points self.data_points do |dp|
-        dt = dp.data_type
-        json.data_type_id dt.id
-        json.data_type_name dt.name
-        json.is_dropdown dt.is_dropdown?
+        json.data_type_id dp.data_type_id
         json.value dp.value
-        if dt.is_dropdown?
-          json.options dt.dropdown_options.order(:order_in_list) do |opt|
-            json.option_id opt.id
-            json.option_name opt.name
-          end
-        end
       end
     end
   end

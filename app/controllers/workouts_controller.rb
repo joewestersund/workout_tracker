@@ -29,7 +29,7 @@ class WorkoutsController < ApplicationController
     apply_defaults(@workout)
     workout_route_templates = get_templates(@workout.workout_type)
 
-    @workout_route_json = get_json(@workout.workout_routes, workout_route_templates)
+    @workout_route_json = get_json(@workout.workout_type, @workout.workout_routes, workout_route_templates)
 
   end
 
@@ -38,13 +38,15 @@ class WorkoutsController < ApplicationController
     apply_defaults(@workout)
     workout_route_templates = get_templates(@workout.workout_type)
 
-    @workout_route_json = get_json(@workout.workout_routes, workout_route_templates)
+    @workout_route_json = get_json(@workout.workout_type, @workout.workout_routes, workout_route_templates)
   end
 
   # POST /workouts or /workouts.json
   def create
     @workout = Workout.new(workout_params)
     @workout.user = current_user
+
+    @workout.workout_route = get_workout_routes
 
     puts "******"
     puts params
@@ -98,6 +100,46 @@ class WorkoutsController < ApplicationController
       @workout_types = current_user.workout_types.order(:order_in_list)
     end
 
+    def get_workout_routes
+      route_count = params.require(:workout).permit(:route_count)
+      workout_routes = []
+      1..route_count.each do |num|
+      route_params = params.require(:workout).require("route#{num}")
+        if route_params.present?
+          wr = WorkoutRoute.new
+
+          route = @workout_type.routes.find(route_params[:route_id])
+          if route.present?
+            wr.user = current_user
+            wr.workout = @workout
+            wr.route = route
+            route.data_types.each do |dt|
+              dt_params = route_params.require("data_type_#{dt.id}")
+              if dt_params.present?
+                dp = DataPoint.new
+                dp.user = current_user
+                dp.workout_route = wr
+                dp.data_type = dt
+                if dt.is_dropdown?
+                  opt = dt.dropdown_options.find(dt_params[:option_id])
+                  dp.dropdown_option = opt
+                elsif dt.is_text?
+                  val = dt.dropdown_options.find(dt_params[:value])
+                  dp.text_value = val
+                else
+                  val = dt.dropdown_options.find(dt_params[:value])
+                  dp.decimal_value = val
+                end
+                wr.data_points << dp
+              end
+            end
+            workout_routes << wr
+          end
+        end
+      end
+      workout_routes
+    end
+
     def apply_defaults(workout)
       workout.workout_routes.each do |wr|
         wr.apply_defaults
@@ -112,10 +154,11 @@ class WorkoutsController < ApplicationController
       workout_route_templates
     end
 
-    def get_json(workout_routes, workout_route_templates)
+    def get_json(workout_type, workout_routes, workout_route_templates)
       Jbuilder.new do |json|
         json.workout_routes workout_routes.collect { |wr| wr.to_builder.attributes! }
         json.workout_route_templates workout_route_templates.collect { |wr| wr.to_builder.attributes! }
+        json.data_types workout_type.data_types.collect { |dt| dt.to_builder.attributes! }
       end.target!.html_safe
     end
 end
