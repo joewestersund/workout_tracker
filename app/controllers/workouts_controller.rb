@@ -46,21 +46,56 @@ class WorkoutsController < ApplicationController
     @workout = Workout.new(workout_params)
     @workout.user = current_user
 
-    @workout.workout_route = get_workout_routes
+    get_workout_routes(@workout)
 
-    puts "******"
-    puts params
-    puts "******"
+    puts "workout routes ******"
+    puts @workout.workout_routes.inspect
+    puts "***************"
 
-    respond_to do |format|
-      if @workout.save
-        format.html { redirect_to workouts_path, notice: "Workout was successfully created." }
-        format.json { render :show, status: :created, location: @workout }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @workout.errors, status: :unprocessable_entity }
-      end
+    ActiveRecord::Base.transaction do
+      begin
+        @workout.workout_routes.each do |wr|
+          wr.data_points.each do |dp|
+            if dp.save
+              puts "saved dp #{dp.data_type.name}"
+            else
+              puts "couldn't save dp #{dp.data_type.name}: #{dp.errors.full_messages}"
+            end
+          end
+          if wr.save
+            puts "saved wr #{wr.route.name}"
+          else
+            puts "couldn't save wr #{wr.route.name}: #{wr.errors.full_messages}"
+          end
+        end
+        if @workout.save
+          puts "saved workout"
+        else
+          puts "couldnt save workout: #{@workout.errors.full_messages}"
+        end
+        respond_to do |format|
+          format.html { redirect_to workouts_path, notice: "Workout was successfully created." }
+          format.json { render :show, status: :created, location: @workout }
+        end
+      # rescue
+      #   get_workout_types
+      #   format.html { render :new, status: :unprocessable_entity }
+      #   format.json { render json: @workout.errors, status: :unprocessable_entity }
+      # end
     end
+  end
+
+
+    # respond_to do |format|
+    #   if @workout.save
+    #     format.html { redirect_to workouts_path, notice: "Workout was successfully created." }
+    #     format.json { render :show, status: :created, location: @workout }
+    #   else
+    #     get_workout_types
+    #     format.html { render :new, status: :unprocessable_entity }
+    #     format.json { render json: @workout.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /workouts/1 or /workouts/1.json
@@ -70,6 +105,7 @@ class WorkoutsController < ApplicationController
         format.html { redirect_to workouts_path, notice: "Workout was successfully updated." }
         format.json { render :show, status: :ok, location: @workout }
       else
+        get_workout_types
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @workout.errors, status: :unprocessable_entity }
       end
@@ -100,44 +136,38 @@ class WorkoutsController < ApplicationController
       @workout_types = current_user.workout_types.order(:order_in_list)
     end
 
-    def get_workout_routes
-      route_count = params.require(:workout).permit(:route_count)
-      workout_routes = []
-      1..route_count.each do |num|
-      route_params = params.require(:workout).require("route#{num}")
-        if route_params.present?
-          wr = WorkoutRoute.new
+    def get_workout_routes(workout)
+      route_count = params.require(:workout).permit(:route_count)[:route_count].to_i
+      #workout_routes = []
+      1.upto(route_count) do |num|
+        workout_params = params.require(:workout)
 
-          route = @workout_type.routes.find(route_params[:route_id])
+        route_params = workout_params["route#{num}"]
+        if route_params.present?
+          workout_type = workout.workout_type
+          route = workout_type.routes.find(route_params[:route_id])
           if route.present?
-            wr.user = current_user
-            wr.workout = @workout
-            wr.route = route
-            route.data_types.each do |dt|
-              dt_params = route_params.require("data_type_#{dt.id}")
+            wr = workout.workout_routes.build(user: current_user, route: route)
+            wr.repetitions = route_params[:repetitions]
+            workout_type.data_types.each do |dt|
+              dt_params = route_params["data_type#{dt.id}"]
               if dt_params.present?
-                dp = DataPoint.new
-                dp.user = current_user
-                dp.workout_route = wr
-                dp.data_type = dt
+                dp = wr.data_points.build(user: current_user, data_type: dt)
                 if dt.is_dropdown?
                   opt = dt.dropdown_options.find(dt_params[:option_id])
                   dp.dropdown_option = opt
                 elsif dt.is_text?
-                  val = dt.dropdown_options.find(dt_params[:value])
+                  val = dt_params[:value]
                   dp.text_value = val
                 else
-                  val = dt.dropdown_options.find(dt_params[:value])
+                  val = dt_params[:value]
                   dp.decimal_value = val
                 end
-                wr.data_points << dp
               end
             end
-            workout_routes << wr
           end
         end
       end
-      workout_routes
     end
 
     def apply_defaults(workout)
