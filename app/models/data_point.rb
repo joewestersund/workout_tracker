@@ -37,9 +37,9 @@ class DataPoint < ApplicationRecord
     count += 1 if decimal_value.present?
     count += 1 if text_value.present?
     if count == 0
-      record.errors.add :base, "No text, decimal or dropdown option id value was supplied."
+      self.errors.add :base, "No text, decimal or dropdown option id value was supplied."
     elsif count > 1
-      record.errors.add :base, "Only one value should be supplied, in either text, decimal or dropdown option id format."
+      self.errors.add :base, "Only one value should be supplied, in either text, decimal or dropdown option id format."
     end
   end
 
@@ -70,6 +70,7 @@ class DataPoint < ApplicationRecord
   end
 
   def DataPoint.create_from_data_type(data_type)
+    #dp = data_type.data_points.build(user: data_type.user)
     dp = DataPoint.new
     dp.user = data_type.user
     dp.data_type = data_type
@@ -77,6 +78,7 @@ class DataPoint < ApplicationRecord
   end
 
   def DataPoint.create_from_default(default_data_point)
+    #dp = default_data_point.data_type.data_points.build(user: default_data_point.user)
     dp = DataPoint.new
     dp.user = default_data_point.user
     dp.data_type = default_data_point.data_type

@@ -18,15 +18,15 @@
 #  index_routes_on_workout_type_id                                (workout_type_id)
 #
 class Route < ApplicationRecord
+  belongs_to :user
+  belongs_to :workout_type
 
   has_many :workout_routes, dependent: :restrict_with_exception
   has_many :default_data_points, dependent: :destroy
-
-  belongs_to :user
-  belongs_to :workout_type
 
   validates :user_id, presence: true
   validates :workout_type_id, presence: true
   validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: [:user_id, :workout_type_id] }
   validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: [:user_id, :workout_type_id] }
+
 end

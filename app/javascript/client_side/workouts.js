@@ -63,9 +63,12 @@ function ready() {
 
                 // set the selected value in the dropdown
                 $("#" + route_number_string + "data-type-id" + dp.data_type_id).val(dp.value);
-
             } else {
+                var type = dt.is_numeric ? "number" : "";
+                var step = dt.is_numeric ? "any" : "";
                 $("<input/>", {
+                    type: type,
+                    step: step,
                     "name": "workout[route" + route_number + "[data_type" + dp.data_type_id + "[value]]",
                     id: route_number_string + "data-type-id" + dp.data_type_id,
                     value: dp.value
@@ -80,6 +83,8 @@ function ready() {
         }).appendTo( route_details_element );
 
         $("<input/>", {
+            type: "number",
+            min: 1,
             "name": "workout[route" + route_number + "[repetitions]]",
             id: route_number_string + "repetitions",
             value: workout_route.repetitions

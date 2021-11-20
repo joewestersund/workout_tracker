@@ -7,17 +7,20 @@
       <th>Workout type</th>
       <th>Routes</th>
       <th>Route Details</th>
-      <th colspan="3"></th>
+      <th colspan="2"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @workouts.each do |workout| %>
-      <tr>
-        <% wr_rows = workout.workout_routes.empty? ? 1 : workout.workout_routes.count %>
-        <td rowspan="<%= wr_rows %>"><%= workout.workout_date %></td>
-        <td rowspan="<%= wr_rows %>"><%= workout.workout_type.name %></td>
-        <% workout.workout_routes.each do |wr| %>
+      <% wr_rows = workout.workout_routes.empty? ? 1 : workout.workout_routes.count %>
+      <% first_workout_route = true %>
+      <% workout.workout_routes.each do |wr| %>
+        <tr>
+          <% if first_workout_route %>
+            <td rowspan="<%= wr_rows %>"><%= workout.workout_date %></td>
+            <td rowspan="<%= wr_rows %>"><%= workout.workout_type.name %></td>
+          <% end %>
           <td>
             <%= wr.route.name %>
           </td>
@@ -26,15 +29,20 @@
               <%= wr.route.description %>
             </div>
             <% wr.data_points.each do |dp| %>
-              <div>
-                <%= dp.data_type.name%>: <%= dp.to_s %>
-              </div>
+              <div><%= dp.to_s %></div>
+            <% end %>
+            <% if wr.repetitions > 1 %>
+              <div><%= pluralize(wr.repetitions, "repetition")%></div>
             <% end %>
           </td>
-        <% end %>
-        <td rowspan="<%= wr_rows %>"><%= link_to 'Edit', edit_workout_path(workout) %></td>
-        <td rowspan="<%= wr_rows %>"><%= link_to 'Delete', workout, method: :delete, data: { confirm: "Are you sure you want to delete the #{workout.workout_type.name} on #{workout.workout_date}?" } %></td>
-      </tr>
+          <% if first_workout_route %>
+            <td rowspan="<%= wr_rows %>"><%= link_to 'Edit', edit_workout_path(workout) %></td>
+            <td rowspan="<%= wr_rows %>"><%= link_to 'Delete', workout, method: :delete, data: { confirm: "Are you sure you want to delete the #{workout.workout_date} #{workout.workout_type.name} workout?" } %></td>
+          <% end %>
+          <% first_workout_route = false %>
+        </tr>
+      <% end %>
+
     <% end %>
   </tbody>
 </table>

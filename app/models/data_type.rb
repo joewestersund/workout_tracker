@@ -62,8 +62,8 @@ class DataType < ApplicationRecord
       json.id self.id
       json.name self.name
       json.description self.description
-      json.field_type self.field_type
       json.is_dropdown self.is_dropdown?
+      json.is_numeric self.is_numeric?
       if self.is_dropdown?
         json.options self.dropdown_options.order(:order_in_list) do |opt|
           json.option_id opt.id
