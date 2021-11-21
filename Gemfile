@@ -33,7 +33,9 @@ gem 'pg', '~> 1.1'
 gem 'font_awesome5_rails'
 gem 'recaptcha'
 
-gem 'react-rails'
+gem 'kaminari'  # for pagination, replacement for will_paginate
+
+#gem 'react-rails'
 
 
 group :development, :test do

@@ -35,11 +35,15 @@
         <td><%= route.name %></td>
         <td><%= route.description %></td>
         <td>
-          <% @data_types.each do |dt| %>
-            <% ddp = dt.default_data_points.where(route: route).first %>
-            <% if ddp.present? %>
-              <div><%= ddp.to_s %></div>
-            <% end %>
+          <% if route.default_data_points.count > 0 %>
+            <ul>
+              <% @data_types.each do |dt| %>
+                <% ddp = route.default_data_points.where(data_type: dt).first %>
+                <% if ddp.present? %>
+                  <li><%= ddp.to_s %></li>
+                <% end %>
+              <% end %>
+            </ul>
           <% end %>
           <%= link_to "add/edit", route_default_data_points_path(route) if route.workout_type.data_types.count > 0 %>
         </td>

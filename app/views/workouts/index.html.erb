@@ -1,5 +1,6 @@
 <h1>Workouts</h1>
 
+<%= paginate @workouts %>
 <table>
   <thead>
     <tr>
@@ -21,7 +22,7 @@
             <td rowspan="<%= wr_rows %>"><%= workout.workout_date %></td>
             <td rowspan="<%= wr_rows %>"><%= workout.workout_type.name %></td>
           <% end %>
-          <td>
+          <td class="show-border">
             <%= wr.route.name %>
           </td>
           <td>
@@ -46,7 +47,7 @@
     <% end %>
   </tbody>
 </table>
-
+<%= paginate @workouts %>
 <br>
 
 <%= link_to 'New Workout', new_workout_path %>

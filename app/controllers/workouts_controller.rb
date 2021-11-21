@@ -3,8 +3,10 @@ class WorkoutsController < ApplicationController
   before_action :set_workout, only: %i[ show edit update destroy ]
   before_action :get_workout_types, only: [:new, :edit]
   # GET /workouts or /workouts.json
+
   def index
-    @workouts = current_user.workouts.order(workout_date: :desc)
+    #w = current_user.workouts.order(workout_date: :desc)
+    @workouts = current_user.workouts.order(workout_date: :desc).page(params[:page]).per(10)
   end
 
   # GET /workouts/1 or /workouts/1.json

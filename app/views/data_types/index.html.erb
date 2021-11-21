@@ -32,10 +32,12 @@
         <td><%= dt.description %></td>
         <td><%= dt.field_type %></td>
         <td>
-          <% if dt.dropdown_options.present? %>
-            <% dt.dropdown_options.order(:order_in_list).each do |dto| %>
-              <div><%= dto.name %></div>
-            <% end %>
+          <% if dt.is_dropdown? %>
+            <ul>
+              <% dt.dropdown_options.order(:order_in_list).each do |dto| %>
+                <li><%= dto.name %></li>
+              <% end %>
+            </ul>
           <% end %>
           <%= link_to "edit options", data_type_dropdown_options_path(dt) if dt.is_dropdown? %>
         </td>

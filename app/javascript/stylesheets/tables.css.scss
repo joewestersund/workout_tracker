@@ -23,6 +23,15 @@ th:first-of-type, td:first-of-type {
   border-left: none;
 }
 
+td.show-border {
+  border-left: 1px black solid;  // override "first-of-type" where needed
+}
+
+td ul {
+  text-align: left;
+  margin: 0px;
+}
+
 td, th {
   &.not-assigned {
     background: darkgray;
