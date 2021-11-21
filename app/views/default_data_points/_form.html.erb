@@ -24,7 +24,7 @@
       <%= form.text_field :text_value %>
     <% else %>
       <%= form.label :decimal_value, ddp.data_type.name %>
-      <%= form.text_field :decimal_value %>
+      <%= form.number_field :decimal_value, {step: "any"} %>
     <% end %>
   </div>
 

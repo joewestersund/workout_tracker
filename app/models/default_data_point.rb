@@ -37,9 +37,9 @@ class DefaultDataPoint < ApplicationRecord
     count += 1 if decimal_value.present?
     count += 1 if text_value.present?
     if count == 0
-      record.errors.add :base, "No text, decimal or dropdown option id value was supplied."
+      self.errors.add :base, "The value cannot be blank."
     elsif count > 1
-      record.errors.add :base, "Only one value should be supplied, in either text, decimal or dropdown option id format."
+      self.errors.add :base, "Only one value should be supplied, in either text, decimal or dropdown option id format."
     end
   end
 

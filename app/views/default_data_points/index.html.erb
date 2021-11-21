@@ -5,6 +5,7 @@
     <tr>
       <th>Name</th>
       <th>Description</th>
+      <th>Field Type</th>
       <th>Unit</th>
       <th>Current Value</th>
       <th colspan="4"></th>
@@ -16,6 +17,7 @@
       <tr>
         <td><%= dt.name %></td>
         <td><%= dt.description %></td>
+        <td><%= dt.field_type%></td>
         <td><%= dt.unit %></td>
         <td>
           <% ddp = @route.default_data_points.find_by(data_type: dt) %>
