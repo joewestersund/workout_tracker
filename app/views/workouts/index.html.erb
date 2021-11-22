@@ -1,6 +1,9 @@
 <h1>Workouts</h1>
 
+<div class="links"><%= link_to 'New Workout', new_workout_path %></div>
+
 <%= paginate @workouts %>
+
 <table>
   <thead>
     <tr>
@@ -47,7 +50,7 @@
     <% end %>
   </tbody>
 </table>
-<%= paginate @workouts %>
-<br>
 
-<%= link_to 'New Workout', new_workout_path %>
+<%= paginate @workouts %>
+
+<div class="links"><%= link_to 'New Workout', new_workout_path %></div>

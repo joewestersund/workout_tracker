@@ -4,7 +4,7 @@ class WorkoutTypesController < ApplicationController
 
   # GET /workout_types or /workout_types.json
   def index
-    @workout_types = current_user.workout_types.order(:order_in_list)
+    @workout_types = current_user.workout_types.order(:order_in_list).page(params[:page]).per(10)
   end
 
   # GET /workout_types/new

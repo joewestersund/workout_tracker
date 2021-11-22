@@ -18,6 +18,14 @@
   </div>
 <% end %>
 
+<div class="links">
+  <%= link_to 'New Route', new_workout_type_route_path(@workout_type) %>
+  |
+  <%= link_to 'Edit the data types you can track for this Workout Type', workout_type_data_types_path(@workout_type) %>
+</div>
+
+<%= paginate @routes %>
+
 <table>
   <thead>
     <tr>
@@ -57,8 +65,10 @@
   </tbody>
 </table>
 
-<br>
+<%= paginate @routes %>
 
+<div class="links">
 <%= link_to 'New Route', new_workout_type_route_path(@workout_type) %>
 |
 <%= link_to 'Edit the data types you can track for this Workout Type', workout_type_data_types_path(@workout_type) %>
+</div>

@@ -2,12 +2,16 @@
 
 <p>What kind of workouts would you like to keep track of?</p>
 
+<div class="links"><%= link_to 'New Workout Type', new_workout_type_path %></div>
+
+<%= paginate @workout_types %>
+
 <table>
   <thead>
     <tr>
       <th>Name</th>
       <th>Order in list</th>
-      <th colspan="3"></th>
+      <th colspan="4"></th>
     </tr>
   </thead>
 
@@ -25,6 +29,6 @@
   </tbody>
 </table>
 
-<br>
+<%= paginate @workout_types %>
 
-<%= link_to 'New Workout Type', new_workout_type_path %>
+<div class="links"><%= link_to 'New Workout Type', new_workout_type_path %></div>
