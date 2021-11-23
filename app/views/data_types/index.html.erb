@@ -24,6 +24,7 @@
       <th>Field Type</th>
       <th>Dropdown Options</th>
       <th>Unit</th>
+      <th>Active</th>
       <th>Order in list</th>
       <th colspan="4"></th>
     </tr>
@@ -46,6 +47,7 @@
           <%= link_to "edit options", data_type_dropdown_options_path(dt) if dt.is_dropdown? %>
         </td>
         <td><%= dt.unit %></td>
+        <td><%= dt.active %></td>
         <td><%= dt.order_in_list %></td>
         <td><%= link_to 'Edit', edit_data_type_path(dt) %></td>
         <td><%= link_to 'Delete', dt, method: :delete, data: { confirm: "Are you sure you want to delete '#{dt.name}'?" } %></td>

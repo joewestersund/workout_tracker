@@ -54,7 +54,7 @@ class WorkoutRoute < ApplicationRecord
 
   def apply_defaults
     # apply the defaults to this route, not overwriting any data point values that exist
-    self.route.workout_type.data_types.order(:order_in_list).each do |dt|
+    self.route.workout_type.data_types.where(active: true).order(:order_in_list).each do |dt|
       if self.data_points.find_by(data_type: dt).nil?
         # we don't have a current data point for this data type
         ddp = route.default_data_points.find_by(data_type: dt)
@@ -72,7 +72,7 @@ class WorkoutRoute < ApplicationRecord
   def to_builder
     # need to sort data points so they appear in correct order in ui
     # can't do with join if some of the data points aren't saved to the database (were created from default / data type)
-    dp_array = self.data_points.sort_by { |dp| dp.data_type.order_in_list}
+    dp_array = self.data_points.sort_by { |dp| dp.data_type.order_in_list }
     Jbuilder.new do |json|
       json.route_id self.route_id
       json.route_name self.route.name

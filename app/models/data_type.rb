@@ -3,6 +3,7 @@
 # Table name: data_types
 #
 #  id              :bigint           not null, primary key
+#  active          :boolean
 #  description     :text
 #  field_type      :string
 #  name            :string
@@ -20,6 +21,8 @@
 #  index_data_types_on_workout_type_id           (workout_type_id)
 #
 class DataType < ApplicationRecord
+  after_initialize :set_defaults, unless: :persisted?
+
   belongs_to :user
   belongs_to :workout_type
 
@@ -38,6 +41,11 @@ class DataType < ApplicationRecord
       text: "text",
       numeric: "numeric"
   }
+
+  def set_defaults
+    self.active = true
+  end
+
 
   def self.field_types
     FIELD_TYPES.map{ |key, str| str }

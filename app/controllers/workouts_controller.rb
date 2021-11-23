@@ -26,7 +26,7 @@ class WorkoutsController < ApplicationController
       @workout.workout_type = current_user.workout_types.order(:order_in_list).first
     end
 
-    @routes = @workout.workout_type.routes.order(:order_in_list)
+    @routes = @workout.workout_type.routes.where(active: true).order(:order_in_list)
 
     apply_defaults(@workout)
     get_json(@workout)
@@ -70,7 +70,7 @@ class WorkoutsController < ApplicationController
   def update
     ActiveRecord::Base.transaction do
       begin
-        @workout.workout_routes.destroy_all
+        @workout.workout_routes.where(active: true).destroy_all   # don't delete the ones they didn't see
         @workout.update!(workout_params)
         save_workout_routes(@workout)
         respond_to do |format|
@@ -134,10 +134,6 @@ class WorkoutsController < ApplicationController
                 if dt_params[:value].present? or dt_params[:option_id].present?
                   if dt.is_dropdown?
                     opt = dt.dropdown_options.find(dt_params[:option_id])
-                    puts "********************"
-                    puts "data type: #{dt.name}: value: #{opt}"
-                    puts "opt.present?: #{opt.present?}"
-                    puts "********************"
                     if opt.present?
                       dp = wr.data_points.build(user: current_user, data_type: dt)
                       dp.dropdown_option = opt
@@ -145,10 +141,6 @@ class WorkoutsController < ApplicationController
                     end
                   elsif dt.is_text?
                     val = dt_params[:value]
-                    puts "********************"
-                    puts "data type: #{dt.name}: value: #{val}"
-                    puts "val.present?: #{val.present?}"
-                    puts "********************"
                     if val.present?
                       dp = wr.data_points.build(user: current_user, data_type: dt)
                       dp.text_value = val
@@ -156,11 +148,6 @@ class WorkoutsController < ApplicationController
                     end
                   else
                     val = dt_params[:value]
-
-                    puts "********************"
-                    puts "data type: #{dt.name}: value: #{val}"
-                    puts "val.present?: #{val.present?}"
-                    puts "********************"
                     if val.present?
                       dp = wr.data_points.build(user: current_user, data_type: dt)
                       dp.decimal_value = val
@@ -183,7 +170,7 @@ class WorkoutsController < ApplicationController
 
     def get_templates(workout)
       workout_route_templates = []
-      workout.workout_type.routes.order(:order_in_list).each do |route|
+      workout.workout_type.routes.where(active: true).order(:order_in_list).each do |route|
         workout_route_templates << WorkoutRoute.create_from_defaults(workout, route)
       end
       workout_route_templates
@@ -191,11 +178,15 @@ class WorkoutsController < ApplicationController
 
     def get_json(workout)
       workout_route_templates = get_templates(workout)
+      active_workout_routes = []
+      workout.workout_routes.each do |wr|
+        active_workout_routes << wr if wr.route.active?
+      end
 
       @workout_route_json = Jbuilder.new do |json|
-        json.workout_routes workout.workout_routes.collect { |wr| wr.to_builder.attributes! }
+        json.workout_routes active_workout_routes.collect { |wr| wr.to_builder.attributes! }
         json.workout_route_templates workout_route_templates.collect { |wr| wr.to_builder.attributes! }
-        json.data_types workout.workout_type.data_types.collect { |dt| dt.to_builder.attributes! }
+        json.data_types workout.workout_type.data_types.where(active: true).collect { |dt| dt.to_builder.attributes! }
       end.target!.html_safe
     end
 end

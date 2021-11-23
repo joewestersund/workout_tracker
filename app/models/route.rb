@@ -3,6 +3,7 @@
 # Table name: routes
 #
 #  id              :bigint           not null, primary key
+#  active          :boolean
 #  description     :text
 #  name            :string
 #  order_in_list   :integer
@@ -18,6 +19,8 @@
 #  index_routes_on_workout_type_id                                (workout_type_id)
 #
 class Route < ApplicationRecord
+  after_initialize :set_defaults, unless: :persisted?
+
   belongs_to :user
   belongs_to :workout_type
 
@@ -28,5 +31,9 @@ class Route < ApplicationRecord
   validates :workout_type_id, presence: true
   validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: [:user_id, :workout_type_id] }
   validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: [:user_id, :workout_type_id] }
+
+  def set_defaults
+    self.active = true
+  end
 
 end

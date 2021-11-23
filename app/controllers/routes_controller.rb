@@ -7,14 +7,14 @@ class RoutesController < ApplicationController
   # GET /routes or /routes.json
   def default_index
     @workout_type = @workout_types.first
-    @routes = @workout_type.routes.order(:order_in_list).page(params[:page]).per(10)
-    @data_types = @workout_type.data_types.order(:order_in_list)
+    @routes = @workout_type.routes.where(active: true).order(:order_in_list).page(params[:page]).per(10)
+    @data_types = @workout_type.data_types.where(active: true).order(:order_in_list)
     render :index
   end
 
   def index
-    @routes = @workout_type.routes.order(:order_in_list).page(params[:page]).per(10)
-    @data_types = @workout_type.data_types.order(:order_in_list)
+    @routes = @workout_type.routes.where(active: true).order(:order_in_list).page(params[:page]).per(10)
+    @data_types = @workout_type.data_types.where(active: true).order(:order_in_list)
   end
 
   # GET /routes/new
@@ -93,7 +93,7 @@ class RoutesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def route_params
-      params.require(:route).permit(:workout_type_id, :name, :distance, :description)
+      params.require(:route).permit(:workout_type_id, :name, :distance, :description, :active)
     end
 
     def move(up)

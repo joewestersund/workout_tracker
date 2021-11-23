@@ -8,6 +8,7 @@ class CreateDataTypes < ActiveRecord::Migration[6.1]
       t.string :unit
       t.text :description
       t.integer :order_in_list
+      t.boolean :active
 
       t.timestamps
     end

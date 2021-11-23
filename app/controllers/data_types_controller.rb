@@ -7,12 +7,12 @@ class DataTypesController < ApplicationController
 
   def default_index
     @workout_type = @workout_types.first
-    @data_types = @workout_type.data_types.order(:order_in_list).page(params[:page]).per(10)
+    @data_types = @workout_type.data_types.where(active: true).order(:order_in_list).page(params[:page]).per(10)
     render :index
   end
 
   def index
-    @data_types = @workout_type.data_types.order(:order_in_list).page(params[:page]).per(10)
+    @data_types = @workout_type.data_types.where(active: true).order(:order_in_list).page(params[:page]).per(10)
   end
 
   # GET /data_types/new
@@ -95,7 +95,7 @@ class DataTypesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def data_type_params
-      params.require(:data_type).permit(:name, :field_type, :unit, :description)
+      params.require(:data_type).permit(:name, :field_type, :unit, :description, :active)
     end
 
     def move(up)

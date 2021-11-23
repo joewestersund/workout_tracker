@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 2021_11_11_052330) do
     t.string "unit"
     t.text "description"
     t.integer "order_in_list"
+    t.boolean "active"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id", "workout_type_id", "order_in_list"], name: "index_adt_on_user_and_workout_type_and_order"
@@ -78,6 +79,7 @@ ActiveRecord::Schema.define(version: 2021_11_11_052330) do
     t.string "name"
     t.text "description"
     t.integer "order_in_list"
+    t.boolean "active"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id", "workout_type_id", "order_in_list"], name: "index_routes_on_user_id_and_workout_type_id_and_order_in_list"
