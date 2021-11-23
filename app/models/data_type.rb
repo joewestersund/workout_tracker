@@ -31,6 +31,8 @@ class DataType < ApplicationRecord
   validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: [:user_id, :workout_type_id] }
   validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: [:user_id, :workout_type_id] }
 
+  validate :field_type_is_valid
+
   FIELD_TYPES = {
       dropdown: "dropdown list",
       text: "text",
@@ -43,6 +45,10 @@ class DataType < ApplicationRecord
 
   def self.field_types_hash
     FIELD_TYPES
+  end
+
+  def field_type_is_valid
+    FIELD_TYPES.has_value?(field_type)
   end
 
   def is_dropdown?

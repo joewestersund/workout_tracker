@@ -52,6 +52,8 @@ Rails.application.routes.draw do
   get '/signup', to: 'users#new' # creates named path 'signup'
   get 'password/forgot', to: 'users#forgot_password'
   post 'password/send_reset_email', to: 'users#send_password_reset_email'
+  get 'password/resend_activation_email', to: 'users#activate', as: :activate
+  post 'password/resend_activation_email', to: 'users#resend_activation_email'
   get 'password/reset/:token', to: 'users#reset_password'
   get 'activate_account/:token', to: 'users#reset_password'
 

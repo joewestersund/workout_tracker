@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
   include UsersHelper
 
-  before_action :signed_in_user, only: [:edit_profile, :edit_password, :update, :update_password, :destroy ]
+  before_action :signed_in_user, only: [:edit_profile, :update, :destroy ]
+  before_action :signed_in_user_unactivated_ok, only: [ :edit_password, :update_password ]
   before_action :set_self_as_user, only: %i[ edit_profile update update_profile edit_password update_password destroy ]
 
 
@@ -24,13 +25,11 @@ class UsersController < ApplicationController
       set_up_user_defaults(@user) # set up default workout types etc
 
       @user.generate_password_token!
-
       NotificationMailer.new_user_email(@user).deliver
 
       notice_text = "We've sent an email to you at #{@user.email}. Please use the link in that email to set your password and activate your account."
-      respond_to do |format|
-        format.html { redirect_to welcome_path, notice: notice_text }
-      end
+
+      format.html { redirect_to activate_path, notice: notice_text }
     else
       render 'new'
     end
@@ -84,13 +83,26 @@ class UsersController < ApplicationController
   def send_password_reset_email
     @user = User.find_by(email: params[:email])
     respond_to do |format|
-      if @user.present? && @user.active? && (verify_recaptcha(model: @user) || Rails.env == "development")
+      if @user.present? && (verify_recaptcha(model: @user) || Rails.env == "development")
         @user.generate_password_token!
         NotificationMailer.password_reset_email(@user).deliver
         format.html { redirect_to signin_path, notice: "A password reset email has been sent to #{@user.name} at #{@user.email}. Please use the link in that email to reset your password in the next #{pluralize(User.hours_to_reset_password,"hour")}." }
       else
         format.html { redirect_to password_forgot_path, alert: "That email address was not recognized, or the recaptcha was not recognized." }
       end
+    end
+  end
+
+  def resend_activation_email
+    @user = User.find_by(email: params[:email])
+    if @user.present? && (verify_recaptcha(model: @user) || Rails.env == "development")
+
+      @user.generate_password_token!
+      NotificationMailer.new_user_email(@user).deliver
+
+      notice_text = "We've sent an email to you at #{@user.email}. Please use the link in that email to set your password and activate your account."
+
+      redirect_to activate_path, notice: notice_text
     end
   end
 
@@ -144,12 +156,6 @@ class UsersController < ApplicationController
 
     def user_params_change_password()
       params.require(:user).permit(:password, :password_confirmation)
-    end
-
-    def create_user_defaults(user)
-      WorkoutType.default_types.each do |wt_name|
-        user.workout_types.create(name: wt_name)
-      end
     end
 
 end

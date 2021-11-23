@@ -1,0 +1,13 @@
+<div class="welcome">
+  <h3>Welcome to Workout Tracker!</h3>
+
+  <p>Please look for an email that includes a link to activate your account.</p>
+
+  <p>To have your password activation email resent, go here </p>
+  <%= form_tag password_resend_activation_email_path do %>
+    <%= hidden_field_tag :email, current_user.email %>
+    <%= recaptcha_tags %>
+    <%= submit_tag "Submit", class: "btn btn-large btn-primary" %>
+  <% end %>
+
+</div>
