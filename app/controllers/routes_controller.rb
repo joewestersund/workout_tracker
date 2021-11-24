@@ -7,13 +7,13 @@ class RoutesController < ApplicationController
   # GET /routes or /routes.json
   def default_index
     @workout_type = @workout_types.first
-    @routes = @workout_type.routes.where(active: true).order(:order_in_list).page(params[:page]).per(10)
+    @routes = @workout_type.routes.order(:order_in_list).page(params[:page]).per(10)
     @data_types = @workout_type.data_types.where(active: true).order(:order_in_list)
     render :index
   end
 
   def index
-    @routes = @workout_type.routes.where(active: true).order(:order_in_list).page(params[:page]).per(10)
+    @routes = @workout_type.routes.order(:order_in_list).page(params[:page]).per(10)
     @data_types = @workout_type.data_types.where(active: true).order(:order_in_list)
   end
 

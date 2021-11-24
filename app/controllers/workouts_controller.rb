@@ -70,7 +70,11 @@ class WorkoutsController < ApplicationController
   def update
     ActiveRecord::Base.transaction do
       begin
-        @workout.workout_routes.where(active: true).destroy_all   # don't delete the ones they didn't see
+        @workout.workout_routes.each do |wr|
+          if wr.route.active?
+            wr.destroy   # don't delete the ones they didn't see
+          end
+        end
         @workout.update!(workout_params)
         save_workout_routes(@workout)
         respond_to do |format|

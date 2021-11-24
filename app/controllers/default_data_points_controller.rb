@@ -5,7 +5,7 @@ class DefaultDataPointsController < ApplicationController
 
   # GET /default_data_points or /default_data_points.json
   def index
-    @data_types = @route.workout_type.data_types.order(:order_in_list)
+    @data_types = @route.workout_type.data_types.where(active: true).order(:order_in_list)
   end
 
   # GET /default_data_points/new

@@ -26,5 +26,4 @@ class DropdownOption < ApplicationRecord
   validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: [:user_id, :data_type_id] }
   validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: [:user_id, :data_type_id] }
 
-
 end

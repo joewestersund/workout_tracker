@@ -72,7 +72,10 @@ class WorkoutRoute < ApplicationRecord
   def to_builder
     # need to sort data points so they appear in correct order in ui
     # can't do with join if some of the data points aren't saved to the database (were created from default / data type)
-    dp_array = self.data_points.sort_by { |dp| dp.data_type.order_in_list }
+    dp_array = self.data_points.map{ |dp| dp.data_type.active? ? dp : nil }
+        .compact
+        .sort_by { |dp| dp.data_type.order_in_list }
+
     Jbuilder.new do |json|
       json.route_id self.route_id
       json.route_name self.route.name

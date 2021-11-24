@@ -46,7 +46,6 @@ class DataType < ApplicationRecord
     self.active = true
   end
 
-
   def self.field_types
     FIELD_TYPES.map{ |key, str| str }
   end
