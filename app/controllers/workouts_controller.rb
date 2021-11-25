@@ -121,8 +121,6 @@ class WorkoutsController < ApplicationController
       # unless they appear in the new wr received from the user.
       workout_routes_to_delete = workout.workout_routes.map{ |wr| wr.route.active? ? wr : nil }.compact
 
-      show_debug_info("workout_routes_to_delete", workout_routes_to_delete,)
-
       route_count = params.require(:workout).permit(:route_count)[:route_count].to_i
       1.upto(route_count) do |num|
         workout_params = params.require(:workout)
@@ -136,13 +134,10 @@ class WorkoutsController < ApplicationController
             workout_route_id = route_params[:workout_route_id]
             if workout_route_id.present?
               # edit existing workout_route, to preserve values of any inactive data_types
-              show_debug_info("found workout_route_id #{workout_route_id}")
               wr = workout.workout_routes.where(id: workout_route_id).first
-              show_debug_info("got workout_route #{wr}")
               if wr.present? && wr.route == route
                 # remove wr from the array.
                 workout_routes_to_delete.delete(wr)
-                show_debug_info("removing workout_route for route #{wr.route.name}")
               else
                 # create a new workout_route
                 wr = workout.workout_routes.build(user: current_user, route: route)
@@ -169,7 +164,6 @@ class WorkoutsController < ApplicationController
                   if dp.present?
                     # remove dp from the array.
                     data_points_to_delete.delete(dp)
-                    show_debug_info("editing existing data point #{dp.to_s}")
                   else
                     # we didn't find an existing data point, so make a new one
                     dp = wr.data_points.build(user: current_user, data_type: dt)
@@ -196,12 +190,10 @@ class WorkoutsController < ApplicationController
                 end
               end
             end
-            show_debug_info("deleting data points #{data_points_to_delete.each {|dp| dp.to_s }}")
             data_points_to_delete.each {|dp| dp.destroy }
           end
         end
       end
-      show_debug_info("deleting workout_routes #{workout_routes_to_delete.each {|wr| wr.route.name }}")
       workout_routes_to_delete.each {|wr| wr.destroy }
     end
 
@@ -211,13 +203,14 @@ class WorkoutsController < ApplicationController
       end
     end
 
-    def get_templates(workout, active_only)
+    def get_templates(workout)
       workout_route_templates = []
-      if active_only
-        routes = workout.workout_type.routes.where(active: true)
-      else
-        routes = workout.workout_type.routes
-      end
+
+      inactive_routes_in_current_workout = workout.workout_routes.map{ |wr| wr.route.active? ? nil : wr.route.id}.compact
+      # start with the active routes
+      # and add any inactive routes that are in the current workout
+      routes = workout.workout_type.routes.where(active: true).or(workout.workout_type.routes.where(id: inactive_routes_in_current_workout))
+
       routes.order(:order_in_list).each do |route|
         workout_route_templates << WorkoutRoute.create_from_defaults(workout, route)
       end
@@ -225,13 +218,8 @@ class WorkoutsController < ApplicationController
     end
 
     def get_json(workout)
-      # if we're editing an existing workout that contains some inactive routes,
-      # then include inactive routes in json.workout_routes and json.workout_route_templates
-      # otherwise, include only active routes.
-      active_workout_routes = workout.workout_routes.map{ |wr| wr.route.active? ? wr : nil}.compact
-      active_only = (workout.workout_routes.count == active_workout_routes.count)
 
-      workout_route_templates = get_templates(workout, active_only)
+      workout_route_templates = get_templates(workout)
 
       @workout_route_json = Jbuilder.new do |json|
         json.workout_routes workout.workout_routes.map { |wr| wr.to_builder.attributes! }
