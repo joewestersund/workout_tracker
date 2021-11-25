@@ -19,7 +19,7 @@
     <% @workouts.each do |workout| %>
       <% wr_rows = workout.workout_routes.empty? ? 1 : workout.workout_routes.count %>
       <% first_workout_route = true %>
-      <% workout.workout_routes.each do |wr| %>
+      <% workout.workout_routes.order(:updated_at).each do |wr|   # order by updated date to maintain order user had in form %>
         <tr>
           <% if first_workout_route %>
             <td rowspan="<%= wr_rows %>"><%= workout.workout_date %></td>
@@ -32,7 +32,7 @@
             <div>
               <%= wr.route.description %>
             </div>
-            <% wr.data_points.each do |dp| %>
+            <% wr.data_points.sort_by { |dp| dp.data_type.order_in_list }.each do |dp| %>
               <div><%= dp.to_s %></div>
             <% end %>
             <% if wr.repetitions > 1 %>

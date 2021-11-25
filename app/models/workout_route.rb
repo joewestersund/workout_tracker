@@ -77,6 +77,7 @@ class WorkoutRoute < ApplicationRecord
         .sort_by { |dp| dp.data_type.order_in_list }
 
     Jbuilder.new do |json|
+      json.workout_route_id self.id
       json.route_id self.route_id
       json.route_name self.route.name
       json.repetitions self.repetitions

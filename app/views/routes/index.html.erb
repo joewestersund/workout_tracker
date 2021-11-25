@@ -43,7 +43,7 @@
       <tr>
         <td><%= route.name %></td>
         <td><%= route.description %></td>
-        <td><%= route.active %></td>
+        <td><%= display_bool(route.active) %></td>
         <td>
           <% if route.default_data_points.count > 0 %>
             <ul>

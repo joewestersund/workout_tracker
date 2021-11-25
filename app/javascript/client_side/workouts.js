@@ -113,6 +113,12 @@ function ready() {
             items.push( "<option value='" + wrt.route_id + "'>" + wrt.route_name + "</option>" );
         });
 
+        $("<input/>", {
+            type: "hidden",
+            "name": "workout[route" + route_number + "[workout_route_id]]",
+            value: wr.workout_route_id
+        }).appendTo( "#" + route_info_element );
+
         $("<label/>", {
             "for": "route-dropdown" + route_number,
             html: "Route"
