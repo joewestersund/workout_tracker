@@ -56,13 +56,8 @@ class WorkoutRoute < ApplicationRecord
     # apply the defaults to this route, not overwriting any data point values that exist
     self.route.workout_type.data_types.where(active: true).order(:order_in_list).each do |dt|
       if self.data_points.find_by(data_type: dt).nil?
-        # we don't have a current data point for this data type
-        ddp = route.default_data_points.find_by(data_type: dt)
-        if ddp.present?
-          dp = DataPoint.create_from_default(ddp)
-        else
-          dp = DataPoint.create_from_data_type(dt)
-        end
+        # for an existing workout_route, don't apply default data points. That's only for templates for new wr.
+        dp = DataPoint.create_from_data_type(dt)
         dp.workout_route = self
         self.data_points << dp
       end
