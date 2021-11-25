@@ -9,10 +9,6 @@ class WorkoutsController < ApplicationController
     @workouts = current_user.workouts.order(workout_date: :desc, created_at: :desc).page(params[:page]).per(10)
   end
 
-  # GET /workouts/1 or /workouts/1.json
-  def show
-  end
-
   # GET /workouts/new
   def new
     @workout = Workout.new
@@ -109,7 +105,12 @@ class WorkoutsController < ApplicationController
     end
 
     def get_workout_types
-      @workout_types = current_user.workout_types.order(:order_in_list)
+      # only include workout types that have one or more routes.
+      workout_types = current_user.workout_types.order(:order_in_list)
+      @workout_types = []
+      workout_types.each do |wt|
+        @workout_types << wt if wt.routes.count > 0
+      end
     end
 
     def save_workout_routes(workout)

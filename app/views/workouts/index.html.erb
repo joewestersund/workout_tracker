@@ -1,56 +1,70 @@
 <h1>Workouts</h1>
 
-<div class="links"><%= link_to 'New Workout', new_workout_path %></div>
-
-<%= paginate @workouts %>
-
-<table>
-  <thead>
-    <tr>
-      <th>Workout date</th>
-      <th>Workout type</th>
-      <th>Routes</th>
-      <th>Route Details</th>
-      <th colspan="2"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @workouts.each do |workout| %>
-      <% wr_rows = workout.workout_routes.empty? ? 1 : workout.workout_routes.count %>
-      <% first_workout_route = true %>
-      <% workout.workout_routes.order(:updated_at).each do |wr|   # order by updated date to maintain order user had in form %>
-        <tr>
-          <% if first_workout_route %>
-            <td rowspan="<%= wr_rows %>"><%= workout.workout_date %></td>
-            <td rowspan="<%= wr_rows %>"><%= workout.workout_type.name %></td>
-          <% end %>
-          <td class="show-border">
-            <%= wr.route.name %>
-          </td>
-          <td>
-            <div>
-              <%= wr.route.description %>
-            </div>
-            <% wr.data_points.sort_by { |dp| dp.data_type.order_in_list }.each do |dp| %>
-              <div><%= dp.to_s %></div>
-            <% end %>
-            <% if wr.repetitions > 1 %>
-              <div><%= pluralize(wr.repetitions, "repetition")%></div>
-            <% end %>
-          </td>
-          <% if first_workout_route %>
-            <td rowspan="<%= wr_rows %>"><%= link_to 'Edit', edit_workout_path(workout) %></td>
-            <td rowspan="<%= wr_rows %>"><%= link_to 'Delete', workout, method: :delete, data: { confirm: "Are you sure you want to delete the #{workout.workout_date} #{workout.workout_type.name} workout?" } %></td>
-          <% end %>
-          <% first_workout_route = false %>
-        </tr>
+<% if current_user.workout_types.count == 0   # they can't add a workout until they add workout_types and routes %>
+  <p>Welcome to Log My Workout!</p>
+  <p>To start, please <%= link_to "add one or more workout types", workout_types_path %>. For each workout type, you'll need to define one or more routes.</p>
+<% elsif current_user.routes.count == 0   # they can't add a workout until they add routes %>
+  <p>Welcome to Log My Workout!</p>
+  <p>You currently have these workout types set up for you:</p>
+    <ul>
+      <% current_user.workout_types.order(:order_in_list).each do |wt| %>
+        <li><%= wt.name %></li>
       <% end %>
+    </ul>
+   <p>To start logging your workouts, you'll first need to <%= link_to "add one or more Routes", routes_default_path %> for each workout type.</p>
+<% else %>
+  <div class="links"><%= link_to 'New Workout', new_workout_path %></div>
 
-    <% end %>
-  </tbody>
-</table>
+  <%= paginate @workouts %>
 
-<%= paginate @workouts %>
+  <table>
+    <thead>
+      <tr>
+        <th>Workout date</th>
+        <th>Workout type</th>
+        <th>Routes</th>
+        <th>Route Details</th>
+        <th colspan="2"></th>
+      </tr>
+    </thead>
 
-<div class="links"><%= link_to 'New Workout', new_workout_path %></div>
+    <tbody>
+      <% @workouts.each do |workout| %>
+        <% wr_rows = workout.workout_routes.empty? ? 1 : workout.workout_routes.count %>
+        <% first_workout_route = true %>
+        <% workout.workout_routes.order(:updated_at).each do |wr|   # order by updated date to maintain order user had in form %>
+          <tr>
+            <% if first_workout_route %>
+              <td rowspan="<%= wr_rows %>"><%= workout.workout_date %></td>
+              <td rowspan="<%= wr_rows %>"><%= workout.workout_type.name %></td>
+            <% end %>
+            <td class="show-border">
+              <%= wr.route.name %>
+            </td>
+            <td>
+              <div>
+                <%= wr.route.description %>
+              </div>
+              <% wr.data_points.sort_by { |dp| dp.data_type.order_in_list }.each do |dp| %>
+                <div><%= dp.to_s %></div>
+              <% end %>
+              <% if wr.repetitions > 1 %>
+                <div><%= pluralize(wr.repetitions, "repetition")%></div>
+              <% end %>
+            </td>
+            <% if first_workout_route %>
+              <td rowspan="<%= wr_rows %>"><%= link_to 'Edit', edit_workout_path(workout) %></td>
+              <td rowspan="<%= wr_rows %>"><%= link_to 'Delete', workout, method: :delete, data: { confirm: "Are you sure you want to delete the #{workout.workout_date} #{workout.workout_type.name} workout?" } %></td>
+            <% end %>
+            <% first_workout_route = false %>
+          </tr>
+        <% end %>
+
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @workouts %>
+
+  <div class="links"><%= link_to 'New Workout', new_workout_path %></div>
+<% end %>

@@ -24,7 +24,7 @@ class Route < ApplicationRecord
   belongs_to :user
   belongs_to :workout_type
 
-  has_many :workout_routes, dependent: :restrict_with_exception
+  has_many :workout_routes, dependent: :destroy
   has_many :default_data_points, dependent: :destroy
 
   validates :user_id, presence: true

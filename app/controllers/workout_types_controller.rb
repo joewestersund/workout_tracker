@@ -60,7 +60,7 @@ class WorkoutTypesController < ApplicationController
     @workout_type.destroy
     handle_delete_of_order_in_list(current_user.workout_types,current_workout_type_oil)
     respond_to do |format|
-      format.html { redirect_to workout_types_url, notice: "Workout type was successfully destroyed." }
+      format.html { redirect_to workout_types_url, notice: "Workout type was successfully deleted." }
       format.json { head :no_content }
     end
   end

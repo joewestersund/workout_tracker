@@ -68,11 +68,16 @@ class RoutesController < ApplicationController
 
   # DELETE /routes/1 or /routes/1.json
   def destroy
+    # delete any workouts that only consisted of this route.
+    current_user.workout_routes.where(route: @route).each do |wr|
+      wr.workout.destroy if wr.workout.workout_routes.count == 1
+    end
+
     deleted_OIL = @route.order_in_list
     @route.destroy
     handle_delete_of_order_in_list(@workout_type.routes,deleted_OIL)
     respond_to do |format|
-      format.html { redirect_to workout_type_routes_path(@workout_type), notice: "Route was successfully destroyed." }
+      format.html { redirect_to workout_type_routes_path(@workout_type), notice: "Route was successfully deleted." }
       format.json { head :no_content }
     end
   end

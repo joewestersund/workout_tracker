@@ -3,41 +3,28 @@
 
 Rails.application.routes.draw do
 
-  resources :default_data_points
-  resources :workouts
+  resources :default_data_points, except: :show
+  resources :workouts, except: :show
 
-  resources :workout_types, shallow: true do
-    resources :routes, shallow: true do
-      resources :default_data_points
+  resources :workout_types, except: :show, shallow: true do
+    resources :routes, except: :show, shallow: true do
+      resources :default_data_points, except: :show
     end
-    resources :data_types, shallow: true do
-      resources :dropdown_options
-      resources :data_points
+    resources :data_types, except: :show, shallow: true do
+      resources :dropdown_options, except: :show
+      resources :data_points, except: :show
     end
   end
 
   post '/workout_types/:id/move_up', to: 'workout_types#move_up'
   post '/workout_types/:id/move_down', to: 'workout_types#move_down'
 
-  #get '/workout_types/:id/default_workout_routes', to: 'workout_types#default_workout_routes'
-
   get '/routes', to: 'routes#default_index', as: :routes_default  # show routes for the first workout type
   get '/data_types', to: 'data_types#default_index', as: :data_types_default  # show dts for the first workout type
-  #get '/dropdown_options', to: 'dropdown_options#default_index', as: :dropdown_options_default # show adts options for the first adt for the first workout type
 
-  #get '/routes/:workout_type_id', to: 'routes#index', as: :routes
-  #get '/routes/:workout_type_id/new', to: 'routes#new', as: :new_route
-  #post '/routes/:workout_type_id/', to: 'routes#create', as: :create_route
-  #post '/routes/:workout_type_id/:id/edit', to: 'routes#edit', as: :edit_route
-  #post '/routes/:workout_type_id/:id', to: 'routes#update', as: :update_route
-  #delete '/routes/:workout_type_id/:id', to: 'routes#destroy', as: :destroy_route
   post '/routes/:id/move_up', to: 'routes#move_up', as: :move_route_up
   post '/routes/:id/move_down', to: 'routes#move_down', as: :move_route_down
 
-  #resources :workout_routes
-
-  resources :data_points
-  resources :dropdown_options
   post '/dropdown_options/:id/move_up', to: 'dropdown_options#move_up'
   post '/dropdown_options/:id/move_down', to: 'dropdown_options#move_down'
 
