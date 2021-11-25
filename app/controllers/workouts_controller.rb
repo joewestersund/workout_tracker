@@ -26,7 +26,7 @@ class WorkoutsController < ApplicationController
       @workout.workout_type = current_user.workout_types.order(:order_in_list).first
     end
 
-    @routes = @workout.workout_type.routes.where(active: true).order(:order_in_list)
+    #@routes = @workout.workout_type.routes.where(active: true).order(:order_in_list)
 
     apply_defaults(@workout)
     get_json(@workout)
@@ -211,23 +211,30 @@ class WorkoutsController < ApplicationController
       end
     end
 
-    def get_templates(workout)
+    def get_templates(workout, active_only)
       workout_route_templates = []
-      workout.workout_type.routes.where(active: true).order(:order_in_list).each do |route|
+      if active_only
+        routes = workout.workout_type.routes.where(active: true)
+      else
+        routes = workout.workout_type.routes
+      end
+      routes.order(:order_in_list).each do |route|
         workout_route_templates << WorkoutRoute.create_from_defaults(workout, route)
       end
       workout_route_templates
     end
 
     def get_json(workout)
-      workout_route_templates = get_templates(workout)
-      active_workout_routes = []
-      workout.workout_routes.each do |wr|
-        active_workout_routes << wr if wr.route.active?
-      end
+      # if we're editing an existing workout that contains some inactive routes,
+      # then include inactive routes in json.workout_routes and json.workout_route_templates
+      # otherwise, include only active routes.
+      active_workout_routes = workout.workout_routes.map{ |wr| wr.route.active? ? wr : nil}.compact
+      active_only = (workout.workout_routes.count == active_workout_routes.count)
+
+      workout_route_templates = get_templates(workout, active_only)
 
       @workout_route_json = Jbuilder.new do |json|
-        json.workout_routes active_workout_routes.map { |wr| wr.to_builder.attributes! }
+        json.workout_routes workout.workout_routes.map { |wr| wr.to_builder.attributes! }
         json.workout_route_templates workout_route_templates.map { |wr| wr.to_builder.attributes! }
         json.data_types workout.workout_type.data_types.where(active: true).map { |dt| dt.to_builder.attributes! }
       end.target!.html_safe
