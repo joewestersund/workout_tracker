@@ -172,19 +172,13 @@ class WorkoutsController < ApplicationController
                   if dt.is_dropdown?
                     opt = dt.dropdown_options.find(dt_params[:option_id])
                     if opt.present?
-                      dp.dropdown_option = opt
-                      dp.save!
-                    end
-                  elsif dt.is_text?
-                    val = dt_params[:value]
-                    if val.present?
-                      dp.text_value = val
+                      dp.set_value(opt.id)
                       dp.save!
                     end
                   else
                     val = dt_params[:value]
                     if val.present?
-                      dp.decimal_value = val
+                      dp.set_value(val)
                       dp.save!
                     end
                   end

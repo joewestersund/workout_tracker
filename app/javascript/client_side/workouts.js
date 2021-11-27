@@ -49,7 +49,7 @@ function ready() {
                 html: dt.name
             }).appendTo( route_details_element );
 
-            if (dt.is_dropdown) {
+            if (dt.field_type == "dropdown list") {
                 var items = [];
                 items.push( "<option value=''></option>" );  //include blank option in dropdown
                 dt.options.forEach( (opt) => {
@@ -64,11 +64,13 @@ function ready() {
                 // set the selected value in the dropdown
                 $("#" + route_number_string + "data-type-id" + dp.data_type_id).val(dp.value);
             } else {
-                var type = dt.is_numeric ? "number" : "";
-                var step = dt.is_numeric ? "any" : "";
+                var type = (dt.field_type == "numeric") ? "number" : "";
+                var step = (dt.field_type == "numeric") ? "any" : "";
                 $("<input/>", {
                     type: type,
                     step: step,
+                    pattern: dt.input_pattern,
+                    title: dt.title_string,
                     "name": "workout[route" + route_number + "[data_type" + dp.data_type_id + "[value]]",
                     id: route_number_string + "data-type-id" + dp.data_type_id,
                     value: dp.value

@@ -49,7 +49,11 @@ class DataPoint < ApplicationRecord
     elsif text_value.present?
       val = text_value
     else
-      val = decimal_value
+      if self.data_type.is_hours_minutes? || self.data_type.is_minutes_seconds?
+        val = self.data_type.convert_from_number(decimal_value)
+      else
+        val = decimal_value
+      end
     end
     val
   end
@@ -60,13 +64,32 @@ class DataPoint < ApplicationRecord
     elsif text_value.present?
       val = text_value
     else
-      val = decimal_value
+      if self.data_type.is_hours_minutes? || self.data_type.is_minutes_seconds?
+        val = self.data_type.convert_from_number(decimal_value)
+      else
+        val = decimal_value
+      end
     end
     val
   end
 
   def to_s
     "#{self.data_type.name}: #{self.value_to_s}"
+  end
+
+  def set_value(value)
+    dt = self.data_type
+    if dt.is_dropdown?
+      self.dropdown_option_id = value
+    elsif dt.is_text?
+      self.text_value = value
+    elsif dt.is_numeric?
+      self.decimal_value = value
+    elsif dt.is_hours_minutes? || dt.is_minutes_seconds?
+      self.decimal_value = dt.convert_to_number(value)
+    else
+      raise "could not set value #{value}"
+    end
   end
 
   def DataPoint.create_from_data_type(data_type)
