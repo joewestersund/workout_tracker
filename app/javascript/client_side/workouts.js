@@ -8,6 +8,7 @@ function ready() {
     const ROUTE_INFO_PREFIX = "route-info";
     const ROUTE_DETAILS_PREFIX = "route-details";
     const ROUTE_ID_PREFIX = "r"; //to make sure the keys for m_workout_route_templates don't look like numbers, so order is preserved
+    const SHORT_INPUT = "short-input";
 
     function setEvents(){
         $(ROUTES_LIST_ELEMENT).on('change','.route-dropdown',function(event){
@@ -66,11 +67,13 @@ function ready() {
             } else {
                 var type = (dt.field_type == "numeric") ? "number" : "";
                 var step = (dt.field_type == "numeric") ? "any" : "";
+                var klass = (dt.field_type != "text" && dt.field_type != "dropdown list") ? SHORT_INPUT : "";
                 $("<input/>", {
                     type: type,
                     step: step,
                     pattern: dt.input_pattern,
                     title: dt.title_string,
+                    class: klass,
                     "name": "workout[route" + route_number + "[data_type" + dp.data_type_id + "[value]]",
                     id: route_number_string + "data-type-id" + dp.data_type_id,
                     value: dp.value
@@ -87,6 +90,7 @@ function ready() {
         $("<input/>", {
             type: "number",
             min: 1,
+            class: SHORT_INPUT,
             "name": "workout[route" + route_number + "[repetitions]]",
             id: route_number_string + "repetitions",
             value: workout_route.repetitions
