@@ -1,7 +1,5 @@
 class NotificationMailer < ActionMailer::Base
 
-  require 'mailgun-ruby'
-
   default from: "#{APPLICATION_NAME} <#{APPLICATION_EMAIL_ADDRESS}>"
 
   def password_reset_email(user)
