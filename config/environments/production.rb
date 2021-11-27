@@ -73,6 +73,15 @@ Rails.application.configure do
 
   Rails.application.routes.default_url_options[:host]= 'https://log-my-workout.herokuapp.com'
 
+  # added for sending emails via mailgun
+  config.action_mailer.delivery_method = :mailgun
+  config.action_mailer.mailgun_settings = {
+      api_key: ENV['MAILGUN_API_KEY'],
+      domain: ENV['MAILGUN_DOMAIN'],
+      # api_host: 'api.eu.mailgun.net'  # Uncomment this line for EU region domains
+  }
+  # end mailgun additions
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
