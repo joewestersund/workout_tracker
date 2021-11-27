@@ -12,23 +12,27 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params_new)
+    if (verify_recaptcha(model: @user) || Rails.env == "development")
+      @user = User.new(user_params_new)
 
-    #create a temporary password. We won't tell them what it is, but it will prevent anyone from logging into this account until they create one
-    pw = User.generate_random_password
-    @user.password = pw
-    @user.password_confirmation = pw
+      #create a temporary password. We won't tell them what it is, but it will prevent anyone from logging into this account until they create one
+      pw = User.generate_random_password
+      @user.password = pw
+      @user.password_confirmation = pw
 
-    if @user.save
+      if @user.save
 
-      sign_in @user
+        sign_in @user
 
-      @user.generate_password_token!
-      NotificationMailer.new_user_email(@user).deliver
+        @user.generate_password_token!
+        NotificationMailer.new_user_email(@user).deliver
 
-      notice_text = "We've sent an email to you at #{@user.email}. Please use the link in that email to set your password and activate your account."
+        notice_text = "We've sent an email to you at #{@user.email}. Please use the link in that email to set your password and activate your account."
 
-      format.html { redirect_to activate_path, notice: notice_text }
+        redirect_to activate_path, notice: notice_text
+      else
+        render 'new'
+      end
     else
       render 'new'
     end

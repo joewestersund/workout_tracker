@@ -26,6 +26,10 @@
     <%= form.time_zone_select :time_zone %>
   </div>
 
+  <% if new_user %>
+    <%= recaptcha_tags %>
+  <% end %>
+
   <div class="actions">
     <%= form.submit value: button_label %>
   </div>
