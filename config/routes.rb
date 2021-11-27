@@ -37,12 +37,12 @@ Rails.application.routes.draw do
 
   resources :users, except: [:show, :destroy]
   get '/signup', to: 'users#new' # creates named path 'signup'
-  get 'password/forgot', to: 'users#forgot_password'
-  post 'password/send_reset_email', to: 'users#send_password_reset_email'
-  get 'password/resend_activation_email', to: 'users#activate', as: :activate
-  post 'password/resend_activation_email', to: 'users#resend_activation_email'
-  get 'password/reset/:token', to: 'users#reset_password'
-  get 'activate_account/:token', to: 'users#reset_password'
+  get '/password/forgot', to: 'users#forgot_password'
+  post '/password/send_reset_email', to: 'users#send_password_reset_email'
+  get '/password/resend_activation_email', to: 'users#activate', as: :activate
+  post '/password/resend_activation_email', to: 'users#resend_activation_email'
+  get '/password/reset/:token', to: 'users#reset_password'
+  get '/activate_account/:token', to: 'users#reset_password'
 
   get '/profile/edit_password', to: 'users#edit_password'
   get '/profile/edit', to: 'users#edit_profile'
