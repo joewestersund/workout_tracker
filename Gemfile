@@ -21,7 +21,6 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
-
 gem 'dotenv-rails', groups: [:development, :test] #used to load environment variables from the .env file
 
 # Use Active Storage variant
@@ -37,6 +36,7 @@ gem 'recaptcha'
 
 gem 'kaminari'  # for pagination, replacement for will_paginate
 
+gem 'mailgun-ruby', '~>1.2.5'    # for posting emails to Mailgun
 #gem 'react-rails'
 
 
