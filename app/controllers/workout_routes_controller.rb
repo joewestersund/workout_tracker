@@ -7,10 +7,6 @@ class WorkoutRoutesController < ApplicationController
     @workout_routes = current_user.workout_routes.all
   end
 
-  # GET /workout_routes/1 or /workout_routes/1.json
-  def show
-  end
-
   # GET /workout_routes/new
   def new
     @workout_route = WorkoutRoute.new

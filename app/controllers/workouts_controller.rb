@@ -19,16 +19,11 @@ class WorkoutsController < ApplicationController
     if wt.present?
       @workout.workout_type = wt
     else
-      @workout.workout_type = current_user.workout_types.order(:order_in_list).first
+      @workout.workout_type = @workout_types.first
     end
-
-    #@routes = @workout.workout_type.routes.where(active: true).order(:order_in_list)
 
     apply_defaults(@workout)
     get_json(@workout)
-
-    #workout_route_templates = get_templates(@workout.workout_type)
-    #@workout_route_json = get_json(@workout.workout_type, @workout.workout_routes, workout_route_templates)
 
   end
 

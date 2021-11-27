@@ -12,10 +12,6 @@ class DropdownOptionsController < ApplicationController
     @dropdown_options = @data_type.dropdown_options.order(:order_in_list)
   end
 
-  # GET /dropdown_options/1 or /dropdown_options/1.json
-  def show
-  end
-
   # GET /dropdown_options/new
   def new
     @dropdown_option = DropdownOption.new

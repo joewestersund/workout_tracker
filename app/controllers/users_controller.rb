@@ -22,7 +22,6 @@ class UsersController < ApplicationController
     if @user.save
 
       sign_in @user
-      set_up_user_defaults(@user) # set up default workout types etc
 
       @user.generate_password_token!
       NotificationMailer.new_user_email(@user).deliver
