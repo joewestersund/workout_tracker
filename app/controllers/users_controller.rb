@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   include UsersHelper
+  include ActionView::Helpers::TextHelper  # for pluralize method
 
   before_action :signed_in_user, only: [:edit_profile, :update, :destroy ]
   before_action :signed_in_user_unactivated_ok, only: [ :edit_password, :update_password ]
@@ -85,14 +86,12 @@ class UsersController < ApplicationController
 
   def send_password_reset_email
     @user = User.find_by(email: params[:email])
-    respond_to do |format|
-      if @user.present? && (verify_recaptcha(model: @user) || Rails.env == "development")
-        @user.generate_password_token!
-        NotificationMailer.password_reset_email(@user).deliver
-        format.html { redirect_to signin_path, notice: "A password reset email has been sent to #{@user.name} at #{@user.email}. Please use the link in that email to reset your password in the next #{pluralize(User.hours_to_reset_password,"hour")}." }
-      else
-        format.html { redirect_to password_forgot_path, alert: "That email address was not recognized, or the recaptcha was not recognized." }
-      end
+    if @user.present? && (verify_recaptcha(model: @user) || Rails.env == "development")
+      @user.generate_password_token!
+      NotificationMailer.password_reset_email(@user).deliver
+      redirect_to signin_path, notice: "A password reset email has been sent to #{@user.name} at #{@user.email}. Please use the link in that email to reset your password in the next #{pluralize(User.hours_to_reset_password,"hour")}."
+    else
+      redirect_to password_forgot_path, alert: "That email address was not recognized, or the recaptcha was not recognized."
     end
   end
 
