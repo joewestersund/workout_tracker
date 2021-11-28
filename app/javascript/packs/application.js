@@ -29,6 +29,7 @@ import "../stylesheets/tables.css.scss"
 import "../stylesheets/workout.css.scss"
 import "../stylesheets/will_paginate.css.scss"
 
+const images = require.context('../images', true)
 
 Rails.start()
 Turbolinks.start()

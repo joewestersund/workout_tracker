@@ -62,7 +62,7 @@ class UsersController < ApplicationController
       if params[:user][:password].present? and @user.update(user_params_change_password)
         if !@user.activated?
           # this user just created their password for the first time
-          notice_text = "Welcome to the Workout Tracker!"
+          notice_text = "Welcome to Log My Workout!"
           create_user_defaults(@user)
           flash[:notice] =
           @user.activated = true
