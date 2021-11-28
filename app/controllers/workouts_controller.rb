@@ -5,8 +5,22 @@ class WorkoutsController < ApplicationController
   # GET /workouts or /workouts.json
 
   def index
-    #w = current_user.workouts.order(workout_date: :desc)
-    @workouts = current_user.workouts.order(workout_date: :desc, created_at: :desc).page(params[:page]).per(10)
+    conditions = get_conditions
+    w = current_user.workouts.where(conditions).order(workout_date: :desc, created_at: :desc)
+
+    respond_to do |format|
+      format.html {
+        @workout_filter_json = get_workout_filter_json()
+        @filtered = !conditions[1].empty?
+        @workouts = w.page(params[:page]).per(20)
+      }
+      format.xlsx {
+        @workout_types = current_user.workout_types.order(:order_in_list)
+        @workouts = w
+        response.headers['Content-Disposition'] = 'attachment; filename="workouts.xlsx"'
+      }
+    end
+
   end
 
   # GET /workouts/new
@@ -23,14 +37,14 @@ class WorkoutsController < ApplicationController
     end
 
     apply_defaults(@workout)
-    get_json(@workout)
+    get_workout_form_json(@workout)
 
   end
 
   # GET /workouts/1/edit
   def edit
     apply_defaults(@workout)
-    get_json(@workout)
+    get_workout_form_json(@workout)
   end
 
   # POST /workouts or /workouts.json
@@ -48,7 +62,7 @@ class WorkoutsController < ApplicationController
       rescue
         get_workout_types
         apply_defaults(@workout)
-        get_json(@workout)
+        get_workout_form_json(@workout)
         respond_to do |format|
           format.html { render :new, status: :unprocessable_entity }
           format.json { render json: @workout.errors, status: :unprocessable_entity }
@@ -70,7 +84,7 @@ class WorkoutsController < ApplicationController
       rescue
         get_workout_types
         apply_defaults(@workout)
-        get_json(@workout)
+        get_workout_form_json(@workout)
         respond_to do |format|
           format.html { render :edit, status: :unprocessable_entity }
           format.json { render json: @workout.errors, status: :unprocessable_entity }
@@ -207,24 +221,53 @@ class WorkoutsController < ApplicationController
       workout_route_templates
     end
 
-    def get_json(workout)
+    def get_workout_filter_json()
+      @workout_filter_json = Jbuilder.new do |json|
+        json.workout_types current_user.workout_types.map { |wt| wt.to_builder.attributes! }
+      end.target!.html_safe
+    end
+
+    def get_workout_form_json(workout)
 
       workout_route_templates = get_templates(workout)
 
-      @workout_route_json = Jbuilder.new do |json|
+      @workout_form_json = Jbuilder.new do |json|
         json.workout_routes workout.workout_routes.map { |wr| wr.to_builder.attributes! }
         json.workout_route_templates workout_route_templates.map { |wr| wr.to_builder.attributes! }
         json.data_types workout.workout_type.data_types.where(active: true).map { |dt| dt.to_builder.attributes! }
       end.target!.html_safe
     end
 
-    def show_debug_info(str, var=nil)
-      puts "**************"
-      if var.present?
-        puts "#{str} = #{var}"
-      else
-        puts str
-      end
-      puts "**************"
+    def get_conditions
+
+      search_terms = Workout.new(search_params)
+
+      conditions = {}
+      conditions_string = []
+
+      conditions[:start_date] = params[:start_date] if params[:start_date].present?
+      conditions_string << "workout_date >= :start_date" if params[:start_date].present?
+
+      conditions[:end_date] = params[:end_date] if params[:end_date].present?
+      conditions_string << "workout_date <= :end_date" if params[:end_date].present?
+
+      conditions[:year] = search_terms.year if search_terms.year.present?
+      conditions_string << "year = :year" if search_terms.year.present?
+
+      conditions[:month] = search_terms.month if search_terms.month.present?
+      conditions_string << "month = :month" if search_terms.month.present?
+
+      conditions[:workout_type_id] = search_terms.workout_type_id if search_terms.workout_type_id.present?
+      conditions_string << "workout_type_id = :workout_type_id" if search_terms.workout_type_id.present?
+
+      #conditions[:route_id] = search_terms.route_id if search_terms.route_id.present?
+      #conditions_string << "route_id = :route_id" if search_terms.route_id.present?
+
+      return [conditions_string.join(" AND "), conditions]
     end
+
+    def search_params
+      params.permit(:year, :month, :workout_type_id)
+    end
+
 end

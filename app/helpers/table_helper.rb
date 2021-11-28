@@ -4,4 +4,10 @@ module TableHelper
     bool ? "Y" : "N"
   end
 
+  def display_date(date)
+    if date.present?
+      date.strftime('%m/%e/%Y')
+    end
+  end
+
 end

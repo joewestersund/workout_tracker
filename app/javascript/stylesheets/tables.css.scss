@@ -110,8 +110,8 @@ td, th {
   .link {
     display: inline-block;
     padding-right: 20px;
+    font-size: 16px;
   }
-
 }
 
 .filter-box {
@@ -137,12 +137,6 @@ td, th {
   border-bottom: 1px solid black;
   margin-bottom: 10px;
   padding-bottom: 10px;
-}
-
-div.links {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-size: 16px;
 }
 
 .welcome p a, .about p a {

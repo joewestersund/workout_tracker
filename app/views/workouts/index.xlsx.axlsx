@@ -1,0 +1,40 @@
+wb = xlsx_package.workbook
+
+header_style = wb.styles.add_style alignment: {horizontal: :center, vertical: :center, wrap_text: true}, b: true, sz: 10, bg_color: "C0C0C0"
+data_style = wb.styles.add_style alignment: {horizontal: :center, vertical: :center, wrap_text: true}, sz: 10
+
+@workout_types.each do |wt|
+  if wt.workouts.count > 0
+    data_types = wt.data_types.order(:order_in_list)
+    data_column_names = data_types.map do |dt|
+        if dt.unit.present?
+          "#{dt.name} (#{dt.unit})"
+        else
+          dt.name
+        end
+    end
+    column_names = ["Workout Type", "Workout Date", "Route"].push(*data_column_names).push("Repetitions")
+    wb.add_worksheet(name: wt.name) do |sheet|
+      sheet.add_row column_names, style: header_style
+
+      @workouts.where(workout_type: wt).each do |w|
+        w.workout_routes.each do |wr|
+          row_data = [wt.name,
+                      display_date(w.workout_date),
+                      wr.route.name]
+          data_types.each do |dt|
+            dp = wr.data_points.where(data_type: dt).first
+            if dp.present?
+              row_data << dp.value_to_s
+            else
+              row_data << ""
+            end
+          end
+          row_data << wr.repetitions
+          sheet.add_row row_data, style: data_style
+        end
+      end
+    end
+  end
+end
+

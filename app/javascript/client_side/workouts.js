@@ -163,7 +163,7 @@ function ready() {
     }
 
     if ($(ROUTES_LIST_ELEMENT).length) {
-        const jsonText = $("#JSON-data").text();
+        const jsonText = $("#workout-form-JSON").text();
         const jsonData = JSON.parse(jsonText);
 
         const templates = jsonData.workout_route_templates;

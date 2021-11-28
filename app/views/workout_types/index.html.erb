@@ -2,7 +2,9 @@
 
 <p>What kind of workouts would you like to keep track of?</p>
 
-<div class="links"><%= link_to 'New Workout Type', new_workout_type_path %></div>
+<div class="link-block">
+<div class="link"><%= link_to 'New Workout Type', new_workout_type_path %></div>
+</div>
 
 <%= paginate @workout_types %>
 

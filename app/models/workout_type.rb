@@ -19,9 +19,34 @@ class WorkoutType < ApplicationRecord
 
   has_many :routes, dependent: :destroy
   has_many :data_types, dependent: :destroy
+  has_many :workouts, dependent: :destroy
 
   validates :user_id, presence: true
   validates :name, presence: true, length: { maximum: 50}, uniqueness: {scope: :user_id }
   validates :order_in_list, numericality: { only_integer: true, greater_than: 0}, uniqueness: {scope: :user_id }
+
+  def to_builder
+
+    Jbuilder.new do |json|
+      json.id self.id
+      json.name self.name
+      json.routes self.routes.order(:order_in_list) do |r|
+        json.id r.id
+        json.name r.name
+      end
+      json.data_types self.data_types.order(:order_in_list) do |dt|
+        json.id dt.id
+        json.name dt.name
+        json.is_numeric dt.is_numeric?
+        json.is_dropdown dt.is_dropdown?
+        if dt.is_dropdown?
+          dt.dropdown_options.order(:order_in_list).each do |opt|
+            json.id opt.id
+            json.name opt.name
+          end
+        end
+      end
+    end
+  end
 
 end

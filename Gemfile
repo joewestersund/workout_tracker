@@ -39,6 +39,10 @@ gem 'kaminari'  # for pagination, replacement for will_paginate
 gem 'mailgun-ruby', '~>1.2.5'    # for posting emails to Mailgun
 #gem 'react-rails'
 
+# for Excel format downloads
+gem 'caxlsx'
+gem 'caxlsx_rails'
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

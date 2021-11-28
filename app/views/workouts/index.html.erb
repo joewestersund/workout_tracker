@@ -13,7 +13,53 @@
     </ul>
    <p>To start logging your workouts, you'll first need to <%= link_to "add one or more Routes", routes_default_path %> for each workout type.</p>
 <% else %>
-  <div class="links"><%= link_to 'New Workout', new_workout_path %></div>
+
+  <script type="application/json" id="workout-filter-JSON"><%= @workout_filter_json %></script>
+
+  <div class="link-block">
+    <div class="link"><%= link_to 'New Workout', new_workout_path %></div> |
+    <div class="link"><%= link_to "Download as XLSX", workouts_path(format: "xlsx") + "?" + request.query_string %></div>
+  </div>
+
+  <div class="filter-box" id="workout-filter-box">
+    <button id="show_filter" class="filter-button">Show/Hide Filter</button>
+    <div class="filter <%="hidden" unless @filtered %>">
+      <%= form_tag workouts_path, method: 'get' do %>
+        <div class="field">
+          <%= label_tag :start_date  %>
+          <%= text_field_tag :start_date, params[:start_date], {class: 'datepicker'} %>
+        </div>
+        <div class="field">
+          <%= label_tag :end_date %>
+          <%= text_field_tag :end_date, params[:end_date], {class: 'datepicker'} %>
+        </div>
+        <div class="field number">
+          <%= label_tag :year %>
+          <%= number_field_tag :year, params[:year], min:2000 %>
+        </div>
+        <div class="field number">
+          <%= label_tag :month %>
+          <%= number_field_tag :month, params[:month], min:1, max:12 %>
+        </div>
+        <div class="field">
+          <%= label_tag :workout_type %>
+          <%= select_tag :workout_type_id %>
+        </div>
+        <div class="field">
+          <%= label_tag :route %>
+          <%= select_tag :route_id %>
+        </div>
+        <div class="field">
+          <%= label_tag :data_type %>
+          <%= select_tag :data_type_id %>
+        </div>
+        <div class="actions">
+          <%= submit_tag "Search" %>
+          <%= button_tag 'Clear Form', {:type => 'reset', id: "clear_filter"} %>
+        </div>
+      <% end %>
+    </div>
+  </div>
 
   <%= paginate @workouts %>
 
