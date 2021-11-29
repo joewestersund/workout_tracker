@@ -8,10 +8,11 @@ function ready() {
         dropdown.html('');  // clear any existing selections
     }
 
-    function setDropdownOptions(dropdown_id, options){
+    function setDropdownOptions(dropdown_id, options, include_blank=true){
         clearDropdownOptions(dropdown_id);
         var dropdown = $(dropdown_id);
-        dropdown.append($('<option/>'));
+        if (include_blank)
+            dropdown.append($('<option/>'));
         $.each(options, function (index, opt) {
             dropdown.append($('<option/>', {
                 value: opt.id,
@@ -21,7 +22,35 @@ function ready() {
     }
 
     function setDataTypeDetailsDropdown(data_type) {
-
+        var operator_dropdown_id = "#operator";
+        var options_dropdown_id = "#dropdown_option_id";
+        var input = $("#comparison_value");
+        input.val("");  // clear input value
+        if (data_type == null) {
+            $(operator_dropdown_id).addClass('hidden');
+            $(options_dropdown_id).addClass('hidden');
+            input.addClass('hidden');
+            clearDropdownOptions(operator_dropdown_id);
+            clearDropdownOptions(options_dropdown_id);
+        } else if (data_type.field_type == "dropdown list") {
+            setDropdownOptions(operator_dropdown_id, [{name:"="}], false);   // don't include blank option
+            setDropdownOptions(options_dropdown_id, data_type.options);
+            $(operator_dropdown_id).removeClass('hidden');
+            $(options_dropdown_id).removeClass('hidden');
+            input.addClass('hidden');
+        } else {
+            if (data_type.field_type == "text") {
+                setDropdownOptions(operator_dropdown_id, [{name:"LIKE"}, {name:"="}], false);
+            } else {
+                setDropdownOptions(operator_dropdown_id, [{name:"<"}, {name:"<="}, {name:"="}, {name:">="}, {name:">"}, {name:"!="}], false);
+            }
+            clearDropdownOptions(options_dropdown_id);
+            $(operator_dropdown_id).removeClass('hidden');
+            $(options_dropdown_id).addClass('hidden');
+            input.removeClass('hidden');
+            input.attr("pattern", data_type.input_pattern);
+            input.attr("title", data_type.title_string);
+        }
     }
 
     function setEvents() {
@@ -42,11 +71,12 @@ function ready() {
             var wt = m_workout_types[ID_PREFIX + wt_id];
             var dt_id = $(this).val();
             if (dt_id == "") {
-                clearDropdownOptions("#data_type_details");
+                var dt = null;
             } else {
-                var dt = wt[ID_PREFIX + dt_id];
-                setDataTypeDetailsDropdown(dt);
+                var dt = wt.data_types_hash[ID_PREFIX + dt_id];
+
             }
+            setDataTypeDetailsDropdown(dt);
         });
 
         $('#show_filter').click(function(event) {
@@ -66,23 +96,26 @@ function ready() {
         const jsonText = $("#workout-filter-JSON").text();
         const jsonData = JSON.parse(jsonText);
 
-        //convert templates to a hash, with the route ID as the key
+        //convert workout_types to a hash, with the workout_type_id as the key
         m_workout_types = jsonData.workout_types.reduce(function (map, wt) {
             var workout_type_id_str = ID_PREFIX + wt.id;
             map[workout_type_id_str] = wt; //convert key to string so order of elements is preserved
             return map;
         }, {});
 
-        alert("got here 2");
+        //convert data_types to a hash, with the data_type_id as the key
+        $.each(m_workout_types, function (index, wt) {
+            wt.data_types_hash = wt.data_types.reduce(function (map, dt){
+                var data_type_id_str = ID_PREFIX + dt.id;
+                map[data_type_id_str] = dt; //convert key to string so order of elements is preserved
+                return map;
+            }, {});
+        });
 
         // populate dropdowns
         setDropdownOptions('#workout_type_id', m_workout_types);
 
-        alert("got here 3");
-
         setEvents();
-
-        alert("got here 4");
 
         // set value of dropdowns, if any
         const urlParams = new URLSearchParams(window.location.search);
@@ -90,8 +123,10 @@ function ready() {
         const route_id = urlParams.get('route_id');
         const dt_id = urlParams.get('data_type_id');
 
-        if (workout_type_id != null)
+        if (workout_type_id != null) {
             $('#workout_type_id').val(workout_type_id);
+            $('#workout_type_id').change();
+        }
         if (route_id != null)
             $('#route_id').val(route_id);
         if (dt_id != null)

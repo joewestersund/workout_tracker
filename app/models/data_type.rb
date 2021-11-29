@@ -133,8 +133,8 @@ class DataType < ApplicationRecord
       end
       if self.is_dropdown?
         json.options self.dropdown_options.order(:order_in_list) do |opt|
-          json.option_id opt.id
-          json.option_name opt.name
+          json.id opt.id
+          json.name opt.name
         end
       end
     end

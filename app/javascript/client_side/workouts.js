@@ -54,7 +54,7 @@ function ready() {
                 var items = [];
                 items.push( "<option value=''></option>" );  //include blank option in dropdown
                 dt.options.forEach( (opt) => {
-                    items.push( "<option value='" + opt.option_id + "'>" + opt.option_name + "</option>" );
+                    items.push( "<option value='" + opt.id + "'>" + opt.name + "</option>" );
                 });
                 $("<select/>", {
                     "name": "workout[route" + route_number + "[data_type" + dp.data_type_id + "[option_id]]",

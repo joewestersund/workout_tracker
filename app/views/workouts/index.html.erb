@@ -53,6 +53,15 @@
           <%= label_tag :data_type %>
           <%= select_tag :data_type_id %>
         </div>
+        <div class="field">
+          <%= select_tag :operator, nil, {class: "hidden"} %>
+        </div>
+        <div class="field">
+          <%= select_tag :dropdown_option_id, nil, {class: "hidden"} %>
+        </div>
+        <div class="field">
+          <%= text_field_tag :comparison_value, "", {class: "hidden"} %>
+        </div>
         <div class="actions">
           <%= submit_tag "Search" %>
           <%= button_tag 'Clear Form', {:type => 'reset', id: "clear_filter"} %>

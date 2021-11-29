@@ -34,18 +34,7 @@ class WorkoutType < ApplicationRecord
         json.id r.id
         json.name r.name
       end
-      json.data_types self.data_types.order(:order_in_list) do |dt|
-        json.id dt.id
-        json.name dt.name
-        json.is_numeric dt.is_numeric?
-        json.is_dropdown dt.is_dropdown?
-        if dt.is_dropdown?
-          dt.dropdown_options.order(:order_in_list).each do |opt|
-            json.id opt.id
-            json.name opt.name
-          end
-        end
-      end
+      json.data_types self.data_types.order(:order_in_list).map { |dt| dt.to_builder.attributes! }
     end
   end
 
