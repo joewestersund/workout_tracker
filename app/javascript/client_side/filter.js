@@ -117,20 +117,36 @@ function ready() {
 
         setEvents();
 
-        // set value of dropdowns, if any
+        // set initial value of dropdowns, if any
         const urlParams = new URLSearchParams(window.location.search);
         const workout_type_id = urlParams.get('workout_type_id');
         const route_id = urlParams.get('route_id');
         const dt_id = urlParams.get('data_type_id');
+        const operator = urlParams.get('operator');
+        const dropdown_option_id = urlParams.get('dropdown_option_id');
+        const comparison_value = urlParams.get('comparison_value');
+        // initial values of date input boxes like start_date, end_date, year and month are handled on server side in view.
 
         if (workout_type_id != null) {
             $('#workout_type_id').val(workout_type_id);
             $('#workout_type_id').change();
         }
-        if (route_id != null)
+        if (route_id != null) {
             $('#route_id').val(route_id);
-        if (dt_id != null)
+        }
+        if (dt_id != null){
             $('#data_type_id').val(dt_id);
+            $('#data_type_id').change();
+        }
+        if (operator != null) {
+            $('#operator').val(operator);
+        }
+        if (dropdown_option_id != null) {
+            $('#dropdown_option_id').val(dropdown_option_id);
+        }
+        if (comparison_value != null) {
+            $('#comparison_value').val(comparison_value);
+        }
     }
 }
 

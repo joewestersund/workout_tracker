@@ -60,7 +60,7 @@
           <%= select_tag :dropdown_option_id, nil, {class: "hidden"} %>
         </div>
         <div class="field">
-          <%= text_field_tag :comparison_value, "", {class: "hidden"} %>
+          <%= text_field_tag :comparison_value, params[:comparison_value], {class: "hidden"} %>
         </div>
         <div class="actions">
           <%= submit_tag "Search" %>
