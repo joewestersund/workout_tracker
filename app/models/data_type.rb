@@ -72,7 +72,9 @@ class DataType < ApplicationRecord
 
   def convert_to_number(str)
     # convert to seconds
-    if self.is_hours_minutes?
+    if self.is_numeric?
+      str.to_f  # just return the string
+    elsif self.is_hours_minutes?
       numbers = str.split(":").map{ |n| n.to_i }
       raise "string #{str} was not recognized as a valid hours:minutes string" if numbers.length != 2
       numbers[0] * 3600 + numbers[1] * 60

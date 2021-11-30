@@ -6,7 +6,9 @@ class WorkoutsController < ApplicationController
 
   def index
     conditions = get_conditions
-    w = current_user.workouts.where(conditions).order(workout_date: :desc, created_at: :desc)
+
+    w = current_user.workouts.where("id IN (?)", current_user.workouts.left_outer_joins(workout_routes: :data_points).where(conditions).select(:id))
+    w = w.order(workout_date: :desc, created_at: :desc)
 
     respond_to do |format|
       format.html {
@@ -260,8 +262,39 @@ class WorkoutsController < ApplicationController
       conditions[:workout_type_id] = search_terms.workout_type_id if search_terms.workout_type_id.present?
       conditions_string << "workout_type_id = :workout_type_id" if search_terms.workout_type_id.present?
 
-      #conditions[:route_id] = search_terms.route_id if search_terms.route_id.present?
-      #conditions_string << "route_id = :route_id" if search_terms.route_id.present?
+      conditions[:route_id] = params[:route_id] if params[:route_id].present?
+      conditions_string << "workout_routes.route_id = :route_id" if params[:route_id].present?
+
+      if params[:data_type_id].present? && params[:operator].present?
+        dt = current_user.data_types.find(params[:data_type_id])
+        if dt.present?
+          if dt.is_dropdown? && params[:dropdown_option_id].present?
+            conditions[:dropdown_option_id] = params[:dropdown_option_id]
+            conditions_string << "data_points.dropdown_option_id = :dropdown_option_id"
+          elsif params[:comparison_value].present?
+            val = params[:comparison_value]
+            op = params[:operator]
+            if dt.is_text?
+              if op == 'LIKE'
+                conditions[:text_value] = "%#{val}%"
+                conditions_string << "data_points.text_value ILIKE :text_value"
+                "comments.summary ILIKE :summary"
+              else
+                conditions[:text_value] = val
+                conditions_string << "data_points.text_value = :text_value"
+              end
+            elsif dt.is_numeric? || dt.is_hours_minutes? || dt.is_minutes_seconds?
+              allowed_operators = %w[ < <= = >= > != <> ]
+              if allowed_operators.include?(op)
+                conditions[:decimal_value] = dt.convert_to_number(val)
+                conditions_string << "data_points.decimal_value #{op} :decimal_value"
+              end
+            else
+              raise "DataType.field_type was not recognized"
+            end
+          end
+        end
+      end
 
       return [conditions_string.join(" AND "), conditions]
     end
