@@ -95,7 +95,7 @@ class DataTypesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def data_type_params
-      params.require(:data_type).permit(:name, :field_type, :unit, :description, :active)
+      params.require(:data_type).permit(:name, :field_type, :units, :description, :active)
     end
 
     def move(up)

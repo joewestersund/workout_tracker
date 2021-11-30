@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_11_052330) do
+ActiveRecord::Schema.define(version: 2021_11_30_214207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 2021_11_11_052330) do
     t.bigint "workout_type_id"
     t.string "name"
     t.string "field_type"
-    t.string "unit"
+    t.string "units"
     t.text "description"
     t.integer "order_in_list"
     t.boolean "active"

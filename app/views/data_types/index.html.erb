@@ -23,7 +23,7 @@
       <th>Description</th>
       <th>Field Type</th>
       <th>Dropdown Options</th>
-      <th>Unit</th>
+      <th>Units</th>
       <th>Active</th>
       <th>Order in list</th>
       <th colspan="4"></th>
@@ -46,7 +46,7 @@
           <% end %>
           <%= link_to "edit options", data_type_dropdown_options_path(dt) if dt.is_dropdown? %>
         </td>
-        <td><%= dt.unit %></td>
+        <td><%= dt.units %></td>
         <td><%= display_bool(dt.active) %></td>
         <td><%= dt.order_in_list %></td>
         <td><%= link_to 'Edit', edit_data_type_path(dt) %></td>
