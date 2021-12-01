@@ -19,6 +19,8 @@ import 'bootstrap/dist/css/bootstrap'
 //import 'd3'
 //import 'd3-tip'
 
+import "d3"
+
 import "@fortawesome/fontawesome-free/js/all"
 
 import "../stylesheets/alert.css.scss"

@@ -8,12 +8,11 @@ environment.plugins.append("Provide", new webpack.ProvidePlugin({
     Popper: ['popper.js', 'default']  // Not a typo, we're still using popper.js here
 }))
 
-/*environment.plugins.prepend('Provide',
-    new webpack.ProvidePlugin({
-        $: 'jquery/src/jquery',
-        jQuery: 'jquery/src/jquery'
-    })
-) */
+const aliasConfig = {
+    'd3': 'd3/dist/d3.js'
+};
+
+environment.config.set('resolve.alias', aliasConfig);
 
 module.exports = environment
 

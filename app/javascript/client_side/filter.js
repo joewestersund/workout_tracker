@@ -27,11 +27,11 @@ function ready() {
         var input = $("#comparison_value");
         input.val("");  // clear input value
         if (data_type == null) {
+            clearDropdownOptions(operator_dropdown_id);
+            clearDropdownOptions(options_dropdown_id);
             $(operator_dropdown_id).addClass('hidden');
             $(options_dropdown_id).addClass('hidden');
             input.addClass('hidden');
-            clearDropdownOptions(operator_dropdown_id);
-            clearDropdownOptions(options_dropdown_id);
         } else if (data_type.field_type == "dropdown list") {
             setDropdownOptions(operator_dropdown_id, [{name:"="}], false);   // don't include blank option
             setDropdownOptions(options_dropdown_id, data_type.options);
@@ -59,10 +59,12 @@ function ready() {
             if (wt_id == "") {
                 clearDropdownOptions('#route_id');
                 clearDropdownOptions('#data_type_id');
+                $('#data_type_id').change();
             } else {
                 var wt = m_workout_types[ID_PREFIX + wt_id];
                 setDropdownOptions('#route_id', wt.routes);
                 setDropdownOptions('#data_type_id', wt.data_types);
+                $('#data_type_id').change();
             }
         });
 
@@ -70,11 +72,10 @@ function ready() {
             var wt_id = $('#workout_type_id').val();
             var wt = m_workout_types[ID_PREFIX + wt_id];
             var dt_id = $(this).val();
-            if (dt_id == "") {
+            if (dt_id == null) {
                 var dt = null;
             } else {
                 var dt = wt.data_types_hash[ID_PREFIX + dt_id];
-
             }
             setDataTypeDetailsDropdown(dt);
         });
