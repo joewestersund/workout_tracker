@@ -63,8 +63,8 @@
           <%= text_field_tag :comparison_value, params[:comparison_value], {class: "hidden"} %>
         </div>
         <div class="actions">
-          <%= submit_tag "Search" %>
-          <%= button_tag 'Clear Form', {:type => 'reset', id: "clear_filter"} %>
+          <%= submit_tag "Search", {id: "submit_filter"} %>
+          <%= button_tag 'Clear Form', {type: "reset", id: "clear_filter"} %>
         </div>
       <% end %>
     </div>

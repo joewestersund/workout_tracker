@@ -84,11 +84,19 @@ function ready() {
         });
 
         $('#clear_filter').click(function(event) {
-            $('.filter input[type="number"]').attr('value', '');
-            $('.filter input[type="text"]').attr('value', '');
-            $('.filter select option').attr('selected', false); //deselect all options
-            $('.filter select option:first').attr('selected', true); //select the first option
-            $('.filter form').submit(); //submit the form with the new, blank values;
+            $('#start_date').val('');
+            $('#end_date').val('');
+            $('#year').val('');
+            $('#month').val('');
+            $('#workout_type_id').val('');
+            $('#workout_type_id').change();
+            $('#route_id').val('');
+            $('#route_id').change();
+            $('#operator').val('');
+            $('.filter input').attr('value', '');
+            //event.preventDefault();
+            //$('.filter form').submit(); //submit the form with the new, blank values;
+            $('#submit_filter').click(); //submit the form with the new, blank values;
         });
     }
 
