@@ -27,11 +27,11 @@
       <%= form_tag workouts_path, method: 'get' do %>
         <div class="field">
           <%= label_tag :start_date  %>
-          <%= text_field_tag :start_date, params[:start_date], {class: 'datepicker'} %>
+          <%= date_field_tag :start_date, params[:start_date] %>
         </div>
         <div class="field">
           <%= label_tag :end_date %>
-          <%= text_field_tag :end_date, params[:end_date], {class: 'datepicker'} %>
+          <%= date_field_tag :end_date, params[:end_date] %>
         </div>
         <div class="field number">
           <%= label_tag :year %>

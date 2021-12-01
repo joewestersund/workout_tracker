@@ -50,13 +50,12 @@ Rails.application.routes.draw do
   patch '/profile/update_password', to: 'users#update_password'
   patch '/profile/update', to: 'users#update_profile'
 
-  get "/summaries/by_account"
-  get "/summaries/by_category"
-  get "/summaries/by_transaction_direction"
+  get "/summaries/time_series"
+  get "/summaries/x_vs_y"
 
   get '/about', to: 'static_pages#about' # creates named path 'about'
   get '/welcome', to: 'static_pages#welcome' # creates named path 'welcome'
 
-  root 'static_pages#about'
+  root 'workouts#index'
 
 end

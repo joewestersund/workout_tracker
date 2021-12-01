@@ -25,7 +25,7 @@ class SummariesController < ApplicationController
   before_action :get_params_for_link_url
   before_action :test_if_filtered
 
-  def by_account
+  def time_series
     @show_table = show_table
     @display = (@show_table ? "table" : "chart")
     at = get_averaging_time
@@ -44,7 +44,7 @@ class SummariesController < ApplicationController
 
   end
 
-  def by_category
+  def x_vs_y
     @show_table = show_table
     @display = (@show_table ? "table" : "chart")
     at = get_averaging_time
@@ -61,23 +61,6 @@ class SummariesController < ApplicationController
       }
     end
 
-  end
-
-  def by_transaction_direction
-    @show_table = show_table
-    @display = (@show_table ? "table" : "chart")
-    at = get_averaging_time
-
-    respond_to do |format|
-      format.html {
-        if @show_table
-          @table = get_transaction_direction_data(at,@show_table)
-        end
-      }
-      format.json {
-        render :json => get_transaction_direction_data(at,@show_table)
-      }
-    end
   end
 
   private

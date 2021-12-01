@@ -16,6 +16,9 @@ import "../client_side/filter"
 import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap/dist/css/bootstrap'
 
+//import 'd3'
+//import 'd3-tip'
+
 import "@fortawesome/fontawesome-free/js/all"
 
 import "../stylesheets/alert.css.scss"

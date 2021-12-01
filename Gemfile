@@ -43,6 +43,8 @@ gem 'mailgun-ruby', '~>1.2.5'    # for posting emails to Mailgun
 gem 'caxlsx'
 gem 'caxlsx_rails'
 
+gem 'bootstrap-datepicker-rails'
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

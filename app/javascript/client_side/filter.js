@@ -84,19 +84,8 @@ function ready() {
         });
 
         $('#clear_filter').click(function(event) {
-            $('#start_date').val('');
-            $('#end_date').val('');
-            $('#year').val('');
-            $('#month').val('');
-            $('#workout_type_id').val('');
-            $('#workout_type_id').change();
-            $('#route_id').val('');
-            $('#route_id').change();
-            $('#operator').val('');
-            $('.filter input').attr('value', '');
-            //event.preventDefault();
-            //$('.filter form').submit(); //submit the form with the new, blank values;
-            $('#submit_filter').click(); //submit the form with the new, blank values;
+            var url = $("form:first").attr("action"); // the page name, with no params
+            window.location.href = url;
         });
     }
 

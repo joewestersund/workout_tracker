@@ -15,12 +15,11 @@
 
   <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="navbarDropdownStats">
-      <%= fa_icon("signal", text: "Stats") %> <b class="caret"></b>
+      <%= fa_icon("signal", text: "Summaries") %> <b class="caret"></b>
     </a>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownStats">
-
-      <%# add links here %>
-
+      <%= link_to "Time Series", summaries_time_series_path, class: "dropdown-item" %>
+      <%= link_to "X vs Y", summaries_x_vs_y_path, class: "dropdown-item" %>
     </div>
   </li>
 
