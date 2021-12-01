@@ -129,10 +129,8 @@ class DataType < ApplicationRecord
       json.name self.name
       json.description self.description
       json.field_type self.field_type
-      if self.input_pattern.present?
-        json.input_pattern self.input_pattern
-        json.title_string self.title_string
-      end
+      json.input_pattern self.input_pattern  # include even if null- will appear as empty string in the json
+      json.title_string self.title_string  # include even if null- will appear as empty string in the json
       if self.is_dropdown?
         json.options self.dropdown_options.order(:order_in_list) do |opt|
           json.id opt.id

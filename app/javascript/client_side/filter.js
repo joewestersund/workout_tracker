@@ -48,7 +48,7 @@ function ready() {
             $(operator_dropdown_id).removeClass('hidden');
             $(options_dropdown_id).addClass('hidden');
             input.removeClass('hidden');
-            input.attr("pattern", data_type.input_pattern);
+            input.attr("pattern", data_type.input_pattern);  // should be empty string or a value. HTML doesn't do null.
             input.attr("title", data_type.title_string);
         }
     }
