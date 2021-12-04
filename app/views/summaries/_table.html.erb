@@ -1,5 +1,5 @@
 <% if @table.num_rows == 0 %>
-  <div class="no_data">You haven't entered any transaction data, or no data matches the filter above.</div>
+  <div class="no_data">You haven't entered any workout data, or no data matches the filter above.</div>
 <% else
   if @table.some_columns_have_no_data %>
     <%= check_box_tag :show_all_columns %>
@@ -27,7 +27,7 @@
           c_text = @table.text(row_index,column_index)
           c_href = @table.href(row_index,column_index)
           c_numeric_value = @table.numeric_value(row_index,column_index)%>
-          <td class="<%= "no_data hide" if @table.column_has_no_data(column_index) %>"><%= link_to set_currency_styling(c_numeric_value), c_href if c_text.present?%></td>
+          <td class="<%= "no_data hide" if @table.column_has_no_data(column_index) %>"><%= link_to c_numeric_value, c_href if c_text.present?%></td>
         <% end %>
       </tr>
     <% end %>

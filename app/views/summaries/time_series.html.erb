@@ -1,55 +1,35 @@
-<h1>Spending Summary</h1>
+<h1>Workout Summary</h1>
 
-<%= render 'navbar' %>
+<% #render 'navbar' %>
 
-<div class="filter-box" id="workout-filter-box">
-  <button id="show_filter" class="filter-button">Show/Hide Filter</button>
-  <div class="filter <%="hidden" unless @filtered %>">
-    <%= form_tag workouts_path, method: 'get' do %>
-      <div class="field">
-        <%= label_tag :start_date  %>
-        <%= text_field_tag :start_date, params[:start_date], {class: 'datepicker'} %>
-      </div>
-      <div class="field">
-        <%= label_tag :end_date %>
-        <%= text_field_tag :end_date, params[:end_date], {class: 'datepicker'} %>
-      </div>
-      <div class="field number">
-        <%= label_tag :year %>
-        <%= number_field_tag :year, params[:year], min:2000 %>
-      </div>
-      <div class="field number">
-        <%= label_tag :month %>
-        <%= number_field_tag :month, params[:month], min:1, max:12 %>
-      </div>
-      <div class="field">
-        <%= label_tag :workout_type %>
-        <%= select_tag :workout_type_id %>
-      </div>
-      <div class="field">
-        <%= label_tag :route %>
-        <%= select_tag :route_id %>
-      </div>
-      <div class="field">
-        <%= label_tag :data_type %>
-        <%= select_tag :data_type_id %>
-      </div>
-      <div class="field">
-        <%= select_tag :operator, nil, {class: "hidden"} %>
-      </div>
-      <div class="field">
-        <%= select_tag :dropdown_option_id, nil, {class: "hidden"} %>
-      </div>
-      <div class="field">
-        <%= text_field_tag :comparison_value, params[:comparison_value], {class: "hidden"} %>
-      </div>
-      <div class="actions">
-        <%= submit_tag "Search", {id: "submit_filter"} %>
-        <%= button_tag 'Clear Form', {:type => 'reset', id: "clear_filter"} %>
-        <%= hidden_field_tag :averaging_time, params[:averaging_time] %>
-      </div>
-    <% end %>
+<script type="application/json" id="summary-options-JSON"><%= @summary_options_json %></script>
+
+<%= form_with() do |form| %>
+  <div class="field">
+    <%= form.label :workout_type %>
+    <%= form.collection_select :workout_type_id, @workout_types, :id, :name, {selected: @workout_type.id, include_blank: false},
+                               {id: "select-and-redirect", "data-prefix": "/summaries/time_series?workout_type_id=", "data-suffix": ''}%>
   </div>
+<% end %>
+
+<div class="filter-box" id="summary-options-box">
+  <%= form_with(url: summaries_time_series_path, method: 'get') do |form| %>
+    <div class="field">
+      <%= form.label :route_id %>
+      <%= form.collection_select :route_id, @routes, :id, :name, {selected: params[:route_id], include_blank: true} %>
+    </div>
+    <div class="field">
+      <%= form.label :data_type_id %>
+      <%= form.collection_select  :data_type_id, @data_types, :id, :name, {selected: @data_type.id, include_blank: false} %>
+    </div>
+    <div class="field">
+      <%= form.label :summary_functions %>
+      <%= form.select :summary_function, {} %>
+    </div>
+    <div class="actions">
+      <%= submit_tag "Search", {id: "submit_filter"} %>
+    </div>
+  <% end %>
 </div>
 
 <% if @show_table %>

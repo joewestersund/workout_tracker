@@ -123,7 +123,7 @@ class SummaryTable
     @row_header_cells[row].numeric_value
   end
 
-  def set_row_numeric_value(row,value)
+  def set_row_numeric_value(row, value)
     @row_header_cells[row].numeric_value = value
     @min_row_value = @min_row_value.nil? || value < @min_row_value ? value : @min_row_value
     @max_row_value = @max_row_value.nil? || value > @max_row_value ? value : @max_row_value

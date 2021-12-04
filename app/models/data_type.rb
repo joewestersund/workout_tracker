@@ -59,6 +59,8 @@ class DataType < ApplicationRecord
   def input_pattern
     if self.is_hours_minutes? || self.is_minutes_seconds?
       '\d+:[0-5]\d'
+    elsif self.is_numeric?
+      '[+-]?(\d+|\.\d+|\d+\.\d+|\d+\.)(e[+-]?\d+)?'  # numeric data, with possible scientific notation
     end
   end
 
@@ -67,6 +69,8 @@ class DataType < ApplicationRecord
       "Enter hours and minutes, like 3:59"
     elsif self.is_minutes_seconds?
       "Enter minutes and seconds, like 12:03"
+    elsif self.is_numeric?
+      "Enter a number, like 12.41 or 12e-10"
     end
   end
 
@@ -123,6 +127,14 @@ class DataType < ApplicationRecord
     field_type == FIELD_TYPES[:minutes_seconds]
   end
 
+  def summary_function_options
+    if self.is_dropdown? || self.is_text?
+      %w[ count ]
+    else
+      %w[sum average min max count]
+    end
+  end
+
   def to_builder
     Jbuilder.new do |json|
       json.id self.id
@@ -131,6 +143,7 @@ class DataType < ApplicationRecord
       json.field_type self.field_type
       json.input_pattern self.input_pattern  # include even if null- will appear as empty string in the json
       json.title_string self.title_string  # include even if null- will appear as empty string in the json
+      json.summary_function_options self.summary_function_options
       if self.is_dropdown?
         json.options self.dropdown_options.order(:order_in_list) do |opt|
           json.id opt.id

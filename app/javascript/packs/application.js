@@ -12,6 +12,7 @@ import "../client_side/default_data_explanation"
 import "../client_side/select_and_redirect"
 import "../client_side/workouts"
 import "../client_side/filter"
+import "../client_side/summaries"
 
 import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap/dist/css/bootstrap'

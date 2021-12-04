@@ -223,7 +223,7 @@ class WorkoutsController < ApplicationController
       workout_route_templates
     end
 
-    def get_workout_filter_json()
+    def get_workout_filter_json
       @workout_filter_json = Jbuilder.new do |json|
         json.workout_types current_user.workout_types.map { |wt| wt.to_builder.attributes! }
       end.target!.html_safe

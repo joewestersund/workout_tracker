@@ -52,4 +52,8 @@ module ApplicationHelper
     end
   end
 
+  def nil_to_zero(variable)
+    return variable if variable.present?
+    0
+  end
 end
