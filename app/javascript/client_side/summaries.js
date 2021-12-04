@@ -47,10 +47,9 @@ function ready() {
         const summary_function = urlParams.get('summary_function');
         // initial values of other input boxes like workout_type, route and data_type are handled on server side in view.
 
+        $('#data_type_id').change();
         if (summary_function != null) {
             $('#summary_function').val(summary_function);
-        } else {
-            $('#data_type_id').change();
         }
     }
 }

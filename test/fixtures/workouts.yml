@@ -3,6 +3,7 @@
 # Table name: workouts
 #
 #  id              :bigint           not null, primary key
+#  day             :integer
 #  month           :integer
 #  week            :integer
 #  workout_date    :date

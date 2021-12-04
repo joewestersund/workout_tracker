@@ -20,11 +20,15 @@
     </div>
     <div class="field">
       <%= form.label :data_type_id %>
-      <%= form.collection_select  :data_type_id, @data_types, :id, :name, {selected: @data_type.id, include_blank: false} %>
+      <%= form.collection_select  :data_type_id, @data_types, :id, :name, {selected: @data_type.id, include_blank: true} %>
     </div>
     <div class="field">
-      <%= form.label :summary_functions %>
+      <%# form.label :summary_functions %>
       <%= form.select :summary_function, {} %>
+    </div>
+    <div class="field">
+      <%= form.label :by %>
+      <%= form.collection_select  :by, @averaging_times, :to_s, :to_s, {selected: @averaging_time, include_blank: false} %>
     </div>
     <div class="actions">
       <%= submit_tag "Search", {id: "submit_filter"} %>

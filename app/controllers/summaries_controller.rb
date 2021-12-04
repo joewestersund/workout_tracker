@@ -40,12 +40,12 @@ class SummariesController < ApplicationController
     respond_to do |format|
       format.html {
         if valid && @show_table
-          @table = get_time_series_data(@data_type, @summary_function, @show_table)
+          @table = get_time_series_data(@data_type, @summary_function, @averaging_time, @show_table)
         end
       }
       format.json {
         if valid
-          render :json => get_time_series_data(@data_type, @summary_function, @show_table)
+          render :json => get_time_series_data(@data_type, @summary_function, @averaging_time, @show_table)
         else
           render json: "data type not recognized or not for the same workout type", status: :unprocessable_entity
         end
@@ -113,52 +113,66 @@ class SummariesController < ApplicationController
       return params[:display] != "chart"
     end
 
-    def get_averaging_time
-      at = params[:averaging_time]
-      if at == "year"
-        at_str = "year, null as month, null as week"
-      elsif at == "month"
-        at = "month"
-        at_str = "year, month, null as week"
-      else #default to week
-        at_str = "year, month, week"
+    def get_averaging_time_fields(averaging_time)
+      if averaging_time == "year"
+        at_str = "year, null as month, null as week, null as day"
+      elsif averaging_time == "month"
+        at_str = "year, month, null as week, null as day"
+      elsif averaging_time == "week"
+        at_str = "year, null as month, week, null as day"
+      else #default to day
+        at_str = "year, month, null as week, day"
       end
-      @averaging_time = at
       return at_str
     end
 
-    def group_by
-      at = params[:averaging_time]
-      if at == "year"
+    def group_by(averaging_time)
+      if averaging_time == "year"
         "year"
-      elsif at == "month"
+      elsif averaging_time == "month"
         "year, month"
-      else #default to week
-        "year, month, week"
+      elsif averaging_time == "week"
+        "year, week"
+      else #default to day
+        "year, month, day"
       end
     end
 
     def order_by
-      "year desc, month desc, week desc" #always this, no matter the averaging time.
+      "year desc, month desc, week desc, day desc" #always this, no matter the averaging time.
     end
 
-    def get_time_series_data(data_type, aggregate_function, table_format)
-      averaging_time_string = get_averaging_time
+    def get_time_series_data(data_type, summary_function, averaging_time, table_format)
+      averaging_time_fields = get_averaging_time_fields(averaging_time)
+
       conditions = get_conditions
+      group_by_str = group_by(averaging_time)
+
       column_names = data_type.workout_type.routes.where(conditions).select("id as column_id, name as column_name").order(:order_in_list).all
       row_names = current_user.workouts.joins(workout_routes: :data_points)
           .where("data_points.data_type_id = #{data_type.id}")
           .where(conditions)
-          .select("#{averaging_time_string}")
-          .group(group_by).order(order_by)
+          .select("#{averaging_time_fields}")
+          .group(group_by_str).order(order_by)
       data = current_user.workouts.joins(workout_routes: :data_points)
           .where("data_points.data_type_id = #{data_type.id}")
           .where(conditions)
-          .select("#{averaging_time_string}, #{aggregate_function}(decimal_value) as result, route_id as column_id")
-          .group("route_id, #{group_by}").order(order_by)
+
+      if summary_function == "average"
+          data = data.select("#{averaging_time_fields}, sum(decimal_value * repetitions) / sum(repetitions) as result, route_id as column_id")
+      elsif summary_function == "sum"
+        data = data.select("#{averaging_time_fields}, sum(decimal_value * repetitions) as result, route_id as column_id")
+      elsif summary_function == "min" || summary_function == "max"
+        data = data.select("#{averaging_time_fields}, #{summary_function}(decimal_value) as result, route_id as column_id")
+      elsif summary_function == "count"
+        data = data.select("#{averaging_time_fields}, sum(repetitions) as result, route_id as column_id")
+      else
+        raise "summary function #{summary_function} was not recognized"
+      end
+      data = data.group("route_id, #{group_by_str}").order(order_by)
 
       if table_format
-        return create_summary_table(row_names,column_names,data)
+        return create_summary_table(row_names, column_names, data, data_type)
       else
         return create_chart_data(column_names,data)
       end
@@ -202,7 +216,7 @@ class SummariesController < ApplicationController
 
     end
 
-    def create_summary_table(row_names, column_names, data)
+    def create_summary_table(row_names, column_names, data, data_type)
       row_count = row_names.each.count
       column_count = column_names.each.count
       st = SummaryTable.new(row_count, column_count)
@@ -211,7 +225,7 @@ class SummariesController < ApplicationController
 
       index=0
       row_names.each do |r|
-        row_name = get_row_name(r.year, r.month, r.week)
+        row_name = get_row_name(r.year, r.month, r.week, r.day)
         rows_hash[row_name] = index
         st.set_header_text(:row, index, row_name)
         href = workouts_path #+ get_query_string(r.year, r.month, r.day, summary_type, nil)
@@ -229,16 +243,17 @@ class SummariesController < ApplicationController
       column_names.each do |c|
         columns_hash[c.column_id] = index
         st.set_header_text(:column,index, c.column_name)
-        href = workouts_path #+ get_query_string(nil, nil, nil, summary_type, c.column_id)
+        href = workouts_path + get_query_string(nil, nil, nil, nil, data_type.workout_type_id, c.column_id)
         st.set_header_href(:column, index, href)
         index += 1
       end
 
       data.each do |d|
-        row = rows_hash[get_row_name(d.year, d.month, d.week)]
+        row = rows_hash[get_row_name(d.year, d.month, d.week, d.day)]
         col_id = nil_to_zero(d.column_id)
         column = columns_hash[col_id]
-        st.set_text(row, column, d.result, d.result.to_f)
+        val = data_type.convert_from_number(d.result)
+        st.set_text(row, column, val, val)
         href = workouts_path #+ get_query_string(d.start_date, d.end_date, d.year, d.month, d.workout_type.id, d.route_id)
         st.set_href(row,column,href)
       end
@@ -261,8 +276,15 @@ class SummariesController < ApplicationController
       end
     end
 
-    def get_row_name(year, month, week)
-      "#{(month.to_s + ' ') if month.present?}#{('week ' + week.to_s + ' ') if week.present?}#{year}"
+    def get_row_name(year, month, week, day)
+      if week.present?
+        d = Date.commercial(year, week)
+        "#{d.month}/#{d.day}-#{d.day+6}/#{d.year}"
+      elsif day.present?
+        "#{month}/#{day}/#{year}"
+      else
+        "#{(month.to_s + ' ') if month.present?}#{year}"
+      end
     end
 
     def search_params
@@ -317,7 +339,9 @@ class SummariesController < ApplicationController
 
       @workout_types = current_user.workout_types.order(:order_in_list)
       @routes = @workout_type.routes.order(:order_in_list)
-      @data_types = @workout_type.data_types.order(:order_in_list)
+      fth = DataType.field_types_hash
+      @data_types = @workout_type.data_types.where(field_type: [fth[:numeric], fth[:hours_minutes], fth[:minutes_seconds]]).order(:order_in_list)
+      @averaging_times = %w[ day week month year]
 
       if params[:route_id].present?
         @route = @workout_type.routes.find(params[:route_id])
@@ -325,12 +349,22 @@ class SummariesController < ApplicationController
         @route = @routes.first
       end
 
-      if params[:summary_function].present?
-        @summary_function = params[:summary_function]
-      else
-        @summary_function = @data_type.summary_function_options[0] # default to first option in this list
-      end
+      @summary_function = param_or_first(:summary_function, nil, @data_type.summary_function_options)
 
+      @averaging_time =  param_or_first(:by, nil, @averaging_times)
+
+    end
+
+    def param_or_first(param_name, find_in, array)
+      if params[param_name].present?
+        if find_in.present?
+          find_in.find(params[param_name])
+        else
+          params[param_name]
+        end
+      else
+        array.first
+      end
     end
 
 end

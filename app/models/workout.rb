@@ -3,6 +3,7 @@
 # Table name: workouts
 #
 #  id              :bigint           not null, primary key
+#  day             :integer
 #  month           :integer
 #  week            :integer
 #  workout_date    :date
@@ -25,14 +26,15 @@ class Workout < ApplicationRecord
 
   has_many :workout_routes, dependent: :destroy
 
-  before_save :set_year_month_week
+  before_save :set_year_month_week_day
 
   validates :user_id, presence: true
 
-  def set_year_month_week
+  def set_year_month_week_day
     self.year = self.workout_date.year
     self.month = self.workout_date.month
     self.week = self.workout_date.cweek
+    self.day = self.workout_date.day
   end
 
 end

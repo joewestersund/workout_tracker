@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_30_214207) do
+ActiveRecord::Schema.define(version: 2021_12_04_201230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -133,6 +133,7 @@ ActiveRecord::Schema.define(version: 2021_11_30_214207) do
     t.integer "week"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "day"
     t.index ["user_id", "workout_date"], name: "index_workouts_on_user_id_and_workout_date", order: { workout_date: :desc }
     t.index ["user_id", "year", "month", "week"], name: "index_workouts_on_user_id_and_year_and_month_and_week", order: { year: :desc, month: :desc, week: :desc }
     t.index ["user_id"], name: "index_workouts_on_user_id"

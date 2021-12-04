@@ -100,6 +100,8 @@ class DataType < ApplicationRecord
       minutes = (value / 60).floor
       seconds = (value - (minutes * 60)).floor
       "#{minutes}:#{"%02d" % seconds}"   # pad minutes with preceding zero if needed
+    else
+      value
     end
   end
 
