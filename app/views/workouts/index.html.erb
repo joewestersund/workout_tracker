@@ -41,6 +41,10 @@
           <%= label_tag :month %>
           <%= number_field_tag :month, params[:month], min:1, max:12 %>
         </div>
+        <div class="field number">
+          <%= label_tag :day %>
+          <%= number_field_tag :day, params[:day], min:1, max:31 %>
+        </div>
         <div class="field">
           <%= label_tag :workout_type %>
           <%= select_tag :workout_type_id %>
@@ -90,7 +94,7 @@
         <% workout.workout_routes.order(:updated_at).each do |wr|   # order by updated date to maintain order user had in form %>
           <tr>
             <% if first_workout_route %>
-              <td rowspan="<%= wr_rows %>"><%= workout.workout_date %></td>
+              <td rowspan="<%= wr_rows %>"><%= display_date_with_day_of_week(workout.workout_date) %></td>
               <td rowspan="<%= wr_rows %>"><%= workout.workout_type.name %></td>
             <% end %>
             <td class="show-border">

@@ -299,14 +299,9 @@ class SummariesController < ApplicationController
         row_name = get_row_name(r.year, r.month, r.week, r.day)
         rows_hash[row_name] = index
         st.set_header_text(:row, index, row_name)
-        href = workouts_path #+ get_query_string(r.year, r.month, r.day, summary_type, nil)
+        href = workouts_path + get_query_string(r.year, r.month, r.week, r.day, data_type.workout_type_id, nil)
         st.set_header_href(:row, index, href)
         d = get_start_of_period_date(r.year, r.month, r.week, r.day)
-        #if r.week
-        #  d = Date.commercial(r.year, r.week) # first day of that week
-        #else
-        #  d = Date.new(r.year,r.month || 1,1)  # first day of month or year
-        #end
         st.set_row_numeric_value(index,d)
         index += 1
       end
@@ -333,7 +328,7 @@ class SummariesController < ApplicationController
         column = columns_hash[col_id]
         val = data_type.convert_from_number(d.result)
         st.set_text(row, column, val, val)
-        href = workouts_path #+ get_query_string(d.start_date, d.end_date, d.year, d.month, d.workout_type.id, d.route_id)
+        href = workouts_path + get_query_string(d.year, d.month, d.week, d.day, data_type.workout_type.id, d.column_id)
         st.set_href(row,column,href)
       end
 
@@ -343,19 +338,25 @@ class SummariesController < ApplicationController
         column = columns_hash[col_id]
         val = data_type.convert_from_number(d.result)
         st.set_text(row, column, val, val)
-        href = workouts_path #+ get_query_string(d.start_date, d.end_date, d.year, d.month, d.workout_type.id, d.route_id)
+        href = workouts_path + get_query_string(d.year, d.month, d.week, d.day, data_type.workout_type.id, nil)
         st.set_href(row,column,href)
       end
 
       return st
     end
 
-    def get_query_string(start_date, end_date, year, month, workout_type_id, route_id)
+    def get_query_string(year, month, week, day, workout_type_id, route_id)
       qs = []
-      qs << "start_date=#{start_date}" if start_date.present?
-      qs << "end_date=#{end_date}" if end_date.present?
-      qs << "year=#{year}" if year.present?
-      qs << "month=#{month}" if month.present?
+      if week.present?
+        d = get_start_of_period_date(year, month, week, day)
+        d2 = d + 6.days
+        qs << "start_date=#{d}"
+        qs << "end_date=#{d2}"
+      else
+        qs << "year=#{year}" if year.present?
+        qs << "month=#{month}" if month.present?
+        qs << "day=#{day}" if day.present?
+      end
       qs << "workout_type_id=#{workout_type_id}" if workout_type_id.present?
       qs << "route_id=#{route_id}" if route_id.present?
       if qs.length > 0
@@ -370,9 +371,11 @@ class SummariesController < ApplicationController
         d = Date.commercial(year, week)
         "#{d.month}/#{d.day}/#{d.year}"
       elsif day.present?
-        "#{month}/#{day}/#{year}"
+        d = Date.new(year,month,day)
+        d.strftime('%A %m/%-d/%Y')
+        #"#{month}/#{day}/#{year}"
       else
-        "#{(month.to_s + ' ') if month.present?}#{year}"
+        "#{(month.to_s + '/') if month.present?}#{year}"
       end
     end
 

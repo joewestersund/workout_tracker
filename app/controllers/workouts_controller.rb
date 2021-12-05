@@ -259,6 +259,9 @@ class WorkoutsController < ApplicationController
       conditions[:month] = search_terms.month if search_terms.month.present?
       conditions_string << "month = :month" if search_terms.month.present?
 
+      conditions[:day] = search_terms.day if search_terms.day.present?
+      conditions_string << "day = :day" if search_terms.day.present?
+
       conditions[:workout_type_id] = search_terms.workout_type_id if search_terms.workout_type_id.present?
       conditions_string << "workout_type_id = :workout_type_id" if search_terms.workout_type_id.present?
 
@@ -300,7 +303,7 @@ class WorkoutsController < ApplicationController
     end
 
     def search_params
-      params.permit(:year, :month, :workout_type_id)
+      params.permit(:year, :month, :day, :workout_type_id)
     end
 
 end
