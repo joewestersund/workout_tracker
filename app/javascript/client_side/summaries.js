@@ -24,9 +24,12 @@ function ready() {
     function setEvents() {
         $('#data_type_id').change(function(event){
             var dt_id = $('#data_type_id').val();
-            var dt = m_data_types[ID_PREFIX + dt_id];
-
-            setDropdownOptions('#summary_function', dt.summary_function_options, false);
+            if (dt_id == "") {
+                clearDropdownOptions('#summary_function');
+            } else {
+                var dt = m_data_types[ID_PREFIX + dt_id];
+                setDropdownOptions('#summary_function', dt.summary_function_options, false);
+            }
         });
     }
 

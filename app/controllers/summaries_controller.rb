@@ -159,20 +159,25 @@ class SummariesController < ApplicationController
           .where(conditions)
 
       if summary_function == "average"
-          data = data.select("#{averaging_time_fields}, sum(decimal_value * repetitions) / sum(repetitions) as result, route_id as column_id")
+        data_by_route = data.select("#{averaging_time_fields}, sum(decimal_value * repetitions) / sum(repetitions) as result, route_id as column_id")
+        data_all_routes = data.select("#{averaging_time_fields}, sum(decimal_value * repetitions) / sum(repetitions) as result, 'all' as column_id")
       elsif summary_function == "sum"
-        data = data.select("#{averaging_time_fields}, sum(decimal_value * repetitions) as result, route_id as column_id")
+        data_by_route = data.select("#{averaging_time_fields}, sum(decimal_value * repetitions) as result, route_id as column_id")
+        data_all_routes = data.select("#{averaging_time_fields}, sum(decimal_value * repetitions) as result, 'all' as column_id")
       elsif summary_function == "min" || summary_function == "max"
-        data = data.select("#{averaging_time_fields}, #{summary_function}(decimal_value) as result, route_id as column_id")
+        data_by_route = data.select("#{averaging_time_fields}, #{summary_function}(decimal_value) as result, route_id as column_id")
+        data_all_routes = data.select("#{averaging_time_fields}, #{summary_function}(decimal_value) as result, 'all' as column_id")
       elsif summary_function == "count"
-        data = data.select("#{averaging_time_fields}, sum(repetitions) as result, route_id as column_id")
+        data_by_route = data.select("#{averaging_time_fields}, sum(repetitions) as result, route_id as column_id")
+        data_all_routes = data.select("#{averaging_time_fields}, sum(repetitions) as result, 'all' as column_id")
       else
         raise "summary function #{summary_function} was not recognized"
       end
-      data = data.group("route_id, #{group_by_str}").order(order_by)
+      data_by_route = data_by_route.group("route_id, #{group_by_str}").order(order_by)
+      data_all_routes = data_all_routes.group(group_by_str).order(order_by)
 
       if table_format
-        return create_summary_table(row_names, column_names, data, data_type)
+        return create_summary_table(row_names, column_names, data_by_route, data_all_routes, data_type)
       else
         return create_chart_data(column_names,data)
       end
@@ -216,9 +221,9 @@ class SummariesController < ApplicationController
 
     end
 
-    def create_summary_table(row_names, column_names, data, data_type)
+    def create_summary_table(row_names, column_names, data, data_all_routes, data_type)
       row_count = row_names.each.count
-      column_count = column_names.each.count
+      column_count = column_names.each.count + 1   # add one, for the 'all routes' column
       st = SummaryTable.new(row_count, column_count)
       rows_hash = {}
       columns_hash = {}
@@ -248,7 +253,24 @@ class SummariesController < ApplicationController
         index += 1
       end
 
+      # add the column for all routes
+      column_name = 'all'
+      columns_hash['all'] = index
+      st.set_header_text(:column,index, column_name)
+      href = workouts_path + get_query_string(nil, nil, nil, nil, data_type.workout_type_id, nil)
+      st.set_header_href(:column, index, href)
+
       data.each do |d|
+        row = rows_hash[get_row_name(d.year, d.month, d.week, d.day)]
+        col_id = nil_to_zero(d.column_id)
+        column = columns_hash[col_id]
+        val = data_type.convert_from_number(d.result)
+        st.set_text(row, column, val, val)
+        href = workouts_path #+ get_query_string(d.start_date, d.end_date, d.year, d.month, d.workout_type.id, d.route_id)
+        st.set_href(row,column,href)
+      end
+
+      data_all_routes.each do |d|
         row = rows_hash[get_row_name(d.year, d.month, d.week, d.day)]
         col_id = nil_to_zero(d.column_id)
         column = columns_hash[col_id]
