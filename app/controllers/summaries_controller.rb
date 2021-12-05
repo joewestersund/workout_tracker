@@ -20,6 +20,31 @@ class ColumnNameAndID
   end
 end
 
+class DateFields
+  def initialize(year, month, week, day, averaging_time)
+    @year = year
+    @month = month if averaging_time == "day" || averaging_time == "month"
+    @week = week if averaging_time == "week"
+    @day = day if averaging_time == "day"
+  end
+
+  def year
+    @year
+  end
+
+  def month
+    @month
+  end
+
+  def week
+    @week
+  end
+
+  def day
+    @day
+  end
+end
+
 class SummariesController < ApplicationController
   before_action :signed_in_user
   before_action :get_field_types
@@ -36,16 +61,17 @@ class SummariesController < ApplicationController
     @summary_options_json = get_summary_options_json(@workout_type)
 
     valid = @data_type.present?
+    include_blank_rows = true
 
     respond_to do |format|
       format.html {
         if valid && @show_table
-          @table = get_time_series_data(@data_type, @summary_function, @averaging_time, @show_table)
+          @table = get_time_series_data(@data_type, @summary_function, @averaging_time, @show_table, include_blank_rows)
         end
       }
       format.json {
         if valid
-          render :json => get_time_series_data(@data_type, @summary_function, @averaging_time, @show_table)
+          render :json => get_time_series_data(@data_type, @summary_function, @averaging_time, @show_table, include_blank_rows)
         else
           render json: "data type not recognized or not for the same workout type", status: :unprocessable_entity
         end
@@ -142,18 +168,18 @@ class SummariesController < ApplicationController
       "year desc, month desc, week desc, day desc" #always this, no matter the averaging time.
     end
 
-    def get_time_series_data(data_type, summary_function, averaging_time, table_format)
+    def get_time_series_data(data_type, summary_function, averaging_time, table_format, include_blank_rows)
       averaging_time_fields = get_averaging_time_fields(averaging_time)
 
       conditions = get_conditions
       group_by_str = group_by(averaging_time)
 
-      column_names = data_type.workout_type.routes.where(conditions).select("id as column_id, name as column_name").order(:order_in_list).all
-      row_names = current_user.workouts.joins(workout_routes: :data_points)
+      column_names = current_user.workouts.joins(workout_routes: [:data_points, :route])
           .where("data_points.data_type_id = #{data_type.id}")
           .where(conditions)
-          .select("#{averaging_time_fields}")
-          .group(group_by_str).order(order_by)
+          .select("routes.id as column_id, routes.name as column_name")
+          .group("routes.id, routes.name, routes.order_in_list")
+          .order(:order_in_list)
       data = current_user.workouts.joins(workout_routes: :data_points)
           .where("data_points.data_type_id = #{data_type.id}")
           .where(conditions)
@@ -175,6 +201,46 @@ class SummariesController < ApplicationController
       end
       data_by_route = data_by_route.group("route_id, #{group_by_str}").order(order_by)
       data_all_routes = data_all_routes.group(group_by_str).order(order_by)
+
+      if include_blank_rows
+        row_names = []
+
+        first_row = data_all_routes.first
+        last_row = data_all_routes.last
+
+        if first_row.present?
+          # note: data_all_routes is ordered descending with time. So first row = last date.
+          last_date = get_start_of_period_date(first_row.year, first_row.month, first_row.week, first_row.day)
+          first_date = get_start_of_period_date(last_row.year, last_row.month, last_row.week, last_row.day)
+
+          d = last_date
+
+          if averaging_time == "day"
+            interval = 1.day
+          elsif averaging_time == "week"
+            interval = 1.week
+          elsif averaging_time == "month"
+            interval = 1.month
+          elsif averaging_time == "year"
+            interval = 1.year
+          else
+            raise "averaging time #{averaging_time} not handled"
+          end
+
+          while d >= first_date
+            df = DateFields.new(d.year, d.month, d.cweek, d.day, averaging_time)
+            row_names << df
+            d -= interval
+          end
+        end
+      else
+        # only include rows for which there will be data
+        row_names = current_user.workouts.joins(workout_routes: :data_points)
+            .where("data_points.data_type_id = #{data_type.id}")
+            .where(conditions)
+            .select("#{averaging_time_fields}")
+            .group(group_by_str).order(order_by)
+      end
 
       if table_format
         return create_summary_table(row_names, column_names, data_by_route, data_all_routes, data_type)
@@ -235,11 +301,12 @@ class SummariesController < ApplicationController
         st.set_header_text(:row, index, row_name)
         href = workouts_path #+ get_query_string(r.year, r.month, r.day, summary_type, nil)
         st.set_header_href(:row, index, href)
-        if r.week
-          d = Date.commercial(r.year, r.week) # first day of that week
-        else
-          d = Date.new(r.year,r.month || 1,1)  # first day of month or year
-        end
+        d = get_start_of_period_date(r.year, r.month, r.week, r.day)
+        #if r.week
+        #  d = Date.commercial(r.year, r.week) # first day of that week
+        #else
+        #  d = Date.new(r.year,r.month || 1,1)  # first day of month or year
+        #end
         st.set_row_numeric_value(index,d)
         index += 1
       end
@@ -301,7 +368,7 @@ class SummariesController < ApplicationController
     def get_row_name(year, month, week, day)
       if week.present?
         d = Date.commercial(year, week)
-        "#{d.month}/#{d.day}-#{d.day+6}/#{d.year}"
+        "#{d.month}/#{d.day}/#{d.year}"
       elsif day.present?
         "#{month}/#{day}/#{year}"
       else
@@ -309,14 +376,7 @@ class SummariesController < ApplicationController
       end
     end
 
-    def search_params
-      params.permit(:year, :month, :workout_type_id)
-    end
-
     def get_conditions
-
-      search_terms = Workout.new(search_params)
-
       conditions = {}
       conditions_string = []
 
@@ -326,11 +386,11 @@ class SummariesController < ApplicationController
       conditions[:end_date] = params[:end_date] if params[:end_date].present?
       conditions_string << "workout_date <= :end_date" if params[:end_date].present?
 
-      conditions[:year] = search_terms.year if search_terms.year.present?
-      conditions_string << "year = :year" if search_terms.year.present?
+      conditions[:year] = params[:year] if params[:year].present?
+      conditions_string << "year = :year" if params[:year].present?
 
-      conditions[:month] = search_terms.month if search_terms.month.present?
-      conditions_string << "month = :month" if search_terms.month.present?
+      conditions[:month] = params[:month] if params[:month].present?
+      conditions_string << "month = :month" if params[:month].present?
 
       conditions[:route_id] = params[:route_id] if params[:route_id].present?
       conditions_string << "workout_routes.route_id = :route_id" if params[:route_id].present?
@@ -389,4 +449,11 @@ class SummariesController < ApplicationController
       end
     end
 
+    def get_start_of_period_date(year, month, week, day)
+      if week
+        d = Date.commercial(year, week) # first day of that week
+      else
+        d = Date.new(year, month || 1, day || 1)  # first day of year if no month or day. First day of month if no day.
+      end
+    end
 end
