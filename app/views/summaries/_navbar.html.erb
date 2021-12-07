@@ -3,9 +3,10 @@
   <%= link_to "X vs Y", summaries_x_vs_y_url(@params_for_link_url.merge(display: @display)), {class: mark_current_tab(request.path,summaries_x_vs_y_path)}%>
 </div>
 <div class="summary_type_navbar">
-  <%= link_to "By Week", @params_for_link_url.merge(averaging_time: 'week'), {class: mark_current_tab(@averaging_time,"week")} %>
-  <%= link_to "By Month", @params_for_link_url.merge(averaging_time: 'month'), {class: mark_current_tab(@averaging_time,"month")} %>
-  <%= link_to "By Year", @params_for_link_url.merge(averaging_time: 'year'), {class: mark_current_tab(@averaging_time,"year")} %>
+  <%= link_to "By Day", @params_for_link_url.merge(by: 'day'), {class: mark_current_tab(@averaging_time,"week")} %>
+  <%= link_to "By Week", @params_for_link_url.merge(by: 'week'), {class: mark_current_tab(@averaging_time,"week")} %>
+  <%= link_to "By Month", @params_for_link_url.merge(by: 'month'), {class: mark_current_tab(@averaging_time,"month")} %>
+  <%= link_to "By Year", @params_for_link_url.merge(by: 'year'), {class: mark_current_tab(@averaging_time,"year")} %>
 </div>
 <div class="summary_type_navbar">
   <%= link_to "Table", @params_for_link_url.merge(display: 'table'), {class: mark_current_tab(@show_table,true)} %>

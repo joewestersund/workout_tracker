@@ -1,0 +1,80 @@
+// Place all the styles related to the Summaries controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.summary_type_navbar{
+  margin-bottom: 10px;
+
+  a {
+    padding: 5px;
+    border-color: black;
+    border-width: 2px 2px 0px 2px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+  }
+
+  a:hover {
+    background-color: gray;
+    color: white;
+  }
+
+  a.current, a.current:hover {
+    background-color: black;
+    color: white;
+  }
+}
+
+table.summary {
+
+  th, td {
+    padding: 0px;
+  }
+
+  a {
+    padding: 2px 5px;
+  }
+
+  a, a:visited {
+    color: black;
+  }
+
+  a:hover {
+    background-color: gray;
+    color: white;
+  }
+}
+
+svg#graph {
+  .axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .x.axis path {
+    //display: none;  //don't show line at x axis
+  }
+
+  .line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+  }
+
+  circle:hover {
+    stroke: black;
+    stroke-width: 3px;
+  }
+}
+
+.d3-tip {
+  line-height: 1;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 4px;
+}

@@ -47,7 +47,7 @@ end
 
 class SummariesController < ApplicationController
   before_action :signed_in_user
-  #before_action :get_params_for_link_url
+  before_action :get_params_for_link_url
   #before_action :test_if_filtered
 
   SUMMARY_TYPE_TIME_SERIES = "time series"
@@ -77,11 +77,7 @@ class SummariesController < ApplicationController
         end
       }
       format.json {
-        if valid
-          render :json => get_time_series_data(@workout_type, @route, @data_type, @summary_function, @averaging_time, @show_table, include_blank_rows)
-        else
-          render json: "data type not recognized or not for the same workout type", status: :unprocessable_entity
-        end
+        render :json => get_time_series_data(@workout_type, @route, @data_type, @summary_function, @averaging_time, @show_table, include_blank_rows)
       }
     end
 
@@ -263,12 +259,12 @@ class SummariesController < ApplicationController
       if table_format
         return create_summary_table(workout_type, data_type, row_names, column_names, data_by_route, data_all_routes)
       else
-        return create_chart_data(column_names,data)
+        return create_chart_data(column_names, data_by_route)
       end
 
     end
 
-    def create_chart_data(column_names,data,summary_type)
+    def create_chart_data(column_names, data_by_route)
       cd = ChartData.new
       columns_hash = {}
 
@@ -279,24 +275,11 @@ class SummariesController < ApplicationController
         index += 1
       end
 
-      if summary_type == :by_transaction_direction
-        #this type uses custom sql, so the data is in a different structure.
-        data.each do |d|
-          year = d[0].to_i
-          month = d[1] ? d[1].to_i : 1  #d[1] may be zero if we're averaging yearly
-          day = d[2] ? d[2].to_i : 1 #d[2] may be zero if we're averaging yearly or monthly
-          x = Date.new(year,month,day)  #d[0] = year, d[1] = month, d[2] = day
-          cd.add_data_point(0,x,d[3].to_f) #income
-          cd.add_data_point(1,x,d[4].to_f) #spending
-          cd.add_data_point(2,x,d[5].to_f) #savings
-        end
-      else
-        data.each do |d|
-          col_id = nil_to_zero(d.column_id)
-          column = columns_hash[col_id]
-          x = Date.new(d.year,d.month || 1, d.day || 1)
-          cd.add_data_point(column,x,d.amount_sum.to_f)
-        end
+      data_by_route.each do |d|
+        col_id = nil_to_zero(d.column_id)
+        column = columns_hash[col_id]
+        x = get_start_of_period_date(d.year, d.month, d.week, d.day)
+        cd.add_data_point(column, x, d.result.to_f)
       end
 
       cd.remove_unused_series
@@ -465,5 +448,9 @@ class SummariesController < ApplicationController
       else
         d = Date.new(year, month || 1, day || 1)  # first day of year if no month or day. First day of month if no day.
       end
+    end
+
+    def get_params_for_link_url
+      @params_for_link_url = params.permit(:workout_type_id, :route_id, :data_type_id, :summary_function, :by)
     end
 end

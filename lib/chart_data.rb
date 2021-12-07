@@ -10,7 +10,7 @@ class ChartData
     @data.push Array.new
   end
 
-  def add_data_point(series_index,x,y)
+  def add_data_point(series_index, x, y)
     #points for each series must be added in order
     @data[series_index].push [x,y]
     @min_x = min(@min_x,x)
