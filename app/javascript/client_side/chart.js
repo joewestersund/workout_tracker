@@ -1,4 +1,4 @@
-import * as d3 from "d3";
+import * as d3 from "d3"
 import { tip as d3tip } from "d3-v6-tip";
 
 function ready() {
@@ -48,8 +48,10 @@ function ready() {
         var yScale = d3.scaleLinear().range([height + margin.top, margin.top])
             .domain([dataWithSeriesNames.min_y - (dataWithSeriesNames.max_y - dataWithSeriesNames.min_y) * 0.05, dataWithSeriesNames.max_y]);
         //var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
-        var xAxis = d3.axisBottom(xScale);
-        var yAxis = d3.axisLeft(yScale);
+        //var xAxis = d3.axisBottom(xScale);
+        var xAxis = d3.select(".axis").call(d3.axisBottom(xScale));
+        var yAxis = d3.select(".axis").call(d3.axisLeft(yScale));
+        //var yAxis = d3.axisLeft(yScale);
         var line = d3.line().curve(d3.curveLinear);
         var chart = d3.select('#graph')
             .attr('width', width + margin.left + margin.right)

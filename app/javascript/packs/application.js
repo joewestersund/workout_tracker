@@ -8,17 +8,19 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
+//import "d3"
+//import "d3-tip"
+
 import "../client_side/default_data_explanation"
 import "../client_side/select_and_redirect"
 import "../client_side/workouts"
 import "../client_side/filter"
 import "../client_side/summaries"
+import "../client_side/chart"
 
 import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap/dist/css/bootstrap'
 
-import "d3"
-//import "d3-tip"
 
 import "@fortawesome/fontawesome-free/js/all"
 
