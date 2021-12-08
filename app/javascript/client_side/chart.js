@@ -47,18 +47,15 @@ function ready() {
             .domain([dataWithSeriesNames.min_x, dataWithSeriesNames.max_x]);
         var yScale = d3.scaleLinear().range([height + margin.top, margin.top])
             .domain([dataWithSeriesNames.min_y - (dataWithSeriesNames.max_y - dataWithSeriesNames.min_y) * 0.05, dataWithSeriesNames.max_y]);
-        //var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
-        //var xAxis = d3.axisBottom(xScale);
-        var xAxis = d3.select(".axis").call(d3.axisBottom(xScale));
-        var yAxis = d3.select(".axis").call(d3.axisLeft(yScale));
-        //var yAxis = d3.axisLeft(yScale);
+        var xAxis = d3.axisBottom(xScale);
+        var yAxis = d3.axisLeft(yScale);
         var line = d3.line().curve(d3.curveLinear);
         var chart = d3.select('#graph')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom);
-        //chart.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-        //chart.append('g').attr('class', 'x axis').attr('transform', 'translate(0,' + (height + margin.top) + ')').call(xAxis);
-        //chart.append('g').attr('class', 'y axis').attr('transform', 'translate(' + margin.left + ',0)').call(yAxis);
+        chart.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+        chart.append('g').attr('class', 'x axis').attr('transform', 'translate(0,' + (height + margin.top) + ')').call(xAxis);
+        chart.append('g').attr('class', 'y axis').attr('transform', 'translate(' + margin.left + ',0)').call(yAxis);
         var data_series = d3.select('#graph').selectAll('.data_series').data(data).enter().append('g').attr('class', 'data_series');
         data_series.append('path').attr('class', 'line').attr('d', function(d) {
             return line(d);
@@ -90,7 +87,8 @@ function ready() {
             return xScale(d[0]);
         }).attr('cy', function(d) {
             return yScale(d[1]);
-        }).attr('r', circleSize).attr('fill', function(d, i, seriesNum) {
+        }).attr('r', circleSize)
+            .attr('fill', function(d, i, seriesNum) {
             return color(dataWithSeriesNames.series_names[seriesNum]);
         }).on('mouseover', tip.show).on('mouseout', tip.hide);
         chart.append('line').style("stroke", "black").attr("x1", xScale(dataWithSeriesNames.min_x)).attr("y1", yScale(0)).attr("x2", xScale(dataWithSeriesNames.max_x)).attr("y2", yScale(0)).style("stroke-dasharray", "10, 10");
