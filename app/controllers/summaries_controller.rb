@@ -259,30 +259,28 @@ class SummariesController < ApplicationController
       if table_format
         return create_summary_table(workout_type, data_type, row_names, column_names, data_by_route, data_all_routes)
       else
-        return create_chart_data(column_names, data_by_route)
+        return create_chart_data(row_names, column_names, data_by_route)
       end
 
     end
 
-    def create_chart_data(column_names, data_by_route)
+    def create_chart_data(row_names, column_names, data_by_route)
+      # TODO: need to handle row_names here
+
       cd = ChartData.new
+
       columns_hash = {}
 
-      index=0
       column_names.each do |c|
-        cd.add_series(c.column_name)
-        columns_hash[c.column_id] = index
-        index += 1
+        columns_hash[c.column_id] = c.column_name
       end
 
       data_by_route.each do |d|
         col_id = nil_to_zero(d.column_id)
-        column = columns_hash[col_id]
+        column_name = columns_hash[col_id]
         x = get_start_of_period_date(d.year, d.month, d.week, d.day)
-        cd.add_data_point(column, x, d.result.to_f)
+        cd.add_data_point(column_name, x, d.result)
       end
-
-      cd.remove_unused_series
 
       return cd
 

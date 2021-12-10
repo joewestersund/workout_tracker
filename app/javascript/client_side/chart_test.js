@@ -21,15 +21,16 @@ function ready() {
     }
 
     function draw_chart(data) {
-        alert("loading chart");
-        var sales = [
-            {units: 10, fruit: "fig", fill: 1},
-            {units: 20, fruit: "date", fill: 2},
-            {units: 40, fruit: "plum", fill: 2},
-            {units: 30, fruit: "plum", fill: 3}
-        ]
-        $('#graph').append(Plot.dot(sales, {x: "units", y: "fruit", fill: "fill"}).plot());
-        alert("plot loaded");
+        var svg = Plot.plot({
+            y: {
+                grid: true
+            },
+            marks: [
+                Plot.barY(data.index, {x: data.x, y: data.y, fill: data.series_names}),
+                Plot.ruleY([0])
+                ]
+        })
+        $('#graph').append(svg);
     }
 
     function chart_error(result){
