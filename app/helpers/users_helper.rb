@@ -2,9 +2,9 @@ module UsersHelper
 
   def create_user_defaults(user)
     wt = user.workout_types.create!(name: "running", order_in_list: 1)
-      dt = wt.data_types.create!(user: user, name: "distance", unit: "miles", field_type: DataType.field_types_hash[:numeric], order_in_list: 1)
-      dt = wt.data_types.create!(user: user, name: "pace", unit: "", field_type: DataType.field_types_hash[:minutes_seconds], order_in_list: 2)
-      dt = wt.data_types.create!(user: user, name: "hr", unit: "bpm", field_type: DataType.field_types_hash[:numeric], order_in_list: 3)
+      dt = wt.data_types.create!(user: user, name: "distance", units: "miles", field_type: DataType.field_types_hash[:numeric], order_in_list: 1)
+      dt = wt.data_types.create!(user: user, name: "pace", units: "", field_type: DataType.field_types_hash[:minutes_seconds], order_in_list: 2)
+      dt = wt.data_types.create!(user: user, name: "hr", units: "bpm", field_type: DataType.field_types_hash[:numeric], order_in_list: 3)
       dt = wt.data_types.create!(user: user, name: "surface", field_type: DataType.field_types_hash[:dropdown], order_in_list: 4)
         dt.dropdown_options.create!(user: user, name: "road", order_in_list: 1)
         dt.dropdown_options.create!(user: user, name: "trail", order_in_list: 2)
