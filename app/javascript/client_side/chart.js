@@ -56,7 +56,9 @@ function ready() {
         chart.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
         chart.append('g').attr('class', 'x axis').attr('transform', 'translate(0,' + (height + margin.top) + ')').call(xAxis);
         chart.append('g').attr('class', 'y axis').attr('transform', 'translate(' + margin.left + ',0)').call(yAxis);
+
         var data_series = d3.select('#graph').selectAll('.data_series').data(data).enter().append('g').attr('class', 'data_series');
+
         data_series.append('path').attr('class', 'line').attr('d', function(d) {
             return line(d);
         }).style('stroke', function(d, i) {
@@ -75,6 +77,11 @@ function ready() {
             return color(dataWithSeriesNames.series_names[i]);
         });
         var tip = d3tip().attr('class', 'd3-tip').html( function(d, i, seriesNum) {
+
+            console.log("d[i] = " + d[i]);  // DEBUG
+            console.log("d = " + d);  // DEBUG
+            console.log("seriesNum = " + seriesNum);  // DEBUG
+
             var date = (d[0].getMonth() + 1) + "/" + (d[0].getDate()) + "/" + (d[0].getFullYear());
             return "<span><div>" + date + "</div><div>" + d[1] + "</div><div>" + dataWithSeriesNames.series_names[seriesNum] + "</div></span>";
         });

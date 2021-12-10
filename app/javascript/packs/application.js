@@ -16,7 +16,7 @@ import "../client_side/select_and_redirect"
 import "../client_side/workouts"
 import "../client_side/filter"
 import "../client_side/summaries"
-import "../client_side/chart"
+import "../client_side/chart_test"
 
 import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap/dist/css/bootstrap'
@@ -31,6 +31,7 @@ import "../stylesheets/framework_and_overrides.css.scss"
 import "../stylesheets/navbar.css.scss"
 import "../stylesheets/scaffolds.css.scss"
 import "../stylesheets/style.css.scss"
+import "../stylesheets/summaries.css.scss"
 import "../stylesheets/tables.css.scss"
 import "../stylesheets/workout.css.scss"
 import "../stylesheets/will_paginate.css.scss"

@@ -4,6 +4,7 @@
   "dependencies": {
     "@babel/preset-react": "^7.16.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
+    "@observablehq/plot": "^0.3.0",
     "@popperjs/core": "^2.10.2",
     "@rails/actioncable": "^6.0.0",
     "@rails/activestorage": "^6.0.0",
