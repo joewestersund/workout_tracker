@@ -21,15 +21,35 @@ function ready() {
     }
 
     function draw_chart(data) {
-        var svg = Plot.plot({
-            y: {
-                grid: true
-            },
-            marks: [
-                Plot.barY(data.index, {x: data.x, y: data.y, fill: data.series_names}),
-                Plot.ruleY([0])
-                ]
-        })
+        var svg;
+        if (data.chart_type == "bar"){
+            if (data.stack_the_bars) {
+                svg = Plot.plot({
+                    y: {
+                        grid: true
+                    },
+                    marks: [
+                        Plot.barY(data.index, {x: data.x, y: data.y, fill: data.series_names}),
+                        Plot.ruleY([0])
+                    ]
+                })
+            } else {
+                svg = Plot.plot({
+                    y: {
+                        grid: true
+                    },
+                    facet: {
+                        data: data,
+                        x: data.x
+                    },
+                    marks: [
+                        Plot.barY(data.index, {x: data.series_names, y: data.y, fill: data.series_names}),
+                        Plot.ruleY([0])
+                    ]
+                })
+            }
+        }
+
         $('#graph').append(svg);
     }
 

@@ -259,15 +259,16 @@ class SummariesController < ApplicationController
       if table_format
         return create_summary_table(workout_type, data_type, row_names, column_names, data_by_route, data_all_routes)
       else
-        return create_chart_data(row_names, column_names, data_by_route)
+        stack_bars = (summary_function.blank? || summary_function == "sum")
+        return create_chart_data("bar", stack_bars, row_names, column_names, data_by_route)
       end
 
     end
 
-    def create_chart_data(row_names, column_names, data_by_route)
+    def create_chart_data(chart_type, stack_bars, row_names, column_names, data_by_route)
       # TODO: need to handle row_names here
 
-      cd = ChartData.new
+      cd = ChartData.new(chart_type, stack_bars)
 
       columns_hash = {}
 
@@ -282,7 +283,7 @@ class SummariesController < ApplicationController
         cd.add_data_point(column_name, x, d.result)
       end
 
-      return cd
+      return cd.to_builder.target!.html_safe
 
     end
 
