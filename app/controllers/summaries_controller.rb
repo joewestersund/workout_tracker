@@ -1,49 +1,9 @@
 require 'ostruct'
 require 'summary_table'
 require 'chart_data'
+require 'column_name_and_id'
+require 'date_fields'
 
-class ColumnNameAndID
-  def column_id
-    @column_id
-  end
-
-  def column_id=(column_id)
-    @column_id = column_id
-  end
-
-  def column_name
-    @column_name
-  end
-
-  def column_name=(column_name)
-    @column_name = column_name
-  end
-end
-
-class DateFields
-  def initialize(year, month, week, day, averaging_time)
-    @year = year
-    @month = month if averaging_time == "day" || averaging_time == "month"
-    @week = week if averaging_time == "week"
-    @day = day if averaging_time == "day"
-  end
-
-  def year
-    @year
-  end
-
-  def month
-    @month
-  end
-
-  def week
-    @week
-  end
-
-  def day
-    @day
-  end
-end
 
 class SummariesController < ApplicationController
   before_action :signed_in_user
@@ -167,8 +127,12 @@ class SummariesController < ApplicationController
       end
     end
 
-    def order_by
+    def order_by_desc
       "year desc, month desc, week desc, day desc" #always this, no matter the averaging time.
+    end
+
+    def order_by_asc
+      "year, month, week, day"
     end
 
     def get_time_series_data(workout_type, route, data_type, summary_function, averaging_time, table_format, include_blank_rows)
@@ -213,6 +177,8 @@ class SummariesController < ApplicationController
       else
         raise "summary function #{summary_function} was not recognized"
       end
+
+      order_by = table_format ? order_by_desc : order_by_asc
       data_by_route = data_by_route.group("route_id, #{group_by_str}").order(order_by)
       data_all_routes = data_all_routes.group(group_by_str).order(order_by)
 
@@ -223,9 +189,17 @@ class SummariesController < ApplicationController
         last_row = data_all_routes.last
 
         if first_row.present?
-          # note: data_all_routes is ordered descending with time. So first row = last date.
-          last_date = get_start_of_period_date(first_row.year, first_row.month, first_row.week, first_row.day)
-          first_date = get_start_of_period_date(last_row.year, last_row.month, last_row.week, last_row.day)
+          # note: data_all_routes is ordered ascending or descending with time, depending on table vs chart view.
+          d1 = get_start_of_period_date(first_row.year, first_row.month, first_row.week, first_row.day)
+          d2 = get_start_of_period_date(last_row.year, last_row.month, last_row.week, last_row.day)
+
+          if d1 < d2
+            first_date = d1
+            last_date = d2
+          else
+            first_date = d2
+            last_date = d1
+          end
 
           d = last_date
 
@@ -266,8 +240,6 @@ class SummariesController < ApplicationController
     end
 
     def create_chart_data(chart_type, stack_bars, row_names, column_names, data_by_route)
-      # TODO: need to handle row_names here
-
       cd = ChartData.new(chart_type, stack_bars)
 
       columns_hash = {}
@@ -282,6 +254,13 @@ class SummariesController < ApplicationController
         x = get_start_of_period_date(d.year, d.month, d.week, d.day)
         cd.add_data_point(column_name, x, d.result)
       end
+
+      x_values = []
+      row_names.each do |r|
+        x_values << get_start_of_period_date(r.year, r.month, r.week, r.day)
+      end
+
+      cd.fill_blank_values(x_values, column_names.first.column_name, nil)
 
       return cd.to_builder.target!.html_safe
 

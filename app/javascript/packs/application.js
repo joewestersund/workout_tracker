@@ -16,7 +16,7 @@ import "../client_side/select_and_redirect"
 import "../client_side/workouts"
 import "../client_side/filter"
 import "../client_side/summaries"
-import "../client_side/chart_test"
+import "../client_side/chart"
 
 import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap/dist/css/bootstrap'
