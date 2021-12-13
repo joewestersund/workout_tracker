@@ -40,8 +40,10 @@ function ready() {
                             label: y_label
                         },
                         x: {
-                            label: x_label
+                            label: x_label,
+                            tickRotate: "-30"
                         },
+                        marginBottom: 70,
                         color: {
                             legend: true
                         },
@@ -49,7 +51,7 @@ function ready() {
                             Plot.barY(cd, {x: "x_value", y: "y_value", fill: "series_name", title: "series_name"}),
                             Plot.ruleY([0])
                         ]
-                    })
+                    });
                 } else {
                     // separate bars for each route, if multiple routes completed in the same day/week/month/year
                     svg = Plot.plot({
@@ -62,14 +64,16 @@ function ready() {
                         },
                         fx: {
                             domain: cd.x_value,
-                            label: x_label
+                            label: x_label,
+                            tickRotate: "-30"
                         },
                         color: {
                             legend: true
                         },
                         facet: {
                             data: cd,
-                            x: "x_value"
+                            x: "x_value",
+                            marginBottom: 70
                         },
                         marks: [
                             Plot.barY(cd, {x: "series_name", y: "y_value", fill: "series_name", title: "series_name"}),
