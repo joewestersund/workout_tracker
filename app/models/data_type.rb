@@ -89,6 +89,18 @@ class DataType < ApplicationRecord
     end
   end
 
+  def convert_to_number_for_chart(value)
+    if value.blank?
+      ""
+    elsif self.is_hours_minutes?
+      value / 3600  # value in hours and decimal fraction of hours
+    elsif self.is_minutes_seconds?
+      value / 60  # value in minutes and decimal fraction of minutes
+    else
+      value
+    end
+  end
+
   def convert_from_number(value)
     if value.blank?
       ""

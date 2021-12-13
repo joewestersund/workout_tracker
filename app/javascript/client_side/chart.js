@@ -1,5 +1,4 @@
 //import * as d3 from "d3"
-//import { tip as d3tip } from "d3-v6-tip";
 import * as Plot from "@observablehq/plot";
 
 function ready() {
@@ -22,51 +21,75 @@ function ready() {
 
     function draw_chart(data) {
         var svg;
-        if (data.chart_type == "bar"){
-            if (data.stack_the_bars) {
-                // stack the bars for different routes, if multiple routes completed in the same day/week/month/year
+        var cd = data.chart_data;
+        if (cd.length == 0) {
+            $('#graph').append("No data was found.");
+        } else {
+            if (data.chart_type == "bar"){
+                var x_label = "Workout Date";
+                if (data.units == null || data.units == "")
+                    var y_label = data.data_type_name;
+                else
+                    var y_label = data.data_type_name + " (" + data.units + ")";
+
+                if (data.stack_the_bars) {
+                    // stack the bars for different routes, if multiple routes completed in the same day/week/month/year
+                    svg = Plot.plot({
+                        y: {
+                            grid: true,
+                            label: y_label
+                        },
+                        x: {
+                            label: x_label
+                        },
+                        color: {
+                            legend: true
+                        },
+                        marks: [
+                            Plot.barY(cd, {x: "x_value", y: "y_value", fill: "series_name", title: "series_name"}),
+                            Plot.ruleY([0])
+                        ]
+                    })
+                } else {
+                    // separate bars for each route, if multiple routes completed in the same day/week/month/year
+                    svg = Plot.plot({
+                        y: {
+                            grid: true,
+                            label: y_label
+                        },
+                        x: {
+                            axis: null  // don't label each route on axis
+                        },
+                        fx: {
+                            domain: cd.x_value,
+                            label: x_label
+                        },
+                        color: {
+                            legend: true
+                        },
+                        facet: {
+                            data: cd,
+                            x: "x_value"
+                        },
+                        marks: [
+                            Plot.barY(cd, {x: "series_name", y: "y_value", fill: "series_name", title: "series_name"}),
+                            Plot.ruleY([0])
+                        ]
+                    })
+                }
+            } else {
                 svg = Plot.plot({
                     y: {
                         grid: true
                     },
                     marks: [
-                        Plot.barY(data.index, {x: data.x, y: data.y, fill: data.series_names}),
-                        Plot.ruleY([0])
-                    ]
-                })
-            } else {
-                // separate bars for each route, if multiple routes completed in the same day/week/month/year
-                svg = Plot.plot({
-                    y: {
-                        grid: true,
-                    },
-                    fx: {
-                        domain: d3.sort(data.x)
-                    },
-                    facet: {
-                        data: data,
-                        x: data.x
-                    },
-                    marks: [
-                        Plot.barY(data.index, {x: data.series_names, y: data.y, fill: data.series_names}),
+                        Plot.dot(cd, {x: "x_value", y: "y_value", fill: "series_name", title: "series_name"}),
                         Plot.ruleY([0])
                     ]
                 })
             }
-        } else {
-            svg = Plot.plot({
-                y: {
-                    grid: true
-                },
-                marks: [
-                    Plot.dot(data.index, {x: data.x, y: data.y, fill: data.series_names}),
-                    Plot.ruleY([0])
-                ]
-            })
+            $('#graph').append(svg);
         }
-
-        $('#graph').append(svg);
-        $('#graph').after("<div>" + JSON.stringify(data) + "</div>"); //DEBUG
     }
 
     function chart_error(result){

@@ -234,13 +234,18 @@ class SummariesController < ApplicationController
         return create_summary_table(workout_type, data_type, row_names, column_names, data_by_route, data_all_routes)
       else
         stack_bars = (summary_function.blank? || summary_function == "sum")
-        return create_chart_data("bar", stack_bars, row_names, column_names, data_by_route)
+        return create_chart_data("bar", stack_bars, data_type, row_names, column_names, data_by_route)
       end
 
     end
 
-    def create_chart_data(chart_type, stack_bars, row_names, column_names, data_by_route)
-      cd = ChartData.new(chart_type, stack_bars)
+    def create_chart_data(chart_type, stack_bars, data_type, row_names, column_names, data_by_route)
+
+      if data_type.present?
+        cd = ChartData.new(chart_type, stack_bars, data_type.name, data_type.units)
+      else
+        cd = ChartData.new(chart_type, stack_bars, "Times completed", nil)
+      end
 
       columns_hash = {}
 
@@ -252,7 +257,12 @@ class SummariesController < ApplicationController
         col_id = nil_to_zero(d.column_id)
         column_name = columns_hash[col_id]
         x = get_start_of_period_date(d.year, d.month, d.week, d.day)
-        cd.add_data_point(column_name, x, d.result)
+        if data_type.present?
+          y_value = data_type.convert_to_number_for_chart(d.result.to_f)
+        else
+          y_value = d.result.to_f
+        end
+        cd.add_data_point(column_name, x, y_value)
       end
 
       x_values = []
@@ -260,7 +270,11 @@ class SummariesController < ApplicationController
         x_values << get_start_of_period_date(r.year, r.month, r.week, r.day)
       end
 
-      cd.fill_blank_values(x_values, column_names.first.column_name, nil)
+      if chart_type == "bar"
+        if column_names.length > 0
+          cd.fill_blank_values(x_values, column_names.first.column_name, nil)
+        end
+      end
 
       return cd.to_builder.target!.html_safe
 
