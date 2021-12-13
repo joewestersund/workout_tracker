@@ -18,6 +18,16 @@
   <%= form_with(url: summaries_time_series_path, method: 'get') do |form| %>
     <%= form.hidden_field :workout_type_id, value: @workout_type.id %>
     <%= form.hidden_field :display, value: @display %>
+
+    <div class="field">
+      <%= label_tag :start_date  %>
+      <%= date_field_tag :start_date, params[:start_date] %>
+    </div>
+    <div class="field">
+      <%= label_tag :end_date %>
+      <%= date_field_tag :end_date, params[:end_date] %>
+    </div>
+
     <div class="field">
       <%= form.label :route_id %>
       <%= form.collection_select :route_id, @routes, :id, :name, {selected: params[:route_id], include_blank: true} %>
@@ -27,7 +37,6 @@
       <%= form.collection_select  :data_type_id, @data_types, :id, :name, {selected: (@data_type.id if @data_type.present?), include_blank: true} %>
     </div>
     <div class="field">
-      <%# form.label :summary_functions %>
       <%= form.select :summary_function, {} %>
     </div>
     <div class="field">

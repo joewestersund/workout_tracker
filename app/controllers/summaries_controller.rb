@@ -7,14 +7,13 @@ require 'date_fields'
 
 class SummariesController < ApplicationController
   before_action :signed_in_user
-  before_action :get_params_for_link_url
-  #before_action :test_if_filtered
 
   SUMMARY_TYPE_TIME_SERIES = "time series"
   SUMMARY_TYPE_X_VS_Y = "x vs y"
 
   def time_series
-    set_workout_type_route_data_type
+    set_workout_type_route_data_type(get_params_for_link_url(SUMMARY_TYPE_TIME_SERIES))
+    get_params_for_link_url(SUMMARY_TYPE_TIME_SERIES)
     @show_table = show_table
     @display = (@show_table ? "table" : "chart")
     @summary_options_json = get_summary_options_json(@workout_type)
@@ -44,27 +43,21 @@ class SummariesController < ApplicationController
   end
 
   def x_vs_y
-    @show_table = show_table
-    @display = (@show_table ? "table" : "chart")
-    at = get_averaging_time
-    @workout_filter_json = get_workout_filter_json()
-    @dt1 = current_user.data_types.find(params[:data_type_id_1])
-    @dt2 = current_user.data_types.find(params[:data_type_id_2])
+    set_workout_type_route_data_type(SUMMARY_TYPE_X_VS_Y)
+    get_params_for_link_url(SUMMARY_TYPE_X_VS_Y)
 
-    valid = @dt1.present? && @dt2.present? && @dt1.workout_type == @dt2.workout_type
+    if @x_data_type.present? && @y_data_type.present? && @route.present?
+      @description = "#{@x_data_type.name} vs #{@y_data_type.name} for '#{@route.name}', by #{@color_by}"
+    elsif @x_data_type.present? && @y_data_type.present?
+      @description = "#{@x_data_type.name} vs #{@y_data_type.name}, by #{@color_by}"
+    end
 
     respond_to do |format|
       format.html {
-        if valid && @show_table
-          @table = get_x_vs_y_data(@dt1, @dt2, at,@show_table)
-        end
+        # just show the view, the chart will get the data by doing a separate query via json
       }
       format.json {
-        if valid
-          render :json => get_x_vs_y_data(@dt1, @dt2, at,@show_table)
-        else
-          render json: "data types not recognized or not for the same workout type", status: :unprocessable_entity
-        end
+        render json: create_x_vs_y_chart_data(@x_data_type, @y_data_type, @color_by)
       }
     end
 
@@ -77,24 +70,11 @@ class SummariesController < ApplicationController
       end.target!.html_safe
     end
 
-    def get_params(summary_type)
+    def get_params_for_link_url(summary_type)
       if summary_type == SUMMARY_TYPE_TIME_SERIES
-        @params_for_link_url = params.permit(:start_date, :end_date, :year, :month, :week, :route_id, :data_type_id, :display, :averaging_time)
+        @params_for_link_url = params.permit(:start_date, :end_date, :workout_type_id, :route_id, :data_type_id, :summary_function, :by)
       else
-        @params_for_link_url = params.permit(:start_date, :end_date, :year, :month, :week, :route_id, :data_type_id, :display)
-      end
-    end
-
-    def test_if_filtered(summary_type)
-      @filtered = false
-      filter_params = %w[start_date, end_date, year, month, week, route_id]
-
-      filter_params.each do |p|
-        param_value = params.fetch(p,nil)
-        if !param_value.nil? and !param_value.empty? then
-          @filtered = true
-          break
-        end
+        @params_for_link_url = params.permit(:start_date, :end_date, :workout_type_id, :route_id, :x_data_type_id, :y_data_type_id, :by)
       end
     end
 
@@ -148,6 +128,9 @@ class SummariesController < ApplicationController
         column_names = current_user.workouts.joins(workout_routes: :route)
           .where("workouts.workout_type_id = #{workout_type.id}")
       end
+      if route.present?
+        column_names = column_names.where("workout_routes.route_id = #{route.id}")
+      end
       column_names = column_names.where(conditions)
           .select("routes.id as column_id, routes.name as column_name")
           .group("routes.id, routes.name, routes.order_in_list")
@@ -159,6 +142,9 @@ class SummariesController < ApplicationController
       else
         data = current_user.workouts.joins(:workout_routes)
             .where("workouts.workout_type_id = #{workout_type.id}")
+      end
+      if route.present?
+        data = data.where("workout_routes.route_id = #{route.id}")
       end
       data = data.where(conditions)
 
@@ -234,18 +220,65 @@ class SummariesController < ApplicationController
         return create_summary_table(workout_type, data_type, row_names, column_names, data_by_route, data_all_routes)
       else
         stack_bars = (summary_function.blank? || summary_function == "sum")
-        return create_chart_data("bar", stack_bars, data_type, row_names, column_names, data_by_route)
+        return create_time_series_chart_data("bar", stack_bars, data_type, row_names, column_names, data_by_route)
       end
 
     end
 
-    def create_chart_data(chart_type, stack_bars, data_type, row_names, column_names, data_by_route)
+    def create_x_vs_y_chart_data(x_data_type, y_data_type, color_by)
+      workout_routes_with_x = current_user.workout_routes.joins(:data_points).where("data_points.data_type_id = #{x_data_type.id}").select("workout_routes.id")
+      workout_routes_with_y = current_user.workout_routes.joins(:data_points).where("data_points.data_type_id = #{y_data_type.id}").select("workout_routes.id")
 
-      if data_type.present?
-        cd = ChartData.new(chart_type, stack_bars, data_type.name, data_type.units)
-      else
-        cd = ChartData.new(chart_type, stack_bars, "Times completed", nil)
+      workout_routes = current_user.workout_routes.joins(:workout)
+          .where("workout_routes.id": workout_routes_with_x)
+          .where("workout_routes.id": workout_routes_with_y)
+          .where(get_conditions)
+
+      x_label = get_axis_label(x_data_type)
+      y_label = get_axis_label(y_data_type)
+
+      cd = ChartData.new("dot", false, x_label, y_label)
+
+      workout_routes.each do |wr|
+        dp_x = wr.data_points.find_by(data_type_id: x_data_type.id)
+        x = dp_x.value_for_chart
+        dp_y = wr.data_points.find_by(data_type_id: y_data_type.id)
+        y = dp_y.value_for_chart
+        w = wr.workout
+        if color_by == "year"
+          series = w.year
+        elsif color_by == "month"
+          series = get_start_of_period_date(w.year, w.month, nil, nil)
+        elsif color_by == "week"
+          series = get_start_of_period_date(w.year, nil, w.week, nil)
+        elsif color_by == "day"
+          series = get_start_of_period_date(w.year, w.month, nil, w.day)
+        elsif color_by == "route"
+          series = wr.route.name
+        else
+          raise "Error: did not recognize label_by = #{label_by}"
+        end
+        label = "#{wr.workout.workout_date} #{wr.route.name}"
+        cd.add_data_point(series, x, y, label)
       end
+
+      return cd.to_builder.target!.html_safe
+
+    end
+
+    def get_axis_label(data_type)
+      data_type.units.blank? ? data_type.name : "#{data_type.name} (#{data_type.units})"
+    end
+
+    def create_time_series_chart_data(chart_type, stack_bars, data_type, row_names, column_names, data_by_route)
+      x_label = "Workout Date"
+      if data_type.present?
+        y_label = get_axis_label(data_type)
+      else
+        y_label = "Times route was completed"
+      end
+
+      cd = ChartData.new(chart_type, stack_bars, x_label, y_label)
 
       columns_hash = {}
 
@@ -258,11 +291,11 @@ class SummariesController < ApplicationController
         column_name = columns_hash[col_id]
         x = get_start_of_period_date(d.year, d.month, d.week, d.day)
         if data_type.present?
-          y_value = data_type.convert_to_number_for_chart(d.result.to_f)
+          y_value = data_type.convert_to_value_for_chart(d.result.to_f)
         else
           y_value = d.result.to_f
         end
-        cd.add_data_point(column_name, x, y_value)
+        cd.add_data_point(column_name, x, y_value, nil)
       end
 
       x_values = []
@@ -382,44 +415,47 @@ class SummariesController < ApplicationController
       conditions[:end_date] = params[:end_date] if params[:end_date].present?
       conditions_string << "workout_date <= :end_date" if params[:end_date].present?
 
-      conditions[:year] = params[:year] if params[:year].present?
-      conditions_string << "year = :year" if params[:year].present?
-
-      conditions[:month] = params[:month] if params[:month].present?
-      conditions_string << "month = :month" if params[:month].present?
-
-      conditions[:route_id] = params[:route_id] if params[:route_id].present?
-      conditions_string << "workout_routes.route_id = :route_id" if params[:route_id].present?
-
       return [conditions_string.join(" AND "), conditions]
     end
 
-    def set_workout_type_route_data_type
+    def set_workout_type_route_data_type(summary_type)
       @workout_types = current_user.workout_types.order(:order_in_list)
 
-      if params[:workout_type_id].present?
-        @workout_type = current_user.workout_types.find(params[:workout_type_id])
-      else
-        @workout_type = @workout_types.first
-      end
-
-      if params[:data_type_id].present?
-        @data_type = @workout_type.data_types.find(params[:data_type_id])
-        @summary_function = param_or_first(:summary_function, nil, @data_type.summary_function_options)
-      else
-        @summary_function = "count"  # we can only return a count, not a sum, average etc, if this is not specific to a data_type
-      end
+      @workout_type = param_or_first(:workout_type_id, @workout_types, @workout_types)
 
       @routes = @workout_type.routes.order(:order_in_list)
       if params[:route_id].present?
         @route = @workout_type.routes.find(params[:route_id])
       end
 
-      fth = DataType.field_types_hash
-      @data_types = @workout_type.data_types.where(field_type: [fth[:numeric], fth[:hours_minutes], fth[:minutes_seconds]]).order(:order_in_list)
-      @averaging_times = %w[ day week month year]
+      if summary_type == SUMMARY_TYPE_X_VS_Y
+        # this is an x vs y graph, wih two data types
+        @x_data_type = param_or_first(:x_data_type_id, @workout_type.data_types, @workout_type.data_types)
+        @y_data_type = param_or_first(:y_data_type_id, @workout_type.data_types, @workout_type.data_types)
 
-      @averaging_time =  param_or_first(:by, nil, @averaging_times)
+        fth = DataType.field_types_hash
+        @data_types = @workout_type.data_types.where.not(field_type: fth[:text]).order(:order_in_list)
+
+        @color_by_options = %w[ day week month year route]
+
+        @color_by =  param_or_first(:by, nil, @color_by_options)
+
+      else
+        # this is a time series graph, with one data type and a summary function
+        if params[:data_type_id].present?
+          @data_type = @workout_type.data_types.find(params[:data_type_id])
+          @summary_function = param_or_first(:summary_function, nil, @data_type.summary_function_options)
+        else
+          @summary_function = "count"  # we can only return a count, not a sum, average etc, if this is not specific to a data_type
+        end
+
+        fth = DataType.field_types_hash
+        @data_types = @workout_type.data_types.where(field_type: [fth[:numeric], fth[:hours_minutes], fth[:minutes_seconds]]).order(:order_in_list)
+        @averaging_times = %w[ day week month year]
+
+        @averaging_time =  param_or_first(:by, nil, @averaging_times)
+      end
+
     end
 
     def param_or_first(param_name, find_in, array)
@@ -440,9 +476,5 @@ class SummariesController < ApplicationController
       else
         d = Date.new(year, month || 1, day || 1)  # first day of year if no month or day. First day of month if no day.
       end
-    end
-
-    def get_params_for_link_url
-      @params_for_link_url = params.permit(:workout_type_id, :route_id, :data_type_id, :summary_function, :by)
     end
 end

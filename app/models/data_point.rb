@@ -73,6 +73,21 @@ class DataPoint < ApplicationRecord
     val
   end
 
+  def value_for_chart
+    if dropdown_option_id.present?
+      val = self.dropdown_option.name
+    elsif text_value.present?
+      val = text_value
+    else
+      if self.data_type.is_hours_minutes? || self.data_type.is_minutes_seconds?
+        val = self.data_type.convert_to_value_for_chart(decimal_value).to_f
+      else
+        val = decimal_value.to_f
+      end
+    end
+    val
+  end
+
   def to_s
     "#{self.data_type.name}: #{self.value_to_s}"
   end

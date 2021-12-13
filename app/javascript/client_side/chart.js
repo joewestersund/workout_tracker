@@ -11,6 +11,7 @@ function ready() {
             url: window.location,
             dataType: 'json',
             success: function(data) {
+                //$('#graph').append("<div>" + JSON.stringify(data) + "</div>");  // DEBUG
                 draw_chart(data);
             },
             error: function(result) {
@@ -22,16 +23,13 @@ function ready() {
     function draw_chart(data) {
         var svg;
         var cd = data.chart_data;
+        var x_label = data.x_label;
+        var y_label = data.y_label;
+
         if (cd.length == 0) {
-            $('#graph').append("No data was found.");
+            $('#graph').append("You haven't entered any workout data, or no data matches the filter above.");
         } else {
             if (data.chart_type == "bar"){
-                var x_label = "Workout Date";
-                if (data.units == null || data.units == "")
-                    var y_label = data.data_type_name;
-                else
-                    var y_label = data.data_type_name + " (" + data.units + ")";
-
                 if (data.stack_the_bars) {
                     // stack the bars for different routes, if multiple routes completed in the same day/week/month/year
                     svg = Plot.plot({
@@ -80,10 +78,14 @@ function ready() {
             } else {
                 svg = Plot.plot({
                     y: {
-                        grid: true
+                        grid: true,
+                        label: y_label
+                    },
+                    x: {
+                        label: x_label
                     },
                     marks: [
-                        Plot.dot(cd, {x: "x_value", y: "y_value", fill: "series_name", title: "series_name"}),
+                        Plot.dot(cd, {x: "x_value", y: "y_value", fill: "series_name", title: "label"}),
                         Plot.ruleY([0])
                     ]
                 })

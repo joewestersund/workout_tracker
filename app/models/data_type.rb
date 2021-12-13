@@ -89,7 +89,7 @@ class DataType < ApplicationRecord
     end
   end
 
-  def convert_to_number_for_chart(value)
+  def convert_to_value_for_chart(value)
     if value.blank?
       ""
     elsif self.is_hours_minutes?
