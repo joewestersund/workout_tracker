@@ -84,6 +84,9 @@ function ready() {
                     x: {
                         label: x_label
                     },
+                    color: {
+                        legend: true
+                    },
                     marks: [
                         Plot.dot(cd, {x: "x_value", y: "y_value", fill: "series_name", title: "label"}),
                         Plot.ruleY([0])
