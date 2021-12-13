@@ -10,9 +10,11 @@ function ready() {
             contentType: 'application/json; charset=utf-8',
             url: window.location,
             dataType: 'json',
-            success: function(data) {
-                //$('#graph').append("<div>" + JSON.stringify(data) + "</div>");  // DEBUG
-                draw_chart(data);
+            success: function(json_data) {
+                //$('#graph').append("<div>" + JSON.stringify(json_data) + "</div>");  // DEBUG
+                json_data.charts.forEach(function(c) {
+                    draw_chart(c);
+                });
             },
             error: function(result) {
                 chart_error(result);

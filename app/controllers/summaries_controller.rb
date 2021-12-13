@@ -219,8 +219,7 @@ class SummariesController < ApplicationController
       if table_format
         return create_summary_table(workout_type, data_type, row_names, column_names, data_by_route, data_all_routes)
       else
-        stack_bars = (summary_function.blank? || summary_function == "sum")
-        return create_time_series_chart_data("bar", stack_bars, data_type, row_names, column_names, data_by_route)
+        return create_time_series_chart_data(summary_function, data_type, row_names, column_names, data_by_route, data_all_routes)
       end
 
     end
@@ -262,7 +261,13 @@ class SummariesController < ApplicationController
         cd.add_data_point(series, x, y, label)
       end
 
-      return cd.to_builder.target!.html_safe
+      charts = [cd]
+
+      charts_json = Jbuilder.new do |json|
+        json.charts charts.map { |c| c.to_builder.attributes! }
+      end
+
+      return charts_json.target!.html_safe
 
     end
 
@@ -270,7 +275,8 @@ class SummariesController < ApplicationController
       data_type.units.blank? ? data_type.name : "#{data_type.name} (#{data_type.units})"
     end
 
-    def create_time_series_chart_data(chart_type, stack_bars, data_type, row_names, column_names, data_by_route)
+    def create_time_series_chart_data(summary_function, data_type, row_names, column_names, data_by_route, data_all_routes)
+
       x_label = "Workout Date"
       if data_type.present?
         y_label = get_axis_label(data_type)
@@ -278,7 +284,14 @@ class SummariesController < ApplicationController
         y_label = "Times route was completed"
       end
 
-      cd = ChartData.new(chart_type, stack_bars, x_label, y_label)
+      stack_bars = (summary_function.blank? || summary_function == "sum")
+
+      cd = ChartData.new("bar", stack_bars, x_label, y_label)
+
+      if !stack_bars
+        all_routes_name = "all routes"
+        cd_all = ChartData.new("bar", false, x_label, y_label)  # never need to stack bars for the "all routes" chart
+      end
 
       columns_hash = {}
 
@@ -298,18 +311,36 @@ class SummariesController < ApplicationController
         cd.add_data_point(column_name, x, y_value, nil)
       end
 
+      if !stack_bars
+        data_all_routes.each do |d|
+          x = get_start_of_period_date(d.year, d.month, d.week, d.day)
+          if data_type.present?
+            y_value = data_type.convert_to_value_for_chart(d.result.to_f)
+          else
+            y_value = d.result.to_f
+          end
+          cd_all.add_data_point(all_routes_name, x, y_value, nil)
+        end
+      end
+
       x_values = []
       row_names.each do |r|
         x_values << get_start_of_period_date(r.year, r.month, r.week, r.day)
       end
 
-      if chart_type == "bar"
-        if column_names.length > 0
-          cd.fill_blank_values(x_values, column_names.first.column_name, nil)
-        end
+      if column_names.length > 0
+        cd.fill_blank_values(x_values, column_names.first.column_name, nil)
+        cd_all.fill_blank_values(x_values, all_routes_name, nil) if !stack_bars
       end
 
-      return cd.to_builder.target!.html_safe
+      charts = [cd]
+      charts << cd_all if !stack_bars
+
+      charts_json = Jbuilder.new do |json|
+        json.charts charts.map { |c| c.to_builder.attributes! }
+      end
+
+      return charts_json.target!.html_safe
 
     end
 
