@@ -284,7 +284,7 @@ class SummariesController < ApplicationController
         y_label = "Times route was completed"
       end
 
-      stack_bars = (summary_function.blank? || summary_function == "sum")
+      stack_bars = (summary_function == "count" || summary_function == "sum")
 
       cd = ChartData.new("bar", stack_bars, x_label, y_label)
 
