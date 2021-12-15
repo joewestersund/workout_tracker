@@ -97,16 +97,12 @@
               <td rowspan="<%= wr_rows %>"><%= display_date_with_day_of_week(workout.workout_date) %></td>
               <td rowspan="<%= wr_rows %>"><%= workout.workout_type.name %></td>
             <% end %>
-            <td class="show-border">
+            <td class="show-border" title="<%= wr.route.description %>" >
               <%= wr.route.name %>
             </td>
             <td>
-              <div>
-                <%= wr.route.description %>
-              </div>
-              <% wr.data_points.sort_by { |dp| dp.data_type.order_in_list }.each do |dp| %>
-                <div><%= dp.to_s %></div>
-              <% end %>
+              <% dp_array = wr.data_points.sort_by { |dp| dp.data_type.order_in_list }.map {|dp| dp.to_s } %>
+              <%= dp_array.join(", ") %>
               <% if wr.repetitions > 1 %>
                 <div><%= pluralize(wr.repetitions, "repetition")%></div>
               <% end %>
