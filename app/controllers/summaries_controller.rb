@@ -59,7 +59,7 @@ class SummariesController < ApplicationController
         # just show the view, the chart will get the data by doing a separate query via json
       }
       format.json {
-        render json: create_x_vs_y_chart_data(@x_data_type, @y_data_type, @color_by)
+        render json: create_x_vs_y_chart_data(@x_data_type, @y_data_type, @route, @color_by)
       }
     end
 
@@ -249,7 +249,7 @@ class SummariesController < ApplicationController
 
     end
 
-    def create_x_vs_y_chart_data(x_data_type, y_data_type, color_by)
+    def create_x_vs_y_chart_data(x_data_type, y_data_type, route, color_by)
       workout_routes_with_x = current_user.workout_routes.joins(:data_points).where("data_points.data_type_id = #{x_data_type.id}").select("workout_routes.id")
       workout_routes_with_y = current_user.workout_routes.joins(:data_points).where("data_points.data_type_id = #{y_data_type.id}").select("workout_routes.id")
 
@@ -257,6 +257,10 @@ class SummariesController < ApplicationController
           .where("workout_routes.id": workout_routes_with_x)
           .where("workout_routes.id": workout_routes_with_y)
           .where(get_conditions)
+
+      if route.present?
+        workout_routes = workout_routes.where("workout_routes.route_id": route.id)
+      end
 
       x_label = get_axis_label(x_data_type)
       y_label = get_axis_label(y_data_type)
@@ -483,30 +487,46 @@ class SummariesController < ApplicationController
     def set_workout_type_route_data_type(summary_type)
       @workout_types = current_user.workout_types.order(:order_in_list)
 
-      if params[:workout_type_id].present?
-        @workout_type = param_or_first(:workout_type_id, @workout_types, @workout_types)
-      end
+      if summary_type == SUMMARY_TYPE_X_VS_Y
+        # this is an x vs y graph, wih two data types
 
-      if @workout_type.present?
+        @workout_type = param_or_first(:workout_type_id, @workout_types, @workout_types)
+
         @routes = @workout_type.routes.order(:order_in_list)
         if params[:route_id].present?
           @route = @workout_type.routes.find(params[:route_id])
         end
 
-        if summary_type == SUMMARY_TYPE_X_VS_Y
-          # this is an x vs y graph, wih two data types
-          @x_data_type = param_or_first(:x_data_type_id, @workout_type.data_types, @workout_type.data_types)
-          @y_data_type = param_or_first(:y_data_type_id, @workout_type.data_types, @workout_type.data_types)
+        @x_data_type = param_or_first(:x_data_type_id, @workout_type.data_types, @workout_type.data_types)
+        @y_data_type = param_or_first(:y_data_type_id, @workout_type.data_types, @workout_type.data_types)
 
-          fth = DataType.field_types_hash
-          @data_types = @workout_type.data_types.where.not(field_type: fth[:text]).order(:order_in_list)
+        fth = DataType.field_types_hash
+        @data_types = @workout_type.data_types.where.not(field_type: fth[:text]).order(:order_in_list)
 
-          @color_by_options = %w[ day week month year route]
+        @color_by_options = %w[ day week month year route]
 
-          @color_by =  param_or_first(:by, nil, @color_by_options)
+        @color_by =  param_or_first(:by, nil, @color_by_options)
 
+      else
+        # this is a time series graph, with one data type and a summary function
+
+        if params[:workout_type_id].present?
+          @workout_type = param_or_first(:workout_type_id, @workout_types, @workout_types)
+        end
+
+        if params[:start_date].present?
+          @start_date = Date.parse(params[:start_date])
         else
-          # this is a time series graph, with one data type and a summary function
+          days_to_subtract = 60
+          @start_date = DateTime.now.in_time_zone(current_user.time_zone).to_date - days_to_subtract.days
+        end
+
+        if @workout_type.present?
+          @routes = @workout_type.routes.order(:order_in_list)
+          if params[:route_id].present?
+            @route = @workout_type.routes.find(params[:route_id])
+          end
+
           if params[:data_type_id].present?
             @data_type = @workout_type.data_types.find(params[:data_type_id])
             @summary_function = param_or_first(:summary_function, nil, @data_type.summary_function_options)
@@ -523,15 +543,15 @@ class SummariesController < ApplicationController
           else
             @averaging_time = @averaging_times[1]  # default to "week"
           end
-        end
-      else
-        @summary_function = "count"  # we can only return a count, not a sum, average etc, if this is not specific to a data_type
-        @averaging_times = %w[ day week month year]
-
-        if params[:by].present?
-          @averaging_time = params[:by]
         else
-          @averaging_time = @averaging_times[1]  # default to "week"
+          @summary_function = "count"  # we can only return a count, not a sum, average etc, if this is not specific to a data_type
+          @averaging_times = %w[ day week month year]
+
+          if params[:by].present?
+            @averaging_time = params[:by]
+          else
+            @averaging_time = @averaging_times[1]  # default to "week"
+          end
         end
       end
 
