@@ -504,8 +504,7 @@ class SummariesController < ApplicationController
         @data_types = @workout_type.data_types.where.not(field_type: fth[:text]).order(:order_in_list)
 
         @color_by_options = %w[ day week month year route]
-
-        @color_by =  param_or_first(:by, nil, @color_by_options)
+        @color_by =  param_or_item_from_list(:by, nil, @color_by_options, 1)
 
       else
         # this is a time series graph, with one data type and a summary function
@@ -536,28 +535,25 @@ class SummariesController < ApplicationController
 
           fth = DataType.field_types_hash
           @data_types = @workout_type.data_types.where(field_type: [fth[:numeric], fth[:hours_minutes], fth[:minutes_seconds]]).order(:order_in_list)
-          @averaging_times = %w[ day week month year]
 
-          if params[:by].present?
-            @averaging_time = params[:by]
-          else
-            @averaging_time = @averaging_times[1]  # default to "week"
-          end
+          @averaging_times = %w[ day week month year]
+          @averaging_time = param_or_item_from_list(:by, nil, @averaging_times, 1)
+
         else
           @summary_function = "count"  # we can only return a count, not a sum, average etc, if this is not specific to a data_type
-          @averaging_times = %w[ day week month year]
 
-          if params[:by].present?
-            @averaging_time = params[:by]
-          else
-            @averaging_time = @averaging_times[1]  # default to "week"
-          end
+          @averaging_times = %w[ day week month year]
+          @averaging_time = param_or_item_from_list(:by, nil, @averaging_times, 1)
         end
       end
 
     end
 
     def param_or_first(param_name, find_in, array)
+      param_or_item_from_list(param_name, find_in, array, 0)
+    end
+
+    def param_or_item_from_list(param_name, find_in, array, default_index)
       if params[param_name].present?
         if find_in.present?
           find_in.find(params[param_name])
@@ -565,7 +561,7 @@ class SummariesController < ApplicationController
           params[param_name]
         end
       else
-        array.first
+        array[default_index]
       end
     end
 
