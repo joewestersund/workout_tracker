@@ -76,14 +76,14 @@ class SummariesController < ApplicationController
 
     def get_params_for_link_url(summary_type)
       if summary_type == SUMMARY_TYPE_TIME_SERIES
-        @params_for_link_url = params.permit(:start_date, :end_date, :workout_type_id, :route_id, :data_type_id, :summary_function, :by)
+        @params_for_link_url = params.permit(:start_date, :end_date, :workout_type_id, :route_id, :data_type_id, :summary_function, :by, :display)
       else
         @params_for_link_url = params.permit(:start_date, :end_date, :workout_type_id, :route_id, :x_data_type_id, :y_data_type_id, :by)
       end
     end
 
     def show_table
-      return params[:display] != "chart"
+      return params[:display] == "table"
     end
 
     def get_averaging_time_fields(averaging_time)
@@ -518,13 +518,21 @@ class SummariesController < ApplicationController
           @data_types = @workout_type.data_types.where(field_type: [fth[:numeric], fth[:hours_minutes], fth[:minutes_seconds]]).order(:order_in_list)
           @averaging_times = %w[ day week month year]
 
-          @averaging_time =  param_or_first(:by, nil, @averaging_times)
+          if params[:by].present?
+            @averaging_time = params[:by]
+          else
+            @averaging_time = @averaging_times[1]  # default to "week"
+          end
         end
       else
         @summary_function = "count"  # we can only return a count, not a sum, average etc, if this is not specific to a data_type
         @averaging_times = %w[ day week month year]
 
-        @averaging_time =  param_or_first(:by, nil, @averaging_times)
+        if params[:by].present?
+          @averaging_time = params[:by]
+        else
+          @averaging_time = @averaging_times[1]  # default to "week"
+        end
       end
 
     end

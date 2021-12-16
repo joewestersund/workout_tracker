@@ -18,6 +18,7 @@
   <%= form_with(url: summaries_time_series_path, method: 'get') do |form| %>
     <%= form.hidden_field :workout_type_id, value: (@workout_type.id if @workout_type.present?)  %>
     <%= form.hidden_field :display, value: @display %>
+    <%= form.hidden_field :by, value: @averaging_time %>
 
     <div class="field">
       <%= label_tag :start_date  %>
@@ -44,10 +45,6 @@
 
     <% end %>
 
-    <div class="field">
-      <%= form.label :by %>
-      <%= form.collection_select  :by, @averaging_times, :to_s, :to_s, {selected: @averaging_time, include_blank: false} %>
-    </div>
     <div class="actions">
       <%= submit_tag "Search", {id: "submit_filter"} %>
     </div>

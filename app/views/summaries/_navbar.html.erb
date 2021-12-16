@@ -1,14 +1,23 @@
 <div class="summary_type_navbar">
-  <%# = link_to "Time Series", summaries_time_series_url(@params_for_link_url.merge(display: @display)), {class: mark_current_tab(request.path,summaries_time_series_path)}%>
-  <%# = link_to "X vs Y", summaries_x_vs_y_url(@params_for_link_url.merge(display: @display)), {class: mark_current_tab(request.path,summaries_x_vs_y_path)}%>
+  <%= link_to "By Day", @params_for_link_url.merge(by: 'day'), {class: mark_current_tab(@averaging_time,"day")} %>
+  <%= link_to "By Week", @params_for_link_url.merge(by: 'week'), {class: mark_current_tab(@averaging_time,"week")} %>
+  <%= link_to "By Month", @params_for_link_url.merge(by: 'month'), {class: mark_current_tab(@averaging_time,"month")} %>
+  <%= link_to "By Year", @params_for_link_url.merge(by: 'year'), {class: mark_current_tab(@averaging_time,"year")} %>
 </div>
 <div class="summary_type_navbar">
-  <%# = link_to "By Day", @params_for_link_url.merge(by: 'day'), {class: mark_current_tab(@averaging_time,"week")} %>
-  <%# = link_to "By Week", @params_for_link_url.merge(by: 'week'), {class: mark_current_tab(@averaging_time,"week")} %>
-  <%# = link_to "By Month", @params_for_link_url.merge(by: 'month'), {class: mark_current_tab(@averaging_time,"month")} %>
-  <%# = link_to "By Year", @params_for_link_url.merge(by: 'year'), {class: mark_current_tab(@averaging_time,"year")} %>
+  <% start_date = Date.parse(params[:start_date]) if params[:start_date].present?
+    today = DateTime.now.in_time_zone(current_user.time_zone).to_date
+    minus_30 = today - 30.days
+    minus_60 = today - 60.days
+    minus_180 = today - 180.days
+    minus_365 = today - 365.days
+  %>
+  <%= link_to "Last 30 days", @params_for_link_url.merge(start_date: minus_30), {class: mark_current_tab(start_date,minus_30)}%>
+  <%= link_to "Last 60 days", @params_for_link_url.merge(start_date: minus_60), {class: mark_current_tab(start_date,minus_60)}%>
+  <%= link_to "Last 180 days", @params_for_link_url.merge(start_date: minus_180), {class: mark_current_tab(start_date,minus_180)}%>
+  <%= link_to "Last 365 days", @params_for_link_url.merge(start_date: minus_365), {class: mark_current_tab(start_date,minus_365)}%>
 </div>
 <div class="summary_type_navbar">
-  <%= link_to "Table", @params_for_link_url.merge(display: 'table'), {class: mark_current_tab(@show_table,true)} %>
   <%= link_to "Chart", @params_for_link_url.merge(display: 'chart'), {class: mark_current_tab(@show_table,false)} %>
+  <%= link_to "Table", @params_for_link_url.merge(display: 'table'), {class: mark_current_tab(@show_table,true)} %>
 </div>
