@@ -6,12 +6,14 @@
 </div>
 <div class="summary_type_navbar">
   <% today = DateTime.now.in_time_zone(current_user.time_zone).to_date
-    minus_30 = today - 30.days
+     minus_7 = today - 7.days
+     minus_30 = today - 30.days
     minus_60 = today - 60.days
     minus_180 = today - 180.days
     minus_365 = today - 365.days
     start_of_time = DateTime.parse("2000-01-01").to_date
   %>
+  <%= link_to "Last 7 days", @params_for_link_url.merge(start_date: minus_7), {class: mark_current_tab(@start_date,minus_7)}%>
   <%= link_to "Last 30 days", @params_for_link_url.merge(start_date: minus_30), {class: mark_current_tab(@start_date,minus_30)}%>
   <%= link_to "Last 60 days", @params_for_link_url.merge(start_date: minus_60), {class: mark_current_tab(@start_date,minus_60)}%>
   <%= link_to "Last 180 days", @params_for_link_url.merge(start_date: minus_180), {class: mark_current_tab(@start_date,minus_180)}%>
