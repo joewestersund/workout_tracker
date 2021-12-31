@@ -77,6 +77,7 @@ class WorkoutTypesController < ApplicationController
     end
 
     def move(up)
-      move_in_list(current_user.workout_types, workout_types_path, params[:id], up)
+      workout_type = current_user.workout_types.find(params[:id])
+      move_in_list(current_user.workout_types, workout_types_path, workout_type, up)
     end
 end
