@@ -132,15 +132,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def destroy
-    sign_out
-    @user.destroy
-    respond_to do |format|
-      format.html { redirect_to signup_path }
-      format.json { head :no_content }
-    end
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_self_as_user

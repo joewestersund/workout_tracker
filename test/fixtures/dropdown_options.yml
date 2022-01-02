@@ -1,26 +1,20 @@
-# == Schema Information
-#
-# Table name: workout_types
-#
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 #  id            :bigint           not null, primary key
 #  name          :string
 #  order_in_list :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  data_type_id  :bigint
 #  user_id       :bigint
-#
-# Indexes
-#
-#  index_workout_types_on_user_id                    (user_id)
-#  index_workout_types_on_user_id_and_order_in_list  (user_id,order_in_list)
-#
 
-running:
+one:
   user: one
-  name: Running
+  data_type: running_surface
+  name: road
   order_in_list: 1
 
-bouldering:
+two:
   user: one
-  name: Bouldering
+  data_type: running_surface
+  name: trail
   order_in_list: 2

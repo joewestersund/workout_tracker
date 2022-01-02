@@ -19,16 +19,18 @@
 #  index_routes_on_workout_type_id                                (workout_type_id)
 #
 
-one:
-  belongs_to: 
-  belongs_to: 
-  name: MyString
-  distance: 1.5
-  order_in_list: 
+bluff:
+  user: one
+  workout_type: running
+  active: true
+  name: Bluff
+  description: run to bluff
+  order_in_list: 1
 
-two:
-  belongs_to: 
-  belongs_to: 
-  name: MyString
-  distance: 1.5
-  order_in_list: 
+fernhill:
+  user: one
+  workout_type: running
+  active: true
+  name: Fernhill
+  description: run to Fernhill park
+  order_in_list: 2

@@ -20,19 +20,15 @@
 #
 
 one:
-  email: MyString
-  name: MyString
-  password_digest: MyString
-  remember_token: MyString
-  reset_password_token: MyString
-  password_reset_sent_at: 2021-10-27 13:18:56
-  time_zone: MyString
+  email: test1@test.com
+  name: Tester 1
+  activated: true
+  password_digest: <%= User.digest('password') %>
+  time_zone: Pacific Time (US & Canada)
 
 two:
-  email: MyString
-  name: MyString
-  password_digest: MyString
-  remember_token: MyString
-  reset_password_token: MyString
-  password_reset_sent_at: 2021-10-27 13:18:56
-  time_zone: MyString
+  email: test2@test.com
+  name: Tester 2
+  activated: true
+  password_digest: <%= User.digest('password') %>
+  time_zone: Pacific Time (US & Canada)

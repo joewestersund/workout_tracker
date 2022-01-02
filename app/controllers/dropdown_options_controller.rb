@@ -62,13 +62,20 @@ class DropdownOptionsController < ApplicationController
 
   # DELETE /dropdown_options/1 or /dropdown_options/1.json
   def destroy
-    deleted_OIL = @dropdown_option.order_in_list
     dt = @dropdown_option.data_type
-    @dropdown_option.destroy
-    handle_delete_of_order_in_list(dt.dropdown_options,deleted_OIL)
-    respond_to do |format|
-      format.html { redirect_to data_type_dropdown_options_path(dt), notice: "Dropdown option was successfully destroyed." }
-      format.json { head :no_content }
+    if @dropdown_option.data_points.count == 0
+      deleted_OIL = @dropdown_option.order_in_list
+      @dropdown_option.destroy
+      handle_delete_of_order_in_list(dt.dropdown_options,deleted_OIL)
+      respond_to do |format|
+        format.html { redirect_to data_type_dropdown_options_path(dt), notice: "Dropdown option was successfully destroyed." }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to data_type_dropdown_options_path(dt), notice: "Can't delete this dropdown option, because it is being used by one or more workout data points." }
+        format.json { head :no_content }
+      end
     end
   end
 

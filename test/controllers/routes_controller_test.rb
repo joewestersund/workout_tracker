@@ -2,30 +2,27 @@ require "test_helper"
 
 class RoutesControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @route = routes(:one)
+    @workout_type = workout_types(:running)
+    @route = routes(:bluff)
+    sign_in_as users(:one)
   end
 
   test "should get index" do
-    get routes_url
+    get routes_default_url
     assert_response :success
   end
 
   test "should get new" do
-    get new_route_url
+    get new_workout_type_route_path(@workout_type)
     assert_response :success
   end
 
   test "should create route" do
     assert_difference('Route.count') do
-      post routes_url, params: { route: { belongs_to: @route.belongs_to, distance: @route.distance, name: @route.name, order_in_list: @route.order_in_list } }
+      post workout_type_routes_url(@workout_type), params: { route: { name: "#{@route.name}2", active: true } }
     end
 
-    assert_redirected_to route_url(Route.last)
-  end
-
-  test "should show route" do
-    get route_url(@route)
-    assert_response :success
+    assert_redirected_to workout_type_routes_url(@workout_type)
   end
 
   test "should get edit" do
@@ -34,8 +31,8 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update route" do
-    patch route_url(@route), params: { route: { belongs_to: @route.belongs_to, distance: @route.distance, name: @route.name, order_in_list: @route.order_in_list } }
-    assert_redirected_to route_url(@route)
+    patch route_url(@route), params: { route: { name: @route.name, active: true } }
+    assert_redirected_to workout_type_routes_url(@workout_type)
   end
 
   test "should destroy route" do
@@ -43,6 +40,6 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
       delete route_url(@route)
     end
 
-    assert_redirected_to routes_url
+    assert_redirected_to workout_type_routes_url(@workout_type)
   end
 end

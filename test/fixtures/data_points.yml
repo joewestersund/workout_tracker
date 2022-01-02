@@ -1,7 +1,4 @@
-# == Schema Information
-#
-# Table name: default_data_points
-#
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 #  id                 :bigint           not null, primary key
 #  decimal_value      :decimal(, )
 #  text_value         :text
@@ -9,18 +6,18 @@
 #  updated_at         :datetime         not null
 #  data_type_id       :bigint
 #  dropdown_option_id :bigint
-#  route_id           :bigint
 #  user_id            :bigint
-#
+#  workout_route_id   :bigint
 
 one:
   user: one
-  route: bluff
-  data_type: distance
-  decimal_value: 6.3
+  workout_route:
+  data_type: running_surface
+  dropdown_option: one
 
 two:
   user: one
-  route: fernhill
-  data_type: running_surface
-  dropdown_option: two
+  workout_route:
+  data_type: distance
+  decimal_value: 12
+  dropdown_option:

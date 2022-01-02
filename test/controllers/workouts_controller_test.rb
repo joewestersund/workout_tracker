@@ -3,6 +3,7 @@ require "test_helper"
 class WorkoutsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @workout = workouts(:one)
+    sign_in_as users(:one)
   end
 
   test "should get index" do
@@ -20,12 +21,7 @@ class WorkoutsControllerTest < ActionDispatch::IntegrationTest
       post workouts_url, params: { workout: { user_id: @workout.user_id, workout_date: @workout.workout_date, workout_type_id: @workout.workout_type_id } }
     end
 
-    assert_redirected_to workout_url(Workout.last)
-  end
-
-  test "should show workout" do
-    get workout_url(@workout)
-    assert_response :success
+    assert_redirected_to workouts_url
   end
 
   test "should get edit" do
@@ -35,7 +31,7 @@ class WorkoutsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update workout" do
     patch workout_url(@workout), params: { workout: { user_id: @workout.user_id, workout_date: @workout.workout_date, workout_type_id: @workout.workout_type_id } }
-    assert_redirected_to workout_url(@workout)
+    assert_redirected_to workouts_url
   end
 
   test "should destroy workout" do

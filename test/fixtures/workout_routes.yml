@@ -19,23 +19,16 @@
 #
 
 one:
-  belongs_to: 
-  belongs_to: 
-  belongs_to: 
-  repetitions: 
-  distance: 1.5
-  pace: 1.5
-  duration: 1.5
-  heart_rate: 
-  description: MyText
+  user: one
+  workout: one
+  route: bluff
+  description: good run
+  repetitions: 1
 
 two:
-  belongs_to: 
-  belongs_to: 
-  belongs_to: 
-  repetitions: 
-  distance: 1.5
-  pace: 1.5
-  duration: 1.5
-  heart_rate: 
-  description: MyText
+  user: one
+  workout: one
+  route: fernhill
+  description: felt slow
+  repetitions: 2
+

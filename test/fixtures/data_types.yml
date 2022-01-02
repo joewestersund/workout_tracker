@@ -1,0 +1,36 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+#  id              :bigint           not null, primary key
+#  active          :boolean
+#  description     :text
+#  field_type      :string
+#  name            :string
+#  order_in_list   :integer
+#  units           :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  user_id         :bigint
+#  workout_type_id :bigint
+
+pace:
+  user: one
+  workout_type: running
+  name: pace
+  units: minutes:seconds
+  field_type: minutes:seconds
+  order_in_list: 1
+
+distance:
+  user: one
+  workout_type: running
+  name: distance
+  units: miles
+  field_type: numeric
+  order_in_list: 2
+
+running_surface:
+  user: one
+  workout_type: running
+  name: running surface
+  units:
+  field_type: dropdown list
+  order_in_list: 3
