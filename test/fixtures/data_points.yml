@@ -11,13 +11,12 @@
 
 one:
   user: one
-  workout_route:
+  workout_route: one
   data_type: running_surface
   dropdown_option: one
 
 two:
   user: one
-  workout_route:
+  workout_route: one
   data_type: distance
   decimal_value: 12
-  dropdown_option:

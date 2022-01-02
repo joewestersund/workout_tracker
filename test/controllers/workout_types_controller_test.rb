@@ -49,8 +49,8 @@ class WorkoutTypesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to workout_types_url
   end
 
-  test "should not destroy workout_type if has data" do
-    assert_difference('WorkoutType.count', 0) do
+  test "should destroy workout_type even if it has data" do
+    assert_difference('WorkoutType.count', -1) do
       delete workout_type_url(@workout_type)
     end
 
