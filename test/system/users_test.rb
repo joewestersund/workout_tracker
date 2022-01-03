@@ -9,7 +9,9 @@ class UsersTest < ApplicationSystemTestCase
   test "creating a User" do
     visit root_url
     assert_text "Sign in"
-    click_on "Sign up now"
+
+    click_link "Sign up now"
+
     assert_text "Sign Up"
 
     new_user_email = "test_user145@test2.com"

@@ -6,7 +6,7 @@
   <div class="field">
     <%= form.label :workout_type %>
     <%= form.collection_select :workout_type_id, @workout_types, :id, :name, {selected: @workout_type.id, include_blank: false},
-                               {id: "select-and-redirect", "data-prefix": "/summaries/x_vs_y?workout_type_id=", "data-suffix": ''}%>
+                               {class: "select-and-redirect", "data-prefix": "/summaries/x_vs_y?workout_type_id=", "data-suffix": ''}%>
   </div>
 <% end %>
 

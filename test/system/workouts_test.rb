@@ -24,7 +24,7 @@ class WorkoutsTest < ApplicationSystemTestCase
 
   test "creating a Workout" do
     visit workouts_url
-    click_on "New Workout", match: :first
+    click_link "New Workout", match: :first
 
     #fill_in "Workout date", with: @workout.workout_date
     select @workout.workout_type.name, from: "Workout type"
@@ -36,7 +36,7 @@ class WorkoutsTest < ApplicationSystemTestCase
 
   test "updating a Workout" do
     visit workouts_url
-    click_on "Edit", match: :first
+    click_link "Edit", match: :first
 
     #fill_in "Workout date", with: @workout.workout_date
     select @workout.workout_type.name, from: "Workout type"
@@ -49,7 +49,7 @@ class WorkoutsTest < ApplicationSystemTestCase
   test "destroying a Workout" do
     visit workouts_url
     page.accept_confirm do
-      click_on "Delete", match: :first
+      click_link "Delete", match: :first
     end
 
     assert_text "Workout was successfully destroyed"
