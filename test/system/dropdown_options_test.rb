@@ -1,3 +1,4 @@
+=begin
 require "application_system_test_case"
 
 class WorkoutTypeDropdownOptionsTest < ApplicationSystemTestCase
@@ -47,3 +48,4 @@ class WorkoutTypeDropdownOptionsTest < ApplicationSystemTestCase
     assert_text "Workout type additional data type option was successfully destroyed"
   end
 end
+=end

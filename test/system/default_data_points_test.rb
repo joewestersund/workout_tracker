@@ -1,3 +1,4 @@
+=begin
 require "application_system_test_case"
 
 class DefaultDataPointsTest < ApplicationSystemTestCase
@@ -39,3 +40,4 @@ class DefaultDataPointsTest < ApplicationSystemTestCase
     assert_text "Default data point was successfully destroyed"
   end
 end
+=end

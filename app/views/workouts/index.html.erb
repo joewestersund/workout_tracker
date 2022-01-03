@@ -17,7 +17,7 @@
   <script type="application/json" id="workout-filter-JSON"><%= @workout_filter_json %></script>
 
   <div class="link-block">
-    <div class="link"><%= link_to 'New Workout', new_workout_path %></div> |
+    <div class="link"><%= link_to 'New Workout', new_workout_path %></div>|
     <div class="link"><%= link_to "Download as XLSX", workouts_path(format: "xlsx") + "?" + request.query_string %></div>
   </div>
 

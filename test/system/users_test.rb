@@ -1,55 +1,37 @@
 require "application_system_test_case"
+require "test_helper"
 
 class UsersTest < ApplicationSystemTestCase
   setup do
     @user = users(:one)
   end
 
-  test "visiting the index" do
-    visit users_url
-    assert_selector "h1", text: "Users"
-  end
-
   test "creating a User" do
-    visit users_url
-    click_on "New User"
+    visit root_url
+    assert_text "Sign in"
+    click_on "Sign up now"
+    assert_text "Sign Up"
 
-    fill_in "Email", with: @user.email
-    fill_in "Name", with: @user.name
-    fill_in "Password digest", with: @user.password_digest
-    fill_in "Password reset sent at", with: @user.password_reset_sent_at
-    fill_in "Remember token", with: @user.remember_token
-    fill_in "Reset password token", with: @user.reset_password_token
-    fill_in "Time zone", with: @user.time_zone
-    click_on "Create User"
+    new_user_email = "test_user145@test2.com"
 
-    assert_text "User was successfully created"
-    click_on "Back"
+    fill_in "Name", with: "#{@user.name}2"
+    fill_in "Email", with: new_user_email
+    select @user.time_zone, from: "Time zone"
+    click_on "Sign me up"
+
+    assert_text "We've sent an email to you at"
+    assert_text "Please use the link in that email to set your password and activate your account."
+
+    u = User.find_by(email: new_user_email)
+    visit "#{activate_account_url}/#{u.reset_password_token}"
+
+    test_pw = "password1234"
+    fill_in "Password" , with: test_pw
+    fill_in "Password confirmation" , with: test_pw
+
+    click_on "Submit"
+
+    assert_text "Welcome to Log My Workout!"
   end
 
-  test "updating a User" do
-    visit users_url
-    click_on "Edit", match: :first
-
-    fill_in "Email", with: @user.email
-    fill_in "Name", with: @user.name
-    fill_in "Password digest", with: @user.password_digest
-    fill_in "Password reset sent at", with: @user.password_reset_sent_at
-    fill_in "Remember token", with: @user.remember_token
-    fill_in "Reset password token", with: @user.reset_password_token
-    fill_in "Time zone", with: @user.time_zone
-    click_on "Update User"
-
-    assert_text "User was successfully updated"
-    click_on "Back"
-  end
-
-  test "destroying a User" do
-    visit users_url
-    page.accept_confirm do
-      click_on "Destroy", match: :first
-    end
-
-    assert_text "User was successfully destroyed"
-  end
 end

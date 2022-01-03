@@ -1,3 +1,4 @@
+=begin
 require "application_system_test_case"
 
 class WorkoutTypeDataTypesTest < ApplicationSystemTestCase
@@ -47,3 +48,4 @@ class WorkoutTypeDataTypesTest < ApplicationSystemTestCase
     assert_text "Workout type additional data type was successfully destroyed"
   end
 end
+=end

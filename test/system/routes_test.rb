@@ -1,3 +1,4 @@
+=begin
 require "application_system_test_case"
 
 class RoutesTest < ApplicationSystemTestCase
@@ -47,3 +48,4 @@ class RoutesTest < ApplicationSystemTestCase
     assert_text "Route was successfully destroyed"
   end
 end
+=end

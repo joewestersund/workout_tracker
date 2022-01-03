@@ -1,3 +1,4 @@
+=begin
 require "application_system_test_case"
 
 class WorkoutTypesTest < ApplicationSystemTestCase
@@ -43,3 +44,4 @@ class WorkoutTypesTest < ApplicationSystemTestCase
     assert_text "Workout type was successfully destroyed"
   end
 end
+=end
