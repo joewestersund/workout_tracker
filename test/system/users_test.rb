@@ -8,11 +8,10 @@ class UsersTest < ApplicationSystemTestCase
 
   test "creating a User" do
     visit root_url
-    assert_text "Sign in"
+    assert_selector "h1", text: "Sign in"
 
-    click_link "Sign up now"
-
-    assert_text "Sign Up"
+    click_link "Sign up now", wait: 1
+    assert_selector "h1", text: "Sign Up"
 
     new_user_email = "test_user145@test2.com"
 
@@ -25,7 +24,7 @@ class UsersTest < ApplicationSystemTestCase
     assert_text "Please use the link in that email to set your password and activate your account."
 
     u = User.find_by(email: new_user_email)
-    visit "#{activate_account_url}/#{u.reset_password_token}"
+    visit "/activate_account/#{u.reset_password_token}"
 
     test_pw = "password1234"
     fill_in "Password" , with: test_pw
