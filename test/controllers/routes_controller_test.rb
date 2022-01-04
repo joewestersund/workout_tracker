@@ -4,6 +4,7 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @workout_type = workout_types(:running)
     @route = routes(:bluff)
+    @route2 = routes(:fernhill)
     sign_in_as users(:one)
   end
 
@@ -40,6 +41,42 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
       delete route_url(@route)
     end
 
+    assert_redirected_to workout_type_routes_url(@workout_type)
+  end
+
+  test "should move up" do
+    two = @route2
+    initial_position = two.order_in_list
+    post move_route_up_url(two)
+    two.reload
+    assert_equal(two.order_in_list, initial_position - 1)
+    assert_redirected_to workout_type_routes_url(@workout_type)
+  end
+
+  test "should move down" do
+    one = @route
+    initial_position = one.order_in_list
+    post move_route_down_url(one)
+    one.reload
+    assert_equal(one.order_in_list, initial_position + 1)
+    assert_redirected_to workout_type_routes_url(@workout_type)
+  end
+
+  test "shouldn't move first one up" do
+    one = @route
+    initial_position = one.order_in_list
+    post move_route_up_url(one)
+    one.reload
+    assert_equal(one.order_in_list, initial_position)
+    assert_redirected_to workout_type_routes_url(@workout_type)
+  end
+
+  test "shouldn't move last one down" do
+    last = @route2
+    initial_position = last.order_in_list
+    post move_route_down_url(last)
+    last.reload
+    assert_equal(last.order_in_list, initial_position)
     assert_redirected_to workout_type_routes_url(@workout_type)
   end
 end

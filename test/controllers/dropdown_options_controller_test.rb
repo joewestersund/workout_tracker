@@ -3,6 +3,7 @@ require "test_helper"
 class DropdownOptionsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @dropdown_option = dropdown_options(:one)
+    @dropdown_option2 = dropdown_options(:two)
     @dropdown_data_type = data_types(:running_surface)
     sign_in_as users(:one)
   end
@@ -59,5 +60,41 @@ class DropdownOptionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to data_type_dropdown_options_url(@dropdown_data_type)
 
+  end
+
+  test "should move up" do
+    two = @dropdown_option2
+    initial_position = two.order_in_list
+    post move_dropdown_option_up_url(two)
+    two.reload
+    assert_equal(two.order_in_list, initial_position - 1)
+    assert_redirected_to data_type_dropdown_options_url(@dropdown_data_type)
+  end
+
+  test "should move down" do
+    one = @dropdown_option
+    initial_position = one.order_in_list
+    post move_dropdown_option_down_url(one)
+    one.reload
+    assert_equal(one.order_in_list, initial_position + 1)
+    assert_redirected_to data_type_dropdown_options_url(@dropdown_data_type)
+  end
+
+  test "shouldn't move first one up" do
+    one = @dropdown_option
+    initial_position = one.order_in_list
+    post move_dropdown_option_up_url(one)
+    one.reload
+    assert_equal(one.order_in_list, initial_position)
+    assert_redirected_to data_type_dropdown_options_url(@dropdown_data_type)
+  end
+
+  test "shouldn't move last one down" do
+    last = @dropdown_option2
+    initial_position = last.order_in_list
+    post move_dropdown_option_down_url(last)
+    last.reload
+    assert_equal(last.order_in_list, initial_position)
+    assert_redirected_to data_type_dropdown_options_url(@dropdown_data_type)
   end
 end

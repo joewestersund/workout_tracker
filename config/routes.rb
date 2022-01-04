@@ -16,8 +16,8 @@ Rails.application.routes.draw do
     end
   end
 
-  post '/workout_types/:id/move_up', to: 'workout_types#move_up'
-  post '/workout_types/:id/move_down', to: 'workout_types#move_down'
+  post '/workout_types/:id/move_up', to: 'workout_types#move_up', as: :move_workout_type_up
+  post '/workout_types/:id/move_down', to: 'workout_types#move_down', as: :move_workout_type_down
 
   get '/routes', to: 'routes#default_index', as: :routes_default  # show routes for the first workout type
   get '/data_types', to: 'data_types#default_index', as: :data_types_default  # show dts for the first workout type
@@ -25,11 +25,11 @@ Rails.application.routes.draw do
   post '/routes/:id/move_up', to: 'routes#move_up', as: :move_route_up
   post '/routes/:id/move_down', to: 'routes#move_down', as: :move_route_down
 
-  post '/dropdown_options/:id/move_up', to: 'dropdown_options#move_up'
-  post '/dropdown_options/:id/move_down', to: 'dropdown_options#move_down'
+  post '/dropdown_options/:id/move_up', to: 'dropdown_options#move_up', as: :move_dropdown_option_up
+  post '/dropdown_options/:id/move_down', to: 'dropdown_options#move_down', as: :move_dropdown_option_down
 
-  post '/data_types/:id/move_up', to: 'data_types#move_up'
-  post '/data_types/:id/move_down', to: 'data_types#move_down'
+  post '/data_types/:id/move_up', to: 'data_types#move_up', as: :move_data_type_up
+  post '/data_types/:id/move_down', to: 'data_types#move_down', as: :move_data_type_down
 
   resources :sessions, only: [:new, :create, :destroy]
   get '/signin', to: "sessions#new"

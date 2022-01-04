@@ -3,6 +3,7 @@ require "test_helper"
 class WorkoutTypesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @workout_type = workout_types(:running)
+    @workout_type2 = workout_types(:bouldering)
     sign_in_as users(:one)
   end
 
@@ -57,4 +58,39 @@ class WorkoutTypesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to workout_types_url
   end
 
+  test "should move up" do
+    two = @workout_type2
+    initial_position = two.order_in_list
+    post move_workout_type_up_url(two)
+    two.reload
+    assert_equal(two.order_in_list, initial_position - 1)
+    assert_redirected_to workout_types_url
+  end
+
+  test "should move down" do
+    one = @workout_type
+    initial_position = one.order_in_list
+    post move_workout_type_down_url(one)
+    one.reload
+    assert_equal(one.order_in_list, initial_position + 1)
+    assert_redirected_to workout_types_url
+  end
+
+  test "shouldn't move first one up" do
+    one = @workout_type
+    initial_position = one.order_in_list
+    post move_workout_type_up_url(one)
+    one.reload
+    assert_equal(one.order_in_list, initial_position)
+    assert_redirected_to workout_types_url
+  end
+
+  test "shouldn't move last one down" do
+    last = @workout_type2
+    initial_position = last.order_in_list
+    post move_workout_type_down_url(last)
+    last.reload
+    assert_equal(last.order_in_list, initial_position)
+    assert_redirected_to workout_types_url
+  end
 end

@@ -4,6 +4,8 @@ class DataTypesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @workout_type = workout_types(:running)
     @data_type = data_types(:pace)
+    @data_type2 = data_types(:distance)
+    @data_type3 = data_types(:running_surface)
     sign_in_as users(:one)
   end
 
@@ -40,6 +42,42 @@ class DataTypesControllerTest < ActionDispatch::IntegrationTest
       delete data_type_url(@data_type)
     end
 
+    assert_redirected_to workout_type_data_types_url(@workout_type)
+  end
+
+  test "should move up" do
+    two = @data_type2
+    initial_position = two.order_in_list
+    post move_data_type_up_url(two)
+    two.reload
+    assert_equal(two.order_in_list, initial_position - 1)
+    assert_redirected_to workout_type_data_types_url(@workout_type)
+  end
+
+  test "should move down" do
+    one = @data_type
+    initial_position = one.order_in_list
+    post move_data_type_down_url(one)
+    one.reload
+    assert_equal(one.order_in_list, initial_position + 1)
+    assert_redirected_to workout_type_data_types_url(@workout_type)
+  end
+
+  test "shouldn't move first one up" do
+    one = @data_type
+    initial_position = one.order_in_list
+    post move_data_type_up_url(one)
+    one.reload
+    assert_equal(one.order_in_list, initial_position)
+    assert_redirected_to workout_type_data_types_url(@workout_type)
+  end
+
+  test "shouldn't move last one down" do
+    last = @data_type3
+    initial_position = last.order_in_list
+    post move_data_type_down_url(last)
+    last.reload
+    assert_equal(last.order_in_list, initial_position)
     assert_redirected_to workout_type_data_types_url(@workout_type)
   end
 end
