@@ -48,7 +48,7 @@ function ready() {
                             legend: true
                         },
                         marks: [
-                            Plot.barY(cd, {x: "x_value", y: "y_value", fill: "series_name", title: "series_name"}),
+                            Plot.barY(cd, {x: "x_value", y: "y_value", fill: "series_name", title: "label"}),
                             Plot.ruleY([0])
                         ]
                     });
@@ -76,7 +76,7 @@ function ready() {
                             marginBottom: 70
                         },
                         marks: [
-                            Plot.barY(cd, {x: "series_name", y: "y_value", fill: "series_name", title: "series_name"}),
+                            Plot.barY(cd, {x: "series_name", y: "y_value", fill: "series_name", title: "label"}),
                             Plot.ruleY([0])
                         ]
                     })

@@ -343,7 +343,8 @@ class SummariesController < ApplicationController
         else
           y_value = d.result.to_f
         end
-        cd.add_data_point(column_name, x, y_value, nil)
+        #cd.add_data_point(column_name, x, y_value, nil)
+        cd.add_data_point(column_name, x, y_value, "#{x} #{column_name} #{y_value}")
       end
 
       if !stack_bars
@@ -354,7 +355,8 @@ class SummariesController < ApplicationController
           else
             y_value = d.result.to_f
           end
-          cd_all.add_data_point(all_groups_name, x, y_value, nil)
+          #cd_all.add_data_point(all_groups_name, x, y_value, nil)
+          cd_all.add_data_point(all_groups_name, x, y_value, "#{x} #{all_groups_name} #{y_value}")
         end
       end
 
