@@ -1,4 +1,7 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# == Schema Information
+#
+# Table name: data_types
+#
 #  id              :bigint           not null, primary key
 #  active          :boolean
 #  description     :text
@@ -10,6 +13,13 @@
 #  updated_at      :datetime         not null
 #  user_id         :bigint
 #  workout_type_id :bigint
+#
+# Indexes
+#
+#  index_adt_on_user_and_workout_type_and_order  (user_id,workout_type_id,order_in_list)
+#  index_data_types_on_user_id                   (user_id)
+#  index_data_types_on_workout_type_id           (workout_type_id)
+#
 
 pace:
   user: one

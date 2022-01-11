@@ -92,7 +92,7 @@ class SummariesController < ApplicationController
       elsif averaging_time == "month"
         at_str = "year, month, null as week, null as day"
       elsif averaging_time == "week"
-        at_str = "year, null as month, week, null as day"
+        at_str = "week_year as year, null as month, week, null as day"
       else #default to day
         at_str = "year, month, null as week, day"
       end
@@ -105,7 +105,7 @@ class SummariesController < ApplicationController
       elsif averaging_time == "month"
         "year, month"
       elsif averaging_time == "week"
-        "year, week"
+        "week_year, week"
       else #default to day
         "year, month, day"
       end
@@ -250,46 +250,51 @@ class SummariesController < ApplicationController
     end
 
     def create_x_vs_y_chart_data(x_data_type, y_data_type, route, color_by)
-      workout_routes_with_x = current_user.workout_routes.joins(:data_points).where("data_points.data_type_id = #{x_data_type.id}").select("workout_routes.id")
-      workout_routes_with_y = current_user.workout_routes.joins(:data_points).where("data_points.data_type_id = #{y_data_type.id}").select("workout_routes.id")
 
-      workout_routes = current_user.workout_routes.joins(:workout)
-          .where("workout_routes.id": workout_routes_with_x)
-          .where("workout_routes.id": workout_routes_with_y)
-          .where(get_conditions)
+      if x_data_type.nil? || y_data_type.nil?
+        # this workout type doesn't have any data types that are graphable
+        cd = ChartData.new("dot", false, nil, nil)
+      else
+        workout_routes_with_x = current_user.workout_routes.joins(:data_points).where("data_points.data_type_id = #{x_data_type.id}").select("workout_routes.id")
+        workout_routes_with_y = current_user.workout_routes.joins(:data_points).where("data_points.data_type_id = #{y_data_type.id}").select("workout_routes.id")
 
-      if route.present?
-        workout_routes = workout_routes.where("workout_routes.route_id": route.id)
-      end
+        workout_routes = current_user.workout_routes.joins(:workout)
+            .where("workout_routes.id": workout_routes_with_x)
+            .where("workout_routes.id": workout_routes_with_y)
+            .where(get_conditions)
 
-      x_label = get_axis_label(x_data_type)
-      y_label = get_axis_label(y_data_type)
-
-      cd = ChartData.new("dot", false, x_label, y_label)
-
-      workout_routes.each do |wr|
-        dp_x = wr.data_points.find_by(data_type_id: x_data_type.id)
-        x = dp_x.value_for_chart
-        dp_y = wr.data_points.find_by(data_type_id: y_data_type.id)
-        y = dp_y.value_for_chart
-        w = wr.workout
-        if color_by == "year"
-          series = w.year
-        elsif color_by == "month"
-          series = get_start_of_period_date(w.year, w.month, nil, nil)
-        elsif color_by == "week"
-          series = get_start_of_period_date(w.year, nil, w.week, nil)
-        elsif color_by == "day"
-          series = get_start_of_period_date(w.year, w.month, nil, w.day)
-        elsif color_by == "route"
-          series = wr.route.name
-        else
-          raise "Error: did not recognize label_by = #{label_by}"
+        if route.present?
+          workout_routes = workout_routes.where("workout_routes.route_id": route.id)
         end
-        label = "#{wr.workout.workout_date} #{wr.route.name}"
-        cd.add_data_point(series, x, y, label)
-      end
 
+        x_label = get_axis_label(x_data_type)
+        y_label = get_axis_label(y_data_type)
+
+        cd = ChartData.new("dot", false, x_label, y_label)
+
+        workout_routes.each do |wr|
+          dp_x = wr.data_points.find_by(data_type_id: x_data_type.id)
+          x = dp_x.value_for_chart
+          dp_y = wr.data_points.find_by(data_type_id: y_data_type.id)
+          y = dp_y.value_for_chart
+          w = wr.workout
+          if color_by == "year"
+            series = w.year
+          elsif color_by == "month"
+            series = get_start_of_period_date(w.year, w.month, nil, nil)
+          elsif color_by == "week"
+            series = get_start_of_period_date(w.week_year, nil, w.week, nil)
+          elsif color_by == "day"
+            series = get_start_of_period_date(w.year, w.month, nil, w.day)
+          elsif color_by == "route"
+            series = wr.route.name
+          else
+            raise "Error: did not recognize label_by = #{label_by}"
+          end
+          label = "#{wr.workout.workout_date} #{wr.route.name}"
+          cd.add_data_point(series, x, y, label)
+        end
+      end
       charts = [cd]
 
       charts_json = Jbuilder.new do |json|

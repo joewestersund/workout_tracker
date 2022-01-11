@@ -12,6 +12,13 @@
 #  route_id           :bigint
 #  user_id            :bigint
 #
+# Indexes
+#
+#  index_ddp_on_do                        (dropdown_option_id)
+#  index_ddp_on_dt                        (data_type_id)
+#  index_default_data_points_on_route_id  (route_id)
+#  index_default_data_points_on_user_id   (user_id)
+#
 
 one:
   user: one
