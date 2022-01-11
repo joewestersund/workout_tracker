@@ -291,7 +291,7 @@ class SummariesController < ApplicationController
           else
             raise "Error: did not recognize label_by = #{label_by}"
           end
-          label = "#{wr.workout.workout_date} #{wr.route.name}"
+          label = "#{dp_x.to_s} #{dp_y.to_s}, #{wr.workout.workout_date} #{wr.route.name}"
           cd.add_data_point(series, x, y, label)
         end
       end
@@ -345,11 +345,12 @@ class SummariesController < ApplicationController
         x = get_start_of_period_date(d.year, d.month, d.week, d.day)
         if data_type.present?
           y_value = data_type.convert_to_value_for_chart(d.result.to_f)
+          result_label = data_type.convert_from_number(d.result.to_f)
         else
           y_value = d.result.to_f
+          result_label = d.result
         end
-        #cd.add_data_point(column_name, x, y_value, nil)
-        cd.add_data_point(column_name, x, y_value, "#{x} #{column_name} #{y_value}")
+        cd.add_data_point(column_name, x, y_value, "#{column_name} #{result_label}, #{x}")
       end
 
       if !stack_bars
@@ -357,11 +358,12 @@ class SummariesController < ApplicationController
           x = get_start_of_period_date(d.year, d.month, d.week, d.day)
           if data_type.present?
             y_value = data_type.convert_to_value_for_chart(d.result.to_f)
+            result_label = data_type.convert_from_number(d.result.to_f)
           else
             y_value = d.result.to_f
+            result_label = d.result
           end
-          #cd_all.add_data_point(all_groups_name, x, y_value, nil)
-          cd_all.add_data_point(all_groups_name, x, y_value, "#{x} #{all_groups_name} #{y_value}")
+          cd_all.add_data_point(all_groups_name, x, y_value, "#{all_groups_name} #{result_label}, #{x}")
         end
       end
 
