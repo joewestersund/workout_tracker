@@ -324,7 +324,9 @@ class SummariesController < ApplicationController
 
       cd = ChartData.new("bar", stack_bars, x_label, y_label)
 
-      if !stack_bars
+      two_charts = column_names.length > 1
+
+      if two_charts
         if workout_type.present?
           all_groups_name = "all routes"
         else
@@ -353,7 +355,7 @@ class SummariesController < ApplicationController
         cd.add_data_point(column_name, x, y_value, "#{column_name} #{result_label}, #{x}")
       end
 
-      if !stack_bars
+      if two_charts
         data_all_groups.each do |d|
           x = get_start_of_period_date(d.year, d.month, d.week, d.day)
           if data_type.present?
@@ -374,11 +376,11 @@ class SummariesController < ApplicationController
 
       if column_names.length > 0
         cd.fill_blank_values(x_values, column_names.first.column_name, nil)
-        cd_all.fill_blank_values(x_values, all_groups_name, nil) if !stack_bars
+        cd_all.fill_blank_values(x_values, all_groups_name, nil) if two_charts
       end
 
       charts = [cd]
-      charts << cd_all if !stack_bars
+      charts << cd_all if two_charts
 
       charts_json = Jbuilder.new do |json|
         json.charts charts.map { |c| c.to_builder.attributes! }
