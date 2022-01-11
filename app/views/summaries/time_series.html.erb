@@ -22,11 +22,11 @@
 
     <div class="field">
       <%= label_tag :start_date  %>
-      <%= date_field_tag :start_date, params[:start_date] %>
+      <%= date_field_tag :start_date, @start_date %>
     </div>
     <div class="field">
       <%= label_tag :end_date %>
-      <%= date_field_tag :end_date, params[:end_date] %>
+      <%= date_field_tag :end_date, @end_date %>
     </div>
 
     <% if @workout_type.present? %>

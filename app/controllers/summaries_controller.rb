@@ -523,9 +523,11 @@ class SummariesController < ApplicationController
         if params[:start_date].present?
           @start_date = Date.parse(params[:start_date])
         else
-          days_to_subtract = 60
+          days_to_subtract = 60   # default number of days back
           @start_date = DateTime.now.in_time_zone(current_user.time_zone).to_date - days_to_subtract.days
         end
+
+        @end_date = params[:end_date]  # may be nil
 
         if @workout_type.present?
           @routes = @workout_type.routes.order(:order_in_list)
