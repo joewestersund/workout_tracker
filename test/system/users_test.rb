@@ -10,8 +10,8 @@ class UsersTest < ApplicationSystemTestCase
     visit root_url
     assert_selector "h1", text: "Sign in"
 
-    click_link "Sign up now", wait: 2
-    assert_selector "h1", text: "Sign Up"
+    click_link "Sign up now", wait: 4
+    assert_selector "h1", text: "Sign Up", wait: 4
 
     new_user_email = "test_user145@test2.com"
 
