@@ -39,7 +39,7 @@
   </thead>
 
   <tbody>
-    <% @routes.each_with_index do |route, index| %>
+    <% @routes.each do |route| %>
       <tr>
         <td><%= route.name %></td>
         <td><%= route.description %></td>
@@ -60,8 +60,8 @@
         <td><%= route.order_in_list %></td>
         <td><%= link_to 'Edit', edit_route_path(route) %></td>
         <td><%= link_to 'Delete', route, method: :delete, data: { confirm: "Are you sure you want to delete '#{route.name}'? This will delete any data you had for this route. If you want to keep past data but not have this route show up in the future, you can set it to 'active' = No."} %></td>
-        <td><%= (link_to 'Move Up', move_route_up_path(route), method: :post) unless index == 0 %></td>
-        <td><%= (link_to 'Move Down', move_route_down_path(route), method: :post) unless index == @routes.count-1 %></td>
+        <td><%= (link_to 'Move Up', move_route_up_path(route), method: :post) unless route.order_in_list == 1 %></td>
+        <td><%= (link_to 'Move Down', move_route_down_path(route), method: :post) unless route.order_in_list == @route_count %></td>
       </tr>
     <% end %>
   </tbody>

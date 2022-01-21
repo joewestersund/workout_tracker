@@ -2,9 +2,12 @@ class WorkoutTypesController < ApplicationController
   before_action :signed_in_user
   before_action :set_workout_type, only: %i[ edit update destroy ]
 
+  NUM_PER_PAGE = 20
+
   # GET /workout_types or /workout_types.json
   def index
-    @workout_types = current_user.workout_types.order(:order_in_list).page(params[:page]).per(10)
+    @workout_types = current_user.workout_types.order(:order_in_list).page(params[:page]).per(NUM_PER_PAGE)
+    @workout_type_count = current_user.workout_types.count
   end
 
   # GET /workout_types/new

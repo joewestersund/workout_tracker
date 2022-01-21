@@ -31,7 +31,7 @@
   </thead>
 
   <tbody>
-    <% @data_types.each_with_index do |dt, index| %>
+    <% @data_types.each do |dt| %>
       <tr>
         <td><%= dt.name %></td>
         <td><%= dt.description %></td>
@@ -51,8 +51,8 @@
         <td><%= dt.order_in_list %></td>
         <td><%= link_to 'Edit', edit_data_type_path(dt) %></td>
         <td><%= link_to 'Delete', dt, method: :delete, data: { confirm: "Are you sure you want to delete '#{dt.name}'?" } %></td>
-        <td><%= (link_to 'Move Up', move_data_type_up_path(dt), method: :post) unless index == 0 %></td>
-        <td><%= (link_to 'Move Down', move_data_type_down_path(dt), method: :post) unless index == @data_types.count-1 %></td>
+        <td><%= (link_to 'Move Up', move_data_type_up_path(dt), method: :post) unless dt.order_in_list == 1 %></td>
+        <td><%= (link_to 'Move Down', move_data_type_down_path(dt), method: :post) unless dt.order_in_list == @data_type_count %></td>
       </tr>
     <% end %>
   </tbody>

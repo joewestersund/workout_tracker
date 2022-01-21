@@ -4,16 +4,20 @@ class RoutesController < ApplicationController
   before_action :set_workout_type, except: %i[ default_index edit update destroy move_up move_down]
   before_action :set_route_and_workout_type, only: %i[ edit update destroy move_up move_down]
 
+  NUM_PER_PAGE = 20
+
   # GET /routes or /routes.json
   def default_index
     @workout_type = @workout_types.first
-    @routes = @workout_type.routes.order(:order_in_list).page(params[:page]).per(10)
+    @routes = @workout_type.routes.order(:order_in_list).page(params[:page]).per(NUM_PER_PAGE)
+    @route_count = @workout_type.routes.count
     @data_types = @workout_type.data_types.where(active: true).order(:order_in_list)
     render :index
   end
 
   def index
-    @routes = @workout_type.routes.order(:order_in_list).page(params[:page]).per(10)
+    @routes = @workout_type.routes.order(:order_in_list).page(params[:page]).per(NUM_PER_PAGE)
+    @route_count = @workout_type.routes.count
     @data_types = @workout_type.data_types.where(active: true).order(:order_in_list)
   end
 

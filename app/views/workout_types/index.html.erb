@@ -20,7 +20,7 @@
   </thead>
 
   <tbody>
-    <% @workout_types.each_with_index do |workout_type, index| %>
+    <% @workout_types.each do |workout_type| %>
       <tr>
         <td><%= workout_type.name %></td>
         <td><% workout_type.data_types.order(:order_in_list).each do |dt| %>
@@ -36,8 +36,8 @@
         <td><%= workout_type.order_in_list %></td>
         <td><%= link_to 'Edit', edit_workout_type_path(workout_type) %></td>
         <td><%= link_to 'Delete', workout_type, method: :delete, data: { confirm: "Are you sure you want to delete '#{workout_type.name}'? This will delete any data you have, including routes, data types and workouts associated with this data type." } %></td>
-        <td><%= (link_to 'Move Up', move_workout_type_up_path(workout_type), method: :post) unless index == 0 %></td>
-        <td><%= (link_to 'Move Down', move_workout_type_down_path(workout_type), method: :post) unless index == @workout_types.count-1 %></td>
+        <td><%= (link_to 'Move Up', move_workout_type_up_path(workout_type), method: :post) unless workout_type.order_in_list == 1 %></td>
+        <td><%= (link_to 'Move Down', move_workout_type_down_path(workout_type), method: :post) unless workout_type.order_in_list == @workout_type_count %></td>
       </tr>
     <% end %>
   </tbody>

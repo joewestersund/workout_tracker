@@ -5,14 +5,18 @@ class DataTypesController < ApplicationController
   before_action :set_workout_type, except: %i[ default_index edit update destroy move_up move_down]
   before_action :set_dt_and_workout_type, only: %i[ edit update destroy move_up move_down]
 
+  NUM_PER_PAGE = 20
+
   def default_index
     @workout_type = @workout_types.first
-    @data_types = @workout_type.data_types.order(:order_in_list).page(params[:page]).per(10)
+    @data_types = @workout_type.data_types.order(:order_in_list).page(params[:page]).per(NUM_PER_PAGE)
+    @data_type_count = @workout_type.data_types.count
     render :index
   end
 
   def index
-    @data_types = @workout_type.data_types.order(:order_in_list).page(params[:page]).per(10)
+    @data_types = @workout_type.data_types.order(:order_in_list).page(params[:page]).per(NUM_PER_PAGE)
+    @data_type_count = @workout_type.data_types.count
   end
 
   # GET /data_types/new
