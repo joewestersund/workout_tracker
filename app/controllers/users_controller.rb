@@ -12,6 +12,9 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
+  def activate
+  end
+
   def create
     if (verify_recaptcha(model: @user) || Rails.env == "development")
       @user = User.new(user_params_new)
